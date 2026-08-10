@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Abhishek Bhattacherjee — Faculty Resource Console | MMDU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A4A;
+    --ink-soft:#3C4A66;
+    --paper:#F6F4EF;
+    --paper-raised:#FFFFFF;
+    --gold:#B8873A;
+    --gold-soft:#E4CFA0;
+    --teal:#2F6F65;
+    --teal-soft:#DCEAE6;
+    --line:#DDD6C7;
+    --charcoal:#232323;
+    --danger:#A8452F;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--charcoal);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .display{font-family:'Fraunces',serif;}
+
+  /* ===== Top bar ===== */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:rgba(246,244,239,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1120px; margin:0 auto; padding:14px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .brand{display:flex; align-items:center; gap:12px;}
+  .crest{
+    width:42px; height:42px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #2A3E63, var(--ink));
+    display:flex; align-items:center; justify-content:center;
+    border:2px solid var(--gold);
+    flex-shrink:0;
+  }
+  .crest span{
+    font-family:'Fraunces',serif; font-weight:600; color:var(--gold-soft); font-size:15px; letter-spacing:0.5px;
+  }
+  .brand-text{line-height:1.15;}
+  .brand-text .uni{font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+  .brand-text .dept{font-size:13px; color:var(--ink); font-weight:600;}
+  .topnav{display:flex; gap:22px; font-size:13px;}
+  .topnav a{text-decoration:none; color:var(--ink-soft); font-weight:500; border-bottom:1px solid transparent; padding-bottom:2px; transition:border-color .15s, color .15s;}
+  .topnav a:hover, .topnav a:focus-visible{color:var(--ink); border-color:var(--gold);}
+  @media (max-width:720px){ .topnav{display:none;} }
+
+  /* ===== Hero ===== */
+  .hero{
+    max-width:1120px; margin:0 auto; padding:72px 28px 56px;
+    display:grid; grid-template-columns:1.3fr 1fr; gap:48px; align-items:end;
+  }
+  @media (max-width:860px){ .hero{grid-template-columns:1fr; padding-top:48px;} }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--teal); margin-bottom:18px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:26px; height:1px; background:var(--teal);}
+  h1.hero-title{
+    font-size:clamp(34px,4.4vw,54px); line-height:1.05; margin:0 0 18px; font-weight:600; color:var(--ink);
+  }
+  h1.hero-title em{font-style:italic; color:var(--gold);}
+  .hero-lede{font-size:16.5px; line-height:1.7; color:var(--ink-soft); max-width:56ch; margin:0 0 22px;}
+  .hero-byline{
+    font-size:13.5px; color:var(--ink); font-weight:600; border-left:3px solid var(--gold); padding-left:14px;
+  }
+  .hero-byline span{display:block; font-weight:400; color:var(--ink-soft); font-size:12.5px; margin-top:2px;}
+
+  .hero-card{
+    background:var(--paper-raised); border:1px solid var(--line); padding:26px;
+    box-shadow:0 1px 0 var(--line);
+  }
+  .hero-card .k{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:14px;}
+  .stat-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--line); font-size:13.5px;}
+  .stat-row:last-child{border-bottom:none;}
+  .stat-row b{color:var(--ink); font-weight:600;}
+
+  /* ===== Section shell ===== */
+  .section{max-width:1120px; margin:0 auto; padding:20px 28px 10px;}
+  .section-head{margin:56px 0 26px;}
+  .section-head .eyebrow{margin-bottom:10px;}
+  .section-head h2{font-size:26px; margin:0; font-weight:600; color:var(--ink);}
+  .section-head p{color:var(--ink-soft); font-size:14.5px; max-width:64ch; margin:8px 0 0;}
+
+  /* ===== Resource console cards ===== */
+  .console{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:860px){ .console{grid-template-columns:1fr;} }
+
+  .card{
+    position:relative;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    padding:26px 24px 24px;
+    display:flex; flex-direction:column; gap:14px;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(27,42,74,0.08); border-color:#C9BFA4; }
+  .card-top{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+  .tag-num{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gold); border:1px solid var(--gold-soft);
+    padding:2px 8px; letter-spacing:1px;
+  }
+  .status{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:1px; text-transform:uppercase;
+    padding:3px 8px; border-radius:20px;
+  }
+  .status.live{background:var(--teal-soft); color:var(--teal);}
+  .status.setup{background:#F3E4DB; color:var(--danger);}
+
+  .card h3{font-size:19px; margin:0; color:var(--ink); font-weight:600; font-family:'Fraunces',serif;}
+  .card p.story{font-size:14px; line-height:1.65; color:var(--ink-soft); margin:0;}
+
+  .btn-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:6px;}
+  .btn{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; text-decoration:none; letter-spacing:0.3px;
+    padding:10px 16px; border:1px solid var(--ink); color:var(--ink); background:transparent;
+    cursor:pointer; transition:background .15s, color .15s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover, .btn:focus-visible{background:var(--ink); color:#fff;}
+  .btn.gold{border-color:var(--gold); color:#8A5F19;}
+  .btn.gold:hover{background:var(--gold); color:#fff;}
+  .btn:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+
+  .gen-box{
+    margin-top:4px; border-top:1px dashed var(--line); padding-top:14px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .gen-box input[type=text]{
+    font-family:'Inter',sans-serif; font-size:13.5px; padding:10px 12px; border:1px solid var(--line);
+    background:var(--paper); color:var(--charcoal);
+  }
+  .gen-box input[type=text]:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
+  .gen-msg{font-size:12.5px; color:var(--ink-soft); display:none; line-height:1.6;}
+  .gen-msg.show{display:block;}
+  .gen-msg.warn{color:var(--danger);}
+
+  /* ===== Note / admin panel ===== */
+  .admin-note{
+    max-width:1120px; margin:52px auto 0; padding:24px 28px; border:1px solid var(--gold-soft);
+    background:#FBF6EB; display:flex; gap:16px;
+  }
+  .admin-note .mark{font-family:'Fraunces',serif; font-weight:600; font-size:20px; color:var(--gold); flex-shrink:0;}
+  .admin-note h4{margin:0 0 6px; font-size:14.5px; color:var(--ink);}
+  .admin-note p{margin:0 0 8px; font-size:13.5px; line-height:1.7; color:var(--ink-soft);}
+  .admin-note p:last-child{margin-bottom:0;}
+
+  /* ===== About MMDU ===== */
+  .about{
+    max-width:1120px; margin:64px auto 0; padding:0 28px;
+    display:grid; grid-template-columns:1fr 1fr; gap:40px;
+  }
+  @media (max-width:860px){ .about{grid-template-columns:1fr;} }
+  .about h2{font-size:24px; color:var(--ink); font-family:'Fraunces',serif; margin:0 0 14px;}
+  .about p{font-size:14.5px; line-height:1.8; color:var(--ink-soft);}
+  .about .fact-list{list-style:none; margin:18px 0 0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .about .fact-list li{font-size:13.5px; color:var(--ink); padding-left:18px; position:relative;}
+  .about .fact-list li::before{content:"—"; position:absolute; left:0; color:var(--gold);}
+
+  footer{
+    margin-top:80px; border-top:1px solid var(--line); padding:32px 28px 40px;
+  }
+  .footer-inner{max-width:1120px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;}
+  .footer-inner .fbrand{font-family:'Fraunces',serif; font-size:15px; color:var(--ink); font-weight:600;}
+  .footer-inner .fmeta{font-size:12.5px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="crest"><span>MM</span></div>
+      <div class="brand-text">
+        <div class="uni">MM (Deemed to be University), Mullana</div>
+        <div class="dept">Dept. of Computer Science &amp; Engineering — MMEC</div>
+      </div>
+    </div>
+    <nav class="topnav">
+      <a href="#timetable">Timetable</a>
+      <a href="#adjustment">Load Adjustment</a>
+      <a href="#targets">Research Targets</a>
+      <a href="#generators">Document Generators</a>
+      <a href="#about">About MMDU</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div>
+    <div class="eyebrow">Faculty Resource Console</div>
+    <h1 class="hero-title">Six tools that quietly<br>run a <em>teaching week.</em></h1>
+    <p class="hero-lede">A working desk of the links, sheets, and generators used to plan classes, cover for absent colleagues, track research targets, and draft the first version of a paper, a deck, or a set of notes — so the actual teaching hours stay free for teaching.</p>
+    <div class="hero-byline">
+      Dr. Abhishek Bhattacherjee, Professor
+      <span>Department of Computer Science &amp; Engineering, MM Engineering College, MMDU Mullana</span>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="k">On this console</div>
+    <div class="stat-row"><span>Live scheduling &amp; sheet links</span><b>3</b></div>
+    <div class="stat-row"><span>Draft-document generators</span><b>3</b></div>
+    <div class="stat-row"><span>Output formats</span><b>DOCX · PPTX</b></div>
+    <div class="stat-row"><span>Human review required</span><b>Always</b></div>
+  </div>
+</header>
+
+<div class="section">
+
+  <div class="section-head" id="timetable">
+    <div class="eyebrow">Resource 01</div>
+    <h2>Timetable Generator</h2>
+    <p>Every semester begins with the same puzzle: rooms, slots, sections, and faculty load that all have to agree with each other. This resource turns that puzzle into a form — fill it once, and a clean timetable comes out the other end, sitting in a shared sheet that stays open for last-minute edits.</p>
+  </div>
+
+  <div class="console">
+    <div class="card">
+      <div class="card-top">
+        <span class="tag-num">01.A</span>
+        <span class="status live">Live link</span>
+      </div>
+      <h3>Generate Timetable</h3>
+      <p class="story">The intake form for a new timetable. Enter the section, subject load, and faculty preferences, and the generator lays out the weekly grid automatically.</p>
+      <div class="btn-row">
+        <a class="btn gold" href="https://bit.ly/GenerateTT" target="_blank" rel="noopener">Open generator ↗</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <span class="tag-num">01.B</span>
+        <span class="status live">Live link</span>
+      </div>
+      <h3>Modify Master Timetable</h3>
+      <p class="story">The underlying spreadsheet behind every generated timetable. Use this when a slot needs to move, a room needs to change, or a correction has to be made after generation.</p>
+      <div class="btn-row">
+        <a class="btn" href="https://docs.google.com/spreadsheets/d/1WP3NajBI3mzHfOWlInr2oRZA3LnhCpM51gg5wtWTQb4/edit?usp=sharing" target="_blank" rel="noopener">Edit sheet ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head" id="adjustment">
+    <div class="eyebrow">Resource 02</div>
+    <h2>Load Adjustment</h2>
+    <p>Faculty go on leave, conferences, and duty calls — and their classes still need to happen. This resource is the record of who covered for whom, filled in the moment it happens and visible to anyone checking coverage later.</p>
+  </div>
+
+  <div class="console">
+    <div class="card">
+      <div class="card-top">
+        <span class="tag-num">02.A</span>
+        <span class="status live">Live link</span>
+      </div>
+      <h3>Give an Adjustment</h3>
+      <p class="story">Log a class covered on behalf of a faculty member on leave — subject, section, date, and the covering faculty, so the record stays current in real time.</p>
+      <div class="btn-row">
+        <a class="btn gold" href="https://bit.ly/load-adjust" target="_blank" rel="noopener">Fill adjustment ↗</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <span class="tag-num">02.B</span>
+        <span class="status live">Live link</span>
+      </div>
+      <h3>View Adjustments</h3>
+      <p class="story">The running log of every adjustment given across the department — useful for verifying coverage, tallying extra load, or settling a dispute about who took which class.</p>
+      <div class="btn-row">
+        <a class="btn" href="https://docs.google.com/spreadsheets/d/1li4xFf1BxGf3SEKiRfGmLXZkqtYtDyqm-_EICjNoQGk/edit?usp=sharing" target="_blank" rel="noopener">View records ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head" id="targets">
+    <div class="eyebrow">Resource 03</div>
+    <h2>Faculty Unique Research Targets</h2>
+    <p>Research output is easiest to sustain when it's tracked like anything else worth tracking — a target, a date, and a place to check progress against it. This resource keeps that record for every faculty member's publication goals.</p>
+  </div>
+
+  <div class="console">
+    <div class="card">
+      <div class="card-top">
+        <span class="tag-num">03.A</span>
+        <span class="status live">Live link</span>
+      </div>
+      <h3>Set a New Target</h3>
+      <p class="story">Record a fresh research publication target for the term — journal tier, expected timeline, and area of focus.</p>
+      <div class="btn-row">
+        <a class="btn gold" href="https://bit.ly/facultyuniquetargets" target="_blank" rel="noopener">New target ↗</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <span class="tag-num">03.B</span>
+        <span class="status live">Live link</span>
+      </div>
+      <h3>View Target Records</h3>
+      <p class="story">The department-wide view of every logged research target, so progress toward publication goals stays visible across the semester rather than surfacing only at appraisal time.</p>
+      <div class="btn-row">
+        <a class="btn" href="https://docs.google.com/spreadsheets/d/1KWWJq3sJPOBUM2AI-DUggPkhYsmgztiTFSO2DhO4io4/edit?usp=sharing" target="_blank" rel="noopener">View records ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head" id="generators">
+    <div class="eyebrow">Resources 04–06</div>
+    <h2>Document Generators</h2>
+    <p>The blank page is the hardest part of any paper, deck, or set of notes. These three tools take a single topic and hand back a structured first draft — a starting document, not a finished one. What goes out under a faculty member's name is still their own writing, checked, corrected, and completed by them.</p>
+  </div>
+
+  <div class="console">
+    <div class="card">
+      <div class="card-top">
+        <span class="tag-num">04</span>
+        <span class="status setup">Needs backend link</span>
+      </div>
+      <h3>Research Paper Draft Generator</h3>
+      <p class="story">Enter a topic and receive a structured DOCX draft — abstract, introduction, literature review, methodology, results, discussion, and references — as a starting point for the real writing and review that follows.</p>
+      <div class="gen-box">
+        <input type="text" placeholder="e.g. Federated Learning for Edge IoT Security" data-target="paper">
+        <div class="btn-row">
+          <button class="btn" onclick="runGenerator('paper', this)">Generate draft →</button>
+        </div>
+        <p class="gen-msg mono" id="msg-paper"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="tag-num">05</span>
+        <span class="status setup">Needs backend link</span>
+      </div>
+      <h3>PPT Draft Generator</h3>
+      <p class="story">Enter a topic and receive a structured PPTX outline — ready to be re-timed, restyled, and taught from, rather than built slide-by-slide from a blank deck.</p>
+      <div class="gen-box">
+        <input type="text" placeholder="e.g. Introduction to Operating System Scheduling" data-target="ppt">
+        <div class="btn-row">
+          <button class="btn" onclick="runGenerator('ppt', this)">Generate draft →</button>
+        </div>
+        <p class="gen-msg mono" id="msg-ppt"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="tag-num">06</span>
+        <span class="status setup">Needs backend link</span>
+      </div>
+      <h3>Notes Draft Generator</h3>
+      <p class="story">Enter a topic and receive a structured DOCX set of notes — organised by concept, ready to be edited into the exact notes a class will be taught from.</p>
+      <div class="gen-box">
+        <input type="text" placeholder="e.g. Normalization in Relational Databases" data-target="notes">
+        <div class="btn-row">
+          <button class="btn" onclick="runGenerator('notes', this)">Generate draft →</button>
+        </div>
+        <p class="gen-msg mono" id="msg-notes"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-note">
+    <div class="mark">i</div>
+    <div>
+      <h4>A note on Resources 04–06</h4>
+      <p>These three run as private scripts on request today — a topic goes in, a DOCX or PPTX comes out. The forms above are wired and ready, but a browser page can't run a Python script by itself; it needs a small server sitting behind these buttons that the script talks to. That server is the one piece still to stand up, and it can live anywhere private — the script's contents never need to appear on this page or in its source.</p>
+      <p>Once that endpoint exists, each button's target URL just needs to be set at the top of this page's script, and the three generators go live without any other change to this design.</p>
+    </div>
+  </div>
+
+  <div class="about" id="about">
+    <div>
+      <h2>About MMDU, Mullana</h2>
+      <p>Maharishi Markandeshwar (Deemed to be University), Mullana–Ambala grew out of the Maharishi Markandeshwar Educational Trust, founded to widen access to higher education across engineering, medicine, dentistry, nursing, pharmacy, management, and law. The Mullana campus in Haryana is one of the larger multi-disciplinary campuses in the region, bringing several professional streams together under one university.</p>
+      <p>The Department of Computer Science &amp; Engineering at MM Engineering College sits within that campus — teaching, mentoring, and research running in parallel, which is exactly the kind of week this console exists to make lighter.</p>
+    </div>
+    <div>
+      <div class="k mono" style="font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:14px;">At a glance</div>
+      <ul class="fact-list">
+        <li>Deemed-to-be University, Mullana–Ambala, Haryana</li>
+        <li>Multi-disciplinary campus: engineering, medicine, dentistry, nursing, pharmacy, management, law</li>
+        <li>Undergraduate through doctoral programmes across faculties</li>
+        <li>Toll-free: 1800 2740 240 · mmumullana.org</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="fbrand">MMDU · Dept. of CSE, MMEC</div>
+    <div class="fmeta">Faculty Resource Console — maintained by Dr. Abhishek Bhattacherjee</div>
+  </div>
+</footer>
+
+<script>
+  // Configure real endpoints here once the backend services exist.
+  // Each should accept a POST with { topic } and return a file (or a download URL).
+  const GENERATOR_ENDPOINTS = {
+    paper: null,   // e.g. "https://your-server.example.com/api/generate/paper"
+    ppt:   null,   // e.g. "https://your-server.example.com/api/generate/ppt"
+    notes: null    // e.g. "https://your-server.example.com/api/generate/notes"
+  };
+
+  async function runGenerator(kind, btn){
+    const card = btn.closest('.card');
+    const input = card.querySelector('input[data-target="'+kind+'"]');
+    const msg = card.querySelector('#msg-'+kind);
+    const topic = (input.value || '').trim();
+
+    msg.classList.remove('warn');
+
+    if(!topic){
+      msg.textContent = 'Enter a topic before generating.';
+      msg.classList.add('show','warn');
+      input.focus();
+      return;
+    }
+
+    const endpoint = GENERATOR_ENDPOINTS[kind];
+
+    if(!endpoint){
+      msg.textContent = 'This generator is not yet connected to a live service — see the note below on Resources 04–06.';
+      msg.classList.add('show','warn');
+      return;
+    }
+
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Generating…';
+    btn.disabled = true;
+    msg.textContent = 'Working on "'+topic+'" — this can take a minute.';
+    msg.classList.add('show');
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ topic })
+      });
+      if(!res.ok) throw new Error('Server returned ' + res.status);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = kind + '-' + topic.replace(/\s+/g,'_') + (kind === 'ppt' ? '.pptx' : '.docx');
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      msg.textContent = 'Draft ready — check your downloads.';
+    } catch (err){
+      msg.textContent = 'Could not reach the generator service. Try again shortly.';
+      msg.classList.add('warn');
+    } finally {
+      btn.textContent = originalLabel;
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
