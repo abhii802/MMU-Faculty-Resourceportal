@@ -384,8 +384,8 @@
     <div class="mark">i</div>
     <div>
       <h4>A note on Resources 04–06</h4>
-      <p>These three run as private scripts on request today — a topic goes in, a DOCX or PPTX comes out. The forms above are wired and ready, but a browser page can't run a Python script by itself; it needs a small server sitting behind these buttons that the script talks to. That server is the one piece still to stand up, and it can live anywhere private — the script's contents never need to appear on this page or in its source.</p>
-      <p>Once that endpoint exists, each button's target URL just needs to be set at the top of this page's script, and the three generators go live without any other change to this design.</p>
+      <p>These three run through a private backend service — a topic goes in, a DOCX or PPTX comes out. The forms above are wired and ready; they just need the service's URL entered in <code class="mono">GENERATOR_ENDPOINTS</code> near the bottom of this page's source, once that service is deployed. The scripts themselves stay in a private repo and never appear on this page.</p>
+      <p>The paper generator is the slowest of the three — it fetches references and builds figures before the file is ready, so a wait of a minute or two there is expected, not a fault.</p>
     </div>
   </div>
 
@@ -450,15 +450,24 @@
     const originalLabel = btn.textContent;
     btn.textContent = 'Generating…';
     btn.disabled = true;
-    msg.textContent = 'Working on "'+topic+'" — this can take a minute.';
+    const waitNote = kind === 'paper'
+      ? 'Working on "'+topic+'" — the paper generator pulls references and builds figures, so this can take 1–3 minutes.'
+      : 'Working on "'+topic+'" — this can take up to a minute.';
+    msg.textContent = waitNote;
     msg.classList.add('show');
 
     try {
+      const controller = new AbortController();
+      const timeoutMs = kind === 'paper' ? 240000 : 90000; // paper needs more headroom
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ topic })
+        body: JSON.stringify({ topic }),
+        signal: controller.signal
       });
+      clearTimeout(timer);
       if(!res.ok) throw new Error('Server returned ' + res.status);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
@@ -470,7 +479,9 @@
       a.remove();
       msg.textContent = 'Draft ready — check your downloads.';
     } catch (err){
-      msg.textContent = 'Could not reach the generator service. Try again shortly.';
+      msg.textContent = err.name === 'AbortError'
+        ? 'The generator is taking longer than expected — it may still be waking up from idle. Try again in a minute.'
+        : 'Could not reach the generator service. Try again shortly.';
       msg.classList.add('warn');
     } finally {
       btn.textContent = originalLabel;
