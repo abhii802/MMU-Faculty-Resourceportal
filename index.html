@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E6J4TDP05D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-E6J4TDP05D');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Faculty Resource Dossier — Dr. Abhishek Bhattacherjee | MM(DU) Mullana</title>
@@ -468,7 +477,7 @@
       </div>
     </div>
     <nav class="index-panel" aria-label="Resource index">
-      <h3>Six resources, one dossier</h3>
+      <h3>Seven resources, one dossier</h3>
       <ul class="index-list">
         <li><span class="num">01</span><a href="#r1">Timetable Generation</a></li>
         <li><span class="num">02</span><a href="#r2">Load Adjustment (Faculty on Leave)</a></li>
@@ -476,6 +485,7 @@
         <li><span class="num">04</span><a href="#r4">Research Paper Draft Generator</a></li>
         <li><span class="num">05</span><a href="#r5">Presentation (PPT) Generator</a></li>
         <li><span class="num">06</span><a href="#r6">Class Notes Generator</a></li>
+        <li><span class="num">07</span><a href="#r7">Project Idea Generator</a></li>
       </ul>
     </nav>
   </div>
@@ -484,7 +494,7 @@
 <section class="story-section">
   <div class="wrap">
     <div class="story-head">
-      <h3>A week, in six resources</h3>
+      <h3>A week, in seven resources</h3>
       <span class="tag">— the working story behind this dossier</span>
     </div>
     <div class="story-body">
@@ -494,6 +504,7 @@
       <p>Then comes the part of the job that takes the longest to start: the blank page. <b>Resource 04</b> gives that page a first draft — a structured skeleton of a paper, section by section, built the moment a topic is typed in, so the real work of research can begin at editing rather than at staring at nothing.</p>
       <p>Tuesday's lecture still needs slides. <b>Resource 05</b> turns a topic into a clean, presentation-ready deck in the time it takes to make a cup of tea — a starting point built to be reshaped with the examples and emphasis only the professor teaching the room would know to add.</p>
       <p>And after the lecture, the notes students actually study from. <b>Resource 06</b> drafts a well-structured notes document for any Computer Science topic — definitions, explanations, a worked example, and a summary — ready to be annotated, corrected, and handed out as the professor's own.</p>
+      <p>And when final-year students come asking for project ideas, <b>Resource 07</b> turns a single technology into a full catalog of twenty fresh, right-sized project briefs — problem statement, tech stack, features and deliverables for each — so no student leaves a meeting empty-handed.</p>
     </div>
   </div>
 </section>
@@ -502,7 +513,7 @@
   <div class="wrap">
     <div class="section-head">
       <h3>The dossier</h3>
-      <p>Each entry below is a live resource. The first three link directly to the department's forms and record sheets; the last three generate a downloadable draft file, entirely inside this page.</p>
+      <p>Each entry below is a live resource. The first three link directly to the department's forms and record sheets; the last four generate a downloadable draft file, entirely inside this page.</p>
     </div>
 
     <div class="dossier">
@@ -651,6 +662,32 @@
         </div>
       </article>
 
+      <!-- RESOURCE 7: PROJECT IDEA GENERATOR -->
+      <article class="card" id="r7">
+        <div class="card-top">
+          <div class="seal-num">07</div>
+          <div class="card-copy">
+            <p class="kicker">Student Projects · Draft Assistance</p>
+            <h4>Project Idea Generator</h4>
+            <p class="story">Type a broad technology — Python, Web Development, Machine Learning, Cybersecurity, Mobile Development, Cloud, Blockchain, Computer Vision, NLP, Data Science, Game Development, AR/VR, DBMS, IoT, or anything else — and get a full catalog of 20 fresh, right-sized project briefs as a self-contained HTML page, each with a problem statement, tech stack, key features, deliverables, difficulty rating, and a shared 16-week roadmap. Every run reshuffles the combinations, so no two batches of students need to compare identical ideas.</p>
+          </div>
+        </div>
+        <div class="gen-panel">
+          <div class="gen-row">
+            <input type="text" id="project-topic" placeholder="e.g. Machine Learning" aria-label="Project technology">
+            <button class="btn btn-primary" id="project-btn" onclick="Dossier.generateProjects()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+              Generate &amp; Download Catalog (.html)
+            </button>
+          </div>
+          <div class="gen-status" id="project-status" role="status"></div>
+          <details class="disclosure">
+            <summary>How this catalog is built</summary>
+            <p>Built entirely in your browser by combining the chosen technology with a bank of real-world problem domains — no server, nothing uploaded, and no external code is loaded or exposed to produce it. Every one of the 20 briefs is written out in full (problem, stack, features, deliverables) — nothing is left blank. Treat each brief as a strong starting point for a student team to scope and refine, not a final specification.</p>
+          </details>
+        </div>
+      </article>
+
     </div>
   </div>
 </section>
@@ -676,7 +713,7 @@
         Last compiled: <span id="build-date"></span>
       </div>
     </div>
-    <p class="footer-note">This page is a static, self-contained resource index. Resources 01–03 link out to the department's live Google Forms and Sheets. Resources 04–06 generate files locally in your browser — nothing is uploaded or stored. University facts (founding year, accreditation, programme count) are drawn from MM(DU)'s public profile at mmumullana.org for reference.</p>
+    <p class="footer-note">This page is a static, self-contained resource index. Resources 01–03 link out to the department's live Google Forms and Sheets. Resources 04–07 generate files locally in your browser — nothing is uploaded or stored. University facts (founding year, accreditation, programme count) are drawn from MM(DU)'s public profile at mmumullana.org for reference.</p>
   </div>
 </footer>
 
@@ -686,7 +723,7 @@
 
 <script>
 /* =========================================================================
-   DOSSIER — client-side draft generators for Resources 04–06
+   DOSSIER — client-side draft generators for Resources 04–07
    Runs entirely in the browser: no network calls, no server, no stored
    data. Two open-source libraries are loaded via CDN purely to assemble
    genuine binary Office files (so they open reliably in Word / PowerPoint,
@@ -1946,12 +1983,324 @@ const Dossier = (() => {
     }, 250);
   }
 
-  return { generatePaper, generateNotes, generatePPT };
+  /* =======================================================================
+     PROJECT IDEA GENERATOR — Resource 07
+     Fresh, self-contained client-side implementation (no external code
+     loaded or embedded) that turns a broad technology into a 20-project
+     catalog, rendered as a standalone, downloadable HTML page.
+     ======================================================================= */
+  const PROJECT_DOMAINS = [
+    {name:"Healthcare & Wellness", users:"patients and caregivers", pain:"tracking health metrics and getting timely reminders", goal:"stay on top of their health more proactively"},
+    {name:"Education & E-Learning", users:"students and teachers", pain:"personalising learning and tracking progress", goal:"teach and learn more effectively"},
+    {name:"Agriculture & Farming", users:"farmers and agri-cooperatives", pain:"predicting crop health and getting timely field insights", goal:"raise yield and cut losses"},
+    {name:"Finance & Personal Banking", users:"individuals and small businesses", pain:"managing budgets and spotting suspicious transactions", goal:"make smarter, safer financial decisions"},
+    {name:"E-Commerce & Retail", users:"online shoppers and small retailers", pain:"discovering relevant products and managing inventory", goal:"improve sales and the shopping experience"},
+    {name:"Transportation & Logistics", users:"commuters and delivery fleets", pain:"planning efficient routes and predicting delays", goal:"save time, fuel and operating cost"},
+    {name:"Environment & Sustainability", users:"city residents and environmental agencies", pain:"monitoring pollution and resource usage", goal:"make more sustainable, informed decisions"},
+    {name:"Campus & Student Life", users:"college students and administrators", pain:"coordinating events, resources and academic records", goal:"simplify everyday campus tasks"},
+    {name:"Accessibility & Inclusion", users:"people with visual, hearing or motor impairments", pain:"accessing digital content and everyday services independently", goal:"navigate daily tasks more independently"},
+    {name:"Public Safety & Disaster Management", users:"citizens and emergency responders", pain:"reporting incidents and coordinating a fast response", goal:"respond to emergencies faster"},
+    {name:"Smart Cities & Urban Living", users:"city residents and municipal staff", pain:"managing shared resources like parking, waste and utilities", goal:"improve everyday urban quality of life"},
+    {name:"Employment & Gig Economy", users:"job seekers and freelancers", pain:"finding relevant opportunities and building trust with clients", goal:"find and manage work more efficiently"},
+    {name:"Entertainment & Media", users:"content consumers and independent creators", pain:"discovering relevant content amid overwhelming choice", goal:"find and enjoy content more easily"},
+    {name:"Tourism & Hospitality", users:"travellers and small hospitality businesses", pain:"planning trips and managing bookings smoothly", goal:"plan and deliver smoother travel experiences"},
+    {name:"Sports & Fitness", users:"athletes and fitness enthusiasts", pain:"tracking performance and staying consistently motivated", goal:"reach fitness goals consistently"},
+    {name:"Social Good & Community", users:"NGOs and local community groups", pain:"coordinating volunteers and limited resources", goal:"mobilise community efforts more effectively"},
+    {name:"Mental Health & Wellbeing", users:"students and working professionals", pain:"tracking mood patterns and managing everyday stress", goal:"build healthier emotional habits"},
+    {name:"Food & Nutrition", users:"home cooks and health-conscious individuals", pain:"planning meals and tracking nutrition without extra effort", goal:"eat healthier with less day-to-day effort"}
+  ];
+
+  const GENERIC_TECH_PROFILE = {
+    stack:["a suitable backend (Python / Node.js / Java)","a relational or NoSQL database","a REST API layer","a simple web or mobile front end"],
+    capabilities:["Automation Tool","Recommendation System","Tracking Dashboard","Management Platform","Assistant App","Monitoring System","Matching Platform","Analytics Tool","Scheduling System","Verification System"],
+    features:["Clean, user-friendly interface","Role-based user accounts","Core workflow automation for the target users","Search, filter & reporting features","Notification / alerting system","Exportable data & reports"],
+    deliverables:["Working end-to-end application","System architecture documentation","User guide","Test / evaluation summary"]
+  };
+
+  const PROJECT_TECH_PROFILES = {
+    python:{ display:"Python", keywords:["python","scripting","automation"],
+      stack:["Python","Flask / FastAPI","SQLite","Pandas","argparse-based CLI","PyTest"],
+      capabilities:["Automation Tool","Command-Line Utility","Data Processing Pipeline","Scheduling Assistant","Report Generator","Rule-Based Recommender","File Organizer","Notification Bot","Workflow Automator","Configuration Manager"],
+      features:["Config-driven customisation (YAML/JSON)","Scheduled/automated runs (cron-style)","Structured logging & error handling","Simple CLI and/or GUI interface","Exportable reports (CSV/PDF)","Unit-tested core modules","Plugin-style extensibility"],
+      deliverables:["Well-documented Python package","CLI/GUI application","Automated test suite with coverage report","User setup guide"] },
+    web:{ display:"Web Development", keywords:["web","website","html","css","javascript","react","angular","vue","node","django","flask","full stack","frontend","backend","mern","mean"],
+      stack:["React","Node.js + Express","MongoDB / PostgreSQL","Django","REST API","Tailwind CSS","Socket.IO"],
+      capabilities:["Booking Platform","Marketplace","Community Portal","Collaboration Tool","Analytics Dashboard","Content Hub","Matching Platform","Review & Rating System","Ticketing System","Event Management System"],
+      features:["Responsive, mobile-friendly UI","User authentication & role-based access","RESTful API backend","Real-time updates via WebSockets","Admin panel with usage analytics","Search & filter functionality","Payment gateway integration (test mode)"],
+      deliverables:["Deployed full-stack web application","REST API documentation","Database schema diagram","Admin & end-user guides"] },
+    mobile:{ display:"Mobile App Development", keywords:["mobile","android","ios","flutter","react native","kotlin","swift","app development"],
+      stack:["Flutter","React Native","Firebase","SQLite","Kotlin / Swift","REST APIs"],
+      capabilities:["Tracker App","Companion App","On-the-Go Assistant","Marketplace App","Booking App","Community App","Reminder & Habit App","Offline-First App","Location-Aware App","Camera-Based Scanner App"],
+      features:["Offline-first local data sync","Push notifications","Location-based services (GPS/Maps)","Camera/gallery integration","Clean, intuitive mobile UI","Guided in-app onboarding flow","Cross-platform support (Android & iOS)"],
+      deliverables:["Installable mobile app (APK / TestFlight build)","Cloud backend setup (Firebase or similar)","UI/UX wireframes","User testing summary"] },
+    ml:{ display:"Machine Learning", keywords:["machine learning","ml","ai","artificial intelligence","deep learning","neural network"],
+      stack:["Python","scikit-learn","TensorFlow / Keras","PyTorch","Pandas","Flask / FastAPI (for serving)"],
+      capabilities:["Predictive Model","Recommendation Engine","Classification System","Anomaly Detector","Forecasting Tool","Risk-Scoring Model","Personalisation Engine","Pattern-Recognition System","Decision-Support Tool","Early-Warning System"],
+      features:["Data preprocessing & feature-engineering pipeline","Model training with cross-validation","Real-time or batch inference API","Performance dashboard (accuracy / precision / recall)","Comparison across multiple algorithms","Feature-importance / explainability view"],
+      deliverables:["Trained & evaluated ML model","Inference API / service","Notebook documenting experiments","Evaluation report with metrics"] },
+    data_science:{ display:"Data Science & Analytics", keywords:["data science","data analytics","analytics","business intelligence"," bi ","data visualization","data visualisation"],
+      stack:["Python","Pandas","NumPy","Plotly Dash (or similar BI dashboard)","SQL"],
+      capabilities:["Analytics Dashboard","Trend-Forecasting Tool","Insight Explorer","KPI Monitoring Tool","Comparative Analysis Tool","Anomaly-Spotting Dashboard","Segmentation Explorer","What-If Simulator","Reporting Suite"],
+      features:["Interactive charts & filters","Automated data-cleaning pipeline","Downloadable reports (PDF/Excel)","Trend & correlation analysis","Drill-down views by category/time","Custom KPI threshold alerts"],
+      deliverables:["Interactive dashboard","Data pipeline scripts","Analysis notebook","Insights summary report"] },
+    nlp:{ display:"Natural Language Processing", keywords:["nlp","natural language processing","text mining","chatbot","language model"],
+      stack:["Python","spaCy","NLTK","Hugging Face Transformers","Flask / FastAPI"],
+      capabilities:["Text Classifier","Summarisation Tool","Chatbot Assistant","Sentiment Analyzer","Named-Entity Extractor","Question-Answering System","Translation Aid","Plagiarism / Similarity Checker","Auto-Tagging Tool"],
+      features:["Text preprocessing & tokenisation pipeline","Pretrained transformer fine-tuning","Confidence / explanation scores","Optional multi-language support","Interactive chat/query interface","Batch document processing"],
+      deliverables:["Fine-tuned NLP model","Web/chat interface","Evaluation report (F1 / accuracy)","Sample dataset & annotations"] },
+    cv:{ display:"Computer Vision", keywords:["computer vision"," cv ","image processing","opencv","object detection"],
+      stack:["Python","OpenCV","TensorFlow / Keras or PyTorch","MediaPipe"],
+      capabilities:["Object Detector","Image Classifier","Real-Time Tracker","Gesture Recognizer","Defect / Anomaly Spotter","Scene Analyzer","Counting System","Face / Landmark Analyzer","Video Highlight Extractor"],
+      features:["Real-time webcam/video inference","Bounding-box / segmentation visualisation","Model trained on a public dataset","Configurable confidence thresholds","Batch image/video processing","Exportable annotated results"],
+      deliverables:["Trained vision model","Real-time demo application","Sample annotated dataset","Accuracy/performance report"] },
+    cybersecurity:{ display:"Cybersecurity", keywords:["cybersecurity","security","infosec","network security","ethical hacking"],
+      stack:["Python","Scapy","Wireshark (traffic analysis)","scikit-learn (ML-based detection)","Flask"],
+      capabilities:["Intrusion Detection System","Vulnerability Scanner","Phishing Detector","Log Anomaly Monitor","Access-Control Auditor","Password Strength / Leak Checker","Network Traffic Analyzer","Encrypted File Vault"],
+      features:["Real-time alerting on suspicious activity","Rule-based and/or ML-based detection","Dashboard of flagged events","Exportable audit/compliance reports","Configurable detection thresholds","Simulated-attack test suite"],
+      deliverables:["Working detection/scanning tool","Threat-model document","Test results against simulated attacks","Security report with recommendations"] },
+    cloud:{ display:"Cloud Computing", keywords:["cloud","aws","azure","gcp","devops"],
+      stack:["AWS / Azure / GCP free tier","Docker","Kubernetes (basic)","Terraform (basic IaC)","GitHub Actions (CI/CD)"],
+      capabilities:["Auto-Scaling Deployment Pipeline","Serverless Task Processor","Multi-Service Cost Dashboard","Backup & Disaster-Recovery Tool","Container Orchestration Demo","Resource-Usage Monitor","CI/CD Pipeline Template","Log Aggregation Dashboard"],
+      features:["Infrastructure-as-code setup","Auto-scaling based on load","Cost tracking & budget alerts","CI/CD pipeline with automated tests","Centralised logging & monitoring","Role-based cloud access control"],
+      deliverables:["Deployed cloud infrastructure (demo)","Infrastructure-as-code scripts","CI/CD pipeline configuration","Architecture diagram & cost report"] },
+    blockchain:{ display:"Blockchain", keywords:["blockchain","web3","smart contract","crypto","dapp"],
+      stack:["Solidity","Ethereum (testnet)","Hardhat / Truffle","Web3.js / Ethers.js","React"],
+      capabilities:["Decentralized Voting App","Supply-Chain Tracker","Certificate Verification System","Escrow Payment Contract","Decentralized Marketplace","Crowdfunding dApp","Identity-Verification System","Loyalty/Rewards Token System"],
+      features:["Smart contract with unit tests","Wallet-based authentication (MetaMask)","Transparent, auditable transaction history","Gas-optimised contract logic","Testnet deployment","Simple frontend for contract interaction"],
+      deliverables:["Deployed smart contract (testnet)","Contract test suite","Web frontend for interaction","Technical documentation & architecture diagram"] },
+    game_dev:{ display:"Game Development", keywords:["game","unity","unreal","game design"],
+      stack:["Unity (C#)","Godot","Python (Pygame)","Blender (basic assets)"],
+      capabilities:["2D Puzzle Game","Educational Mini-Game Suite","Endless Runner","Strategy/Simulation Game","AI-Driven NPC Behaviour Demo","Local Multiplayer Mini-Game","Accessibility-Focused Game","Procedurally Generated Level Game"],
+      features:["Core gameplay loop with win/lose states","Level progression & difficulty scaling","Basic AI/NPC behaviour","Score tracking & leaderboard","Sound & visual feedback polish","Playtesting-based balancing"],
+      deliverables:["Playable game build","Game design document","Playtest feedback summary","Source code with asset credits"] },
+    ar_vr:{ display:"AR / VR", keywords:["ar","vr","augmented reality","virtual reality","xr","mixed reality"],
+      stack:["Unity + AR Foundation","ARCore / ARKit","WebXR / Three.js","Blender (basic assets)"],
+      capabilities:["AR Try-On Tool","Virtual Campus Tour","AR Learning Aid","VR Training Simulator","AR Navigation Overlay","Virtual Product Showcase","AR Measurement Tool","VR Soft-Skills Trainer"],
+      features:["Real-world surface/marker detection","3D model placement & interaction","Immersive UI/UX for headset or mobile","Voice or gesture-based controls","Cross-device compatibility (mobile AR)","Guided tutorial/onboarding flow"],
+      deliverables:["Working AR/VR demo application","3D asset library used","User-experience test notes","Setup & deployment guide"] },
+    dbms:{ display:"Database Systems (DBMS)", keywords:["database","dbms","sql","data management"],
+      stack:["MySQL / PostgreSQL","SQL","Python or Java backend","ER modelling tools"],
+      capabilities:["Inventory Management System","Records Management System","Multi-User Booking Database","Data-Warehouse Mini-Project","Role-Based Access Database App","Report-Generation System","Audit-Trail Tracking System","Query-Optimization Demo Tool"],
+      features:["Normalised relational schema design","Role-based access control","Complex queries, joins & stored procedures","Automated backup/restore scripts","Report generation from live queries","Transaction & concurrency handling"],
+      deliverables:["Designed database schema (ER diagram)","Working application with DB integration","Sample queries & stored procedures","Backup/recovery documentation"] },
+    iot:{ display:"IoT (Software Simulation)", keywords:["iot","internet of things"],
+      stack:["Python","MQTT (simulated broker)","Node-RED","InfluxDB + Grafana","Flask"],
+      capabilities:["Simulated Sensor Dashboard","Smart-Home Automation Simulator","Predictive-Maintenance Simulator","Environmental-Monitoring Dashboard","Fleet-Tracking Simulator","Energy-Usage Monitoring Dashboard","Smart-Agriculture Dashboard Simulator","Alert & Automation Rule Engine"],
+      features:["Simulated sensor data stream (MQTT)","Rule-based automation triggers","Real-time dashboard visualisation","Historical data logging & trend charts","Alert/notification system","Configurable virtual device fleet"],
+      deliverables:["Working simulation dashboard (no physical hardware required)","Simulated data-generator scripts","Automation-rule documentation","System architecture diagram"] }
+  };
+
+  const PROJECT_TITLE_TEMPLATES = [
+    "{capability} for {users}", "{tech}-Based {capability} for {users}",
+    "Smart {capability} for {users}", "{capability}: Empowering {users}"
+  ];
+  const PROJECT_PROBLEM_TEMPLATES = [
+    "{Users} often struggle with {pain}. This project builds {article} {capabilityLower} using {tech} to help them {goal}.",
+    "For {users}, {pain} remains a persistent, everyday friction point. This project proposes {article} {capabilityLower}, built on {tech}, so they can {goal}.",
+    "{Users} typically lack an easy way to handle {pain}. Using {tech}, this project delivers {article} {capabilityLower} that helps them {goal}."
+  ];
+  const PROJECT_ROADMAP = [
+    ["Weeks 1–2","Requirement Gathering & Tech Study","Finalise scope, study the chosen tech stack, and survey a few existing solutions."],
+    ["Weeks 3–5","Design & Prototyping","System design, wireframes or architecture diagram, and a throwaway proof-of-concept."],
+    ["Weeks 6–11","Core Development","Implement core features iteratively, with a short weekly demo to track progress."],
+    ["Weeks 12–14","Testing & Integration","Unit/integration testing, bug fixing, and usability or performance checks."],
+    ["Weeks 15–16","Documentation & Demo Prep","Final report, user guide, deployment, and a rehearsed presentation/demo."]
+  ];
+
+  function resolveTechProfile(raw){
+    const text = raw.trim().toLowerCase();
+    for(const key in PROJECT_TECH_PROFILES){
+      const p = PROJECT_TECH_PROFILES[key];
+      if(text===key || p.keywords.some(kw=>text.includes(kw))) return {key, profile:p};
+    }
+    const generic = Object.assign({}, GENERIC_TECH_PROFILE, { display: titleCase(raw.trim()), stack:[raw.trim(), ...GENERIC_TECH_PROFILE.stack] });
+    return {key:'generic', profile:generic};
+  }
+  function articleFor(word){ return /^[aeiou]/i.test(word) ? 'an' : 'a'; }
+  function weightedDifficulty(rng){
+    const r = rng();
+    if(r < 0.25) return 'Easy';
+    if(r < 0.75) return 'Medium';
+    return 'Hard';
+  }
+  function shuffleArr(rng, arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){ const j = Math.floor(rng()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+    return a;
+  }
+
+  function buildProjectList(rng, profile, domains, count){
+    const combos = [];
+    for(let d=0; d<domains.length; d++) for(let c=0;c<profile.capabilities.length;c++) combos.push([d,c]);
+    let shuffled = shuffleArr(rng, combos);
+    while(shuffled.length < count) shuffled = shuffled.concat(shuffleArr(rng, combos));
+    shuffled = shuffled.slice(0, count);
+
+    const usedTitles = new Set();
+    return shuffled.map(([dIdx,cIdx])=>{
+      const domain = domains[dIdx];
+      const capability = profile.capabilities[cIdx];
+      const usersShort = titleCase(domain.users.split(' and ')[0]);
+
+      let title, attempt=0;
+      do{
+        const tpl = pick(rng, PROJECT_TITLE_TEMPLATES);
+        title = tpl.replace('{capability}',capability).replace('{users}',usersShort).replace('{tech}',profile.display);
+        attempt++;
+      } while(usedTitles.has(title) && attempt < 4);
+      usedTitles.add(title);
+
+      const ptpl = pick(rng, PROJECT_PROBLEM_TEMPLATES);
+      const problem = ptpl
+        .replace('{Users}', domain.users.charAt(0).toUpperCase()+domain.users.slice(1))
+        .replace('{users}', domain.users)
+        .replace('{pain}', domain.pain)
+        .replace('{article}', articleFor(capability))
+        .replace('{capabilityLower}', capability.toLowerCase())
+        .replace('{tech}', profile.display)
+        .replace('{goal}', domain.goal);
+
+      return {
+        title, domain: domain.name, problem,
+        stack: pickN(rng, profile.stack, Math.min(4, profile.stack.length)),
+        features: pickN(rng, profile.features, Math.min(4, profile.features.length)),
+        deliverables: pickN(rng, profile.deliverables, Math.min(3, profile.deliverables.length)),
+        difficulty: weightedDifficulty(rng)
+      };
+    });
+  }
+
+  function escHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function buildProjectCatalogHtml(techDisplay, projects, meta){
+    const diffClass = d => d.toLowerCase();
+    const indexItems = projects.map((p,i)=>`
+      <a class="index-card" href="#sheet-${i+1}">
+        <span class="index-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="index-body">
+          <span class="index-title">${escHtml(p.title)}</span>
+          <span class="index-domain">${escHtml(p.domain)}</span>
+        </span>
+        <span class="index-diff diff-${diffClass(p.difficulty)}">${escHtml(p.difficulty)}</span>
+      </a>`).join('');
+
+    const roadmapItems = PROJECT_ROADMAP.map(([w,t,d])=>`
+      <div class="road-step">
+        <div class="road-week">${escHtml(w)}</div>
+        <div class="road-title">${escHtml(t)}</div>
+        <div class="road-desc">${escHtml(d)}</div>
+      </div>`).join('');
+
+    const sheets = projects.map((p,i)=>`
+      <section class="sheet" id="sheet-${i+1}">
+        <div class="sheet-header">
+          <span class="sheet-num">Sheet ${String(i+1).padStart(2,'0')}</span>
+          <span class="sheet-domain">${escHtml(p.domain)}</span>
+          <span class="sheet-diff diff-${diffClass(p.difficulty)}">${escHtml(p.difficulty)}</span>
+        </div>
+        <h2 class="sheet-title">${escHtml(p.title)}</h2>
+        <p class="sheet-problem">${escHtml(p.problem)}</p>
+        <div class="sheet-grid">
+          <div class="sheet-block"><h3>Tech Stack</h3><p class="stack-line">${p.stack.map(escHtml).join(', ')}</p></div>
+          <div class="sheet-block"><h3>Key Features</h3><ul>${p.features.map(f=>`<li>${escHtml(f)}</li>`).join('')}</ul></div>
+          <div class="sheet-block"><h3>Deliverables</h3><ul>${p.deliverables.map(d=>`<li>${escHtml(d)}</li>`).join('')}</ul></div>
+        </div>
+      </section>`).join('');
+
+    const generatedOn = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+
+    return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escHtml(meta.title)}</title>
+<style>
+  :root{ --accent:#A11319; --gold:#B8891A; --ink:#1C1B1F; --muted:#5B6472; --border:#E3E5EA; --paper:#FFFFFF; }
+  *{box-sizing:border-box;}
+  body{ margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#F5F6F8; color:var(--ink); }
+  .hero{ background:linear-gradient(135deg, var(--accent) 0%, #1C1B1F 130%); color:#F8FAFC; padding:56px 24px 84px; text-align:center; }
+  .hero .eyebrow{ letter-spacing:.14em; text-transform:uppercase; font-size:12px; color:rgba(248,250,252,.75); margin-bottom:14px; font-weight:600; }
+  .hero h1{ font-size:32px; margin:0 0 14px; letter-spacing:.01em; }
+  .hero .meta-line{ font-size:14px; color:rgba(248,250,252,.85); margin-bottom:10px; }
+  .hero .meta-note{ max-width:700px; margin:0 auto; font-size:13px; color:rgba(248,250,252,.7); line-height:1.6; }
+  main{ max-width:980px; margin:-48px auto 0; padding:0 20px 40px; }
+  .card{ background:var(--paper); border-radius:16px; box-shadow:0 6px 20px rgba(2,6,23,.08); padding:26px 30px; margin-bottom:22px; }
+  .card h2{ font-size:19px; margin:0 0 16px; }
+  .roadmap{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+  .road-step{ border:1px solid var(--border); border-radius:10px; padding:12px; }
+  .road-week{ font-size:11px; font-weight:700; color:var(--accent); margin-bottom:4px; }
+  .road-title{ font-size:12.5px; font-weight:700; margin-bottom:4px; }
+  .road-desc{ font-size:11.5px; color:var(--muted); line-height:1.5; }
+  .index-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .index-card{ display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); border:1px solid var(--border); border-radius:10px; padding:10px 12px; }
+  .index-card:hover{ border-color:var(--accent); }
+  .index-num{ font-size:11px; color:var(--muted); font-weight:700; flex:none; }
+  .index-body{ display:flex; flex-direction:column; flex:1; min-width:0; }
+  .index-title{ font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .index-domain{ font-size:11px; color:var(--muted); }
+  .index-diff{ font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; flex:none; }
+  .diff-easy{ background:#dcfce7; color:#15803d; } .diff-medium{ background:#fef3c7; color:#b45309; } .diff-hard{ background:#fee2e2; color:#dc2626; }
+  .sheet{ background:var(--paper); border-radius:16px; box-shadow:0 6px 20px rgba(2,6,23,.08); padding:26px 30px; margin-bottom:20px; scroll-margin-top:20px; }
+  .sheet-header{ display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .sheet-num{ font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.05em; }
+  .sheet-domain{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; background:#FBF1DC; color:var(--gold); }
+  .sheet-diff{ font-size:10.5px; font-weight:700; padding:3px 10px; border-radius:999px; }
+  .sheet-title{ font-size:20px; margin:6px 0 8px; }
+  .sheet-problem{ color:var(--muted); line-height:1.65; margin:0 0 16px; font-size:14px; }
+  .sheet-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
+  .sheet-block h3{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); margin:0 0 8px; }
+  .sheet-block ul{ margin:0; padding-left:18px; font-size:13px; line-height:1.6; }
+  .stack-line{ font-size:13px; line-height:1.6; margin:0; }
+  footer{ text-align:center; color:var(--muted); font-size:12px; padding:8px 0 36px; }
+  @media (max-width:760px){ .roadmap{grid-template-columns:1fr 1fr;} .index-list{grid-template-columns:1fr;} .sheet-grid{grid-template-columns:1fr;} .hero h1{font-size:25px;} }
+</style></head>
+<body>
+<div class="hero">
+  <div class="eyebrow">Project Lab Catalog · ${escHtml(techDisplay)}</div>
+  <h1>${escHtml(meta.title)}</h1>
+  <div class="meta-line">${escHtml(meta.sem)} Semester &middot; ${projects.length} Sheets &middot; Software-Only &middot; ${escHtml(meta.duration)} (${escHtml(meta.weeks)}) &middot; Team of ${escHtml(meta.teamSize)}</div>
+  <p class="meta-note">Generated for the <strong>${escHtml(techDisplay)}</strong> track &middot; all ${projects.length} projects are software-only, buildable with free/open-source tools, and scoped for a ${escHtml(meta.teamSize)}-member team within a ${escHtml(meta.duration)} (${escHtml(meta.weeks)}) lab cycle. Generated ${generatedOn} for Dr. Abhishek Bhattacherjee, Dept. of CSE, MM(DU) Mullana–Ambala.</p>
+</div>
+<main>
+  <div class="card"><h2>Suggested 16-Week Roadmap</h2><div class="roadmap">${roadmapItems}</div></div>
+  <div class="card"><h2>Sheet Index — ${projects.length} ${escHtml(techDisplay)} Projects</h2><div class="index-list">${indexItems}</div></div>
+  ${sheets}
+  <footer>Generated automatically for the ${escHtml(techDisplay)} track · open this generator again for a brand-new set of projects</footer>
+</main>
+</body></html>`;
+  }
+
+  function generateProjects(){
+    const raw = document.getElementById('project-topic').value.trim();
+    if(!raw){ setStatus('project-status','Please enter a technology first.','err'); return; }
+    setStatus('project-status','Assembling a 20-project catalog…','busy');
+    document.getElementById('project-btn').disabled = true;
+
+    setTimeout(()=>{
+      try{
+        const rng = mulberry32(hashSeed(raw+'_projects_'+Date.now()));
+        const { profile } = resolveTechProfile(raw);
+        const projects = buildProjectList(rng, profile, PROJECT_DOMAINS, 20);
+        const meta = { title:`B.Tech CSE 7th Sem — ${profile.display} Project Lab`, sem:'7th', teamSize:'4', duration:'3-Month', weeks:'16 Weeks' };
+        const htmlOut = buildProjectCatalogHtml(profile.display, projects, meta);
+        const blob = new Blob([htmlOut], {type:'text/html;charset=utf-8'});
+        downloadBlob(blob, `${safeFilename(profile.display)}_Project_Catalog.html`);
+        setStatus('project-status',`Downloaded — 20 fresh ${profile.display} project briefs with a shared roadmap. Open the file in any browser.`,'ok');
+        toast('Project catalog downloaded.');
+      }catch(e){
+        console.error(e);
+        setStatus('project-status','Something went wrong generating the catalog. Please try again.','err');
+        toast('Could not generate the catalog. Please try again.', true);
+      }finally{
+        document.getElementById('project-btn').disabled = false;
+      }
+    }, 250);
+  }
+
+  return { generatePaper, generateNotes, generatePPT, generateProjects };
 })();
 
 document.getElementById('build-date').textContent = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
 
-[['paper-topic',Dossier.generatePaper],['ppt-topic',Dossier.generatePPT],['notes-topic',Dossier.generateNotes]]
+[['paper-topic',Dossier.generatePaper],['ppt-topic',Dossier.generatePPT],['notes-topic',Dossier.generateNotes],['project-topic',Dossier.generateProjects]]
   .forEach(([id,fn])=>{
     document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); fn(); } });
   });
