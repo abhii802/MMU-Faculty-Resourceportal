@@ -3,491 +3,1033 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dr. Abhishek Bhattacherjee — Faculty Resource Console | MMDU</title>
+<title>Faculty Resource Dossier — Dr. Abhishek Bhattacherjee | MM(DU) Mullana</title>
+<meta name="description" content="Faculty resource hub for Dr. Abhishek Bhattacherjee, Professor, Maharishi Markandeshwar (Deemed to be University), Mullana-Ambala.">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,560;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<!-- pptxgenjs is loaded from CDN purely to build a real, native .pptx binary file client-side.
+     Everything else on this page (all layout, text, docx generation) works with zero external
+     dependency, entirely inside this single file. -->
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+
 <style>
   :root{
-    --ink:#1B2A4A;
-    --ink-soft:#3C4A66;
-    --paper:#F6F4EF;
+    --paper:#F5F6F8;
     --paper-raised:#FFFFFF;
-    --gold:#B8873A;
-    --gold-soft:#E4CFA0;
-    --teal:#2F6F65;
-    --teal-soft:#DCEAE6;
-    --line:#DDD6C7;
-    --charcoal:#232323;
-    --danger:#A8452F;
-    --radius:2px;
+    --ink:#1C1B1F;
+    --ink-soft:#5B6472;
+    --ink-faint:#8891A0;
+    --crimson:#E31E24;
+    --crimson-dark:#A11319;
+    --crimson-wash:#FDEAEA;
+    --brass:#B8891A;
+    --brass-wash:#FBF1DC;
+    --line:#E3E5EA;
+    --line-strong:#CBCFD8;
+    --radius:14px;
+    --shadow-card: 0 1px 2px rgba(28,27,31,.04), 0 8px 24px -12px rgba(28,27,31,.16);
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
   }
+
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
-  }
   body{
     margin:0;
     background:var(--paper);
-    color:var(--charcoal);
-    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
+  img{max-width:100%;display:block;}
   a{color:inherit;}
-  .mono{font-family:'IBM Plex Mono',monospace;}
-  .display{font-family:'Fraunces',serif;}
+  ::selection{background:var(--crimson-wash); color:var(--crimson-dark);}
 
-  /* ===== Top bar ===== */
-  .topbar{
-    position:sticky; top:0; z-index:50;
-    background:rgba(246,244,239,0.92);
-    backdrop-filter:blur(6px);
+  .wrap{max-width:1120px; margin:0 auto; padding:0 28px;}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible{
+    outline:2px solid var(--crimson); outline-offset:3px; border-radius:4px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+  }
+
+  /* ============ TOP RIBBON ============ */
+  .ribbon{
+    background:var(--ink);
+    color:#EDEEF1;
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.04em;
+    text-align:center;
+    padding:7px 12px;
+  }
+  .ribbon b{color:#fff; font-weight:600;}
+
+  /* ============ HEADER / SEAL BAND ============ */
+  header.seal-band{
+    background:var(--paper-raised);
     border-bottom:1px solid var(--line);
   }
-  .topbar-inner{
-    max-width:1120px; margin:0 auto; padding:14px 28px;
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  .seal-band-inner{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    padding:26px 28px;
+    max-width:1120px;
+    margin:0 auto;
+    flex-wrap:wrap;
   }
-  .brand{display:flex; align-items:center; gap:12px;}
-  .crest{
-    width:42px; height:42px; border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, #2A3E63, var(--ink));
-    display:flex; align-items:center; justify-content:center;
-    border:2px solid var(--gold);
-    flex-shrink:0;
+  .seal{
+    flex:none;
+    width:66px; height:66px;
   }
-  .crest span{
-    font-family:'Fraunces',serif; font-weight:600; color:var(--gold-soft); font-size:15px; letter-spacing:0.5px;
+  .seal svg{width:100%; height:100%;}
+  .uni-name{flex:1; min-width:260px;}
+  .uni-name .eyebrow{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.09em;
+    color:var(--crimson-dark);
+    text-transform:uppercase;
+    margin:0 0 4px;
   }
-  .brand-text{line-height:1.15;}
-  .brand-text .uni{font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
-  .brand-text .dept{font-size:13px; color:var(--ink); font-weight:600;}
-  .topnav{display:flex; gap:22px; font-size:13px;}
-  .topnav a{text-decoration:none; color:var(--ink-soft); font-weight:500; border-bottom:1px solid transparent; padding-bottom:2px; transition:border-color .15s, color .15s;}
-  .topnav a:hover, .topnav a:focus-visible{color:var(--ink); border-color:var(--gold);}
-  @media (max-width:720px){ .topnav{display:none;} }
+  .uni-name h1{
+    font-family:var(--serif);
+    font-weight:560;
+    font-size:clamp(20px,2.6vw,27px);
+    margin:0 0 6px;
+    letter-spacing:-.01em;
+  }
+  .uni-name .sub{
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+  .accreditation-chips{
+    display:flex; gap:8px; flex-wrap:wrap;
+    margin-left:auto;
+  }
+  .chip{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.03em;
+    padding:6px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:100px;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .chip.gold{border-color:#E7CE8E; background:var(--brass-wash); color:var(--brass);}
 
-  /* ===== Hero ===== */
+  /* ============ HERO ============ */
   .hero{
-    max-width:1120px; margin:0 auto; padding:72px 28px 56px;
-    display:grid; grid-template-columns:1.3fr 1fr; gap:48px; align-items:end;
-  }
-  @media (max-width:860px){ .hero{grid-template-columns:1fr; padding-top:48px;} }
-  .eyebrow{
-    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:2px; text-transform:uppercase;
-    color:var(--teal); margin-bottom:18px; display:flex; align-items:center; gap:10px;
-  }
-  .eyebrow::before{content:""; width:26px; height:1px; background:var(--teal);}
-  h1.hero-title{
-    font-size:clamp(34px,4.4vw,54px); line-height:1.05; margin:0 0 18px; font-weight:600; color:var(--ink);
-  }
-  h1.hero-title em{font-style:italic; color:var(--gold);}
-  .hero-lede{font-size:16.5px; line-height:1.7; color:var(--ink-soft); max-width:56ch; margin:0 0 22px;}
-  .hero-byline{
-    font-size:13.5px; color:var(--ink); font-weight:600; border-left:3px solid var(--gold); padding-left:14px;
-  }
-  .hero-byline span{display:block; font-weight:400; color:var(--ink-soft); font-size:12.5px; margin-top:2px;}
-
-  .hero-card{
-    background:var(--paper-raised); border:1px solid var(--line); padding:26px;
-    box-shadow:0 1px 0 var(--line);
-  }
-  .hero-card .k{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:14px;}
-  .stat-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--line); font-size:13.5px;}
-  .stat-row:last-child{border-bottom:none;}
-  .stat-row b{color:var(--ink); font-weight:600;}
-
-  /* ===== Section shell ===== */
-  .section{max-width:1120px; margin:0 auto; padding:20px 28px 10px;}
-  .section-head{margin:56px 0 26px;}
-  .section-head .eyebrow{margin-bottom:10px;}
-  .section-head h2{font-size:26px; margin:0; font-weight:600; color:var(--ink);}
-  .section-head p{color:var(--ink-soft); font-size:14.5px; max-width:64ch; margin:8px 0 0;}
-
-  /* ===== Resource console cards ===== */
-  .console{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
-  @media (max-width:860px){ .console{grid-template-columns:1fr;} }
-
-  .card{
+    padding:64px 0 40px;
+    border-bottom:1px solid var(--line);
     position:relative;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:56px;
+    align-items:start;
+  }
+  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr;} }
+
+  .file-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--crimson-dark);
+    background:var(--crimson-wash);
+    padding:6px 12px 6px 10px;
+    border-radius:100px;
+    margin-bottom:22px;
+  }
+  .file-tag .dot{width:6px;height:6px;border-radius:50%; background:var(--crimson);}
+
+  .hero h2{
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:clamp(34px,4.4vw,52px);
+    line-height:1.06;
+    letter-spacing:-.015em;
+    margin:0 0 18px;
+  }
+  .hero h2 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--crimson);
+  }
+  .hero .lede{
+    font-size:17px;
+    color:var(--ink-soft);
+    max-width:52ch;
+    margin:0 0 26px;
+  }
+  .prof-card{
+    display:flex; gap:14px; align-items:center;
+    padding:16px 18px;
     background:var(--paper-raised);
     border:1px solid var(--line);
-    padding:26px 24px 24px;
-    display:flex; flex-direction:column; gap:14px;
-    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    border-radius:var(--radius);
+    max-width:460px;
+    box-shadow:var(--shadow-card);
   }
-  .card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(27,42,74,0.08); border-color:#C9BFA4; }
-  .card-top{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
-  .tag-num{
-    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gold); border:1px solid var(--gold-soft);
-    padding:2px 8px; letter-spacing:1px;
+  .prof-initials{
+    flex:none;
+    width:48px; height:48px; border-radius:50%;
+    background:linear-gradient(155deg, var(--crimson), var(--crimson-dark));
+    color:#fff; font-family:var(--serif); font-weight:700; font-size:18px;
+    display:flex; align-items:center; justify-content:center;
   }
-  .status{
-    font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:1px; text-transform:uppercase;
-    padding:3px 8px; border-radius:20px;
-  }
-  .status.live{background:var(--teal-soft); color:var(--teal);}
-  .status.setup{background:#F3E4DB; color:var(--danger);}
+  .prof-card .name{font-weight:600; font-size:14.5px;}
+  .prof-card .role{font-size:12.5px; color:var(--ink-soft);}
 
-  .card h3{font-size:19px; margin:0; color:var(--ink); font-weight:600; font-family:'Fraunces',serif;}
-  .card p.story{font-size:14px; line-height:1.65; color:var(--ink-soft); margin:0;}
+  /* index of resources - right column of hero */
+  .index-panel{
+    background:var(--ink);
+    color:#EDEEF1;
+    border-radius:var(--radius);
+    padding:26px 24px;
+    position:relative;
+    overflow:hidden;
+  }
+  .index-panel::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(600px 200px at 100% 0%, rgba(227,30,36,.35), transparent 60%);
+    pointer-events:none;
+  }
+  .index-panel h3{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:#B9BEC9;
+    margin:0 0 16px;
+    font-weight:600;
+  }
+  .index-list{list-style:none; margin:0; padding:0;}
+  .index-list li{
+    display:flex; align-items:baseline; gap:12px;
+    padding:10px 0;
+    border-top:1px solid rgba(255,255,255,.09);
+    font-size:14px;
+  }
+  .index-list li:first-child{border-top:none;}
+  .index-list .num{
+    font-family:var(--mono); color:#7D8496; font-size:12.5px; flex:none; width:20px;
+  }
+  .index-list a{text-decoration:none;}
+  .index-list a:hover{color:#fff;}
 
-  .btn-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:6px;}
+  /* ============ STORY SECTION ============ */
+  .story-section{padding:56px 0; border-bottom:1px solid var(--line);}
+  .story-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:20px;
+    margin-bottom:26px; flex-wrap:wrap;
+  }
+  .story-head h3{
+    font-family:var(--serif); font-size:28px; font-weight:560; margin:0;
+  }
+  .story-head .tag{
+    font-family:var(--mono); font-size:11.5px; color:var(--ink-faint); letter-spacing:.05em;
+  }
+  .story-body{
+    columns:2; column-gap:44px;
+    max-width:980px;
+  }
+  @media (max-width:760px){ .story-body{columns:1;} }
+  .story-body p{
+    font-size:15.5px; color:#33323A;
+    margin:0 0 16px;
+    break-inside:avoid;
+  }
+  .story-body p:first-of-type::first-letter{
+    font-family:var(--serif);
+    font-size:56px;
+    font-weight:700;
+    float:left;
+    line-height:.8;
+    padding:6px 8px 0 0;
+    color:var(--crimson);
+  }
+  .story-body b{font-weight:600; color:var(--ink);}
+
+  /* ============ RESOURCES ============ */
+  .resources{padding:56px 0 20px;}
+  .resources > .wrap > .section-head{margin-bottom:30px;}
+  .section-head h3{
+    font-family:var(--serif); font-size:28px; font-weight:560; margin:0 0 8px;
+  }
+  .section-head p{color:var(--ink-soft); font-size:15px; margin:0; max-width:60ch;}
+
+  .dossier{
+    display:grid;
+    gap:20px;
+    grid-template-columns:1fr;
+  }
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-card);
+    overflow:hidden;
+    scroll-margin-top:20px;
+  }
+  .card-top{
+    display:flex; gap:18px; padding:26px 26px 20px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+  .seal-num{
+    flex:none;
+    width:52px; height:52px; border-radius:50%;
+    border:1.5px solid var(--crimson);
+    color:var(--crimson-dark);
+    font-family:var(--mono); font-weight:600; font-size:16px;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .seal-num::after{
+    content:"";
+    position:absolute; inset:4px;
+    border:1px dashed var(--crimson);
+    border-radius:50%;
+    opacity:.5;
+  }
+  .card-copy{flex:1; min-width:240px;}
+  .card-copy .kicker{
+    font-family:var(--mono); font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+    color:var(--ink-faint); margin:2px 0 6px;
+  }
+  .card-copy h4{
+    font-family:var(--serif); font-size:21px; font-weight:600; margin:0 0 10px;
+  }
+  .card-copy .story{
+    color:#40404A; font-size:14.5px; margin:0; max-width:70ch;
+  }
+  .card-actions{
+    display:flex; gap:10px; flex-wrap:wrap;
+    padding:0 26px 26px 26px;
+  }
+  .card-actions.indent{padding-left:96px;}
+  @media (max-width:640px){ .card-actions.indent{padding-left:26px;} }
+
   .btn{
-    font-family:'IBM Plex Mono',monospace; font-size:12.5px; text-decoration:none; letter-spacing:0.3px;
-    padding:10px 16px; border:1px solid var(--ink); color:var(--ink); background:transparent;
-    cursor:pointer; transition:background .15s, color .15s;
     display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--sans); font-weight:600; font-size:13.5px;
+    padding:10px 16px;
+    border-radius:9px;
+    border:1px solid transparent;
+    text-decoration:none;
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease, background .15s ease;
   }
-  .btn:hover, .btn:focus-visible{background:var(--ink); color:#fff;}
-  .btn.gold{border-color:var(--gold); color:#8A5F19;}
-  .btn.gold:hover{background:var(--gold); color:#fff;}
-  .btn:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--crimson); color:#fff;}
+  .btn-primary:hover{background:var(--crimson-dark);}
+  .btn-ghost{background:var(--paper); border-color:var(--line-strong); color:var(--ink);}
+  .btn-ghost:hover{background:#EDEEF1;}
+  .btn-gold{background:var(--brass-wash); color:var(--brass); border-color:#E7CE8E;}
+  .btn:disabled{opacity:.55; cursor:not-allowed; transform:none;}
+  .btn svg{width:14px; height:14px; flex:none;}
 
-  .gen-box{
-    margin-top:4px; border-top:1px dashed var(--line); padding-top:14px;
-    display:flex; flex-direction:column; gap:10px;
+  /* generator panel */
+  .gen-panel{
+    border-top:1px dashed var(--line-strong);
+    background:#FBFBFC;
+    padding:22px 26px 26px;
   }
-  .gen-box input[type=text]{
-    font-family:'Inter',sans-serif; font-size:13.5px; padding:10px 12px; border:1px solid var(--line);
-    background:var(--paper); color:var(--charcoal);
+  .gen-panel .gen-row{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    margin-bottom:12px;
   }
-  .gen-box input[type=text]:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
-  .gen-msg{font-size:12.5px; color:var(--ink-soft); display:none; line-height:1.6;}
-  .gen-msg.show{display:block;}
-  .gen-msg.warn{color:var(--danger);}
+  .gen-panel input[type="text"]{
+    flex:1; min-width:220px;
+    padding:11px 14px;
+    border:1px solid var(--line-strong);
+    border-radius:9px;
+    font-family:var(--sans); font-size:14px;
+    background:#fff;
+  }
+  .gen-panel input[type="text"]:focus{border-color:var(--crimson);}
+  .gen-note{
+    font-size:12.5px; color:var(--ink-faint); margin:8px 0 0;
+    display:flex; gap:6px; align-items:flex-start;
+  }
+  .gen-status{
+    font-family:var(--mono); font-size:12.5px; margin-top:10px; min-height:16px;
+  }
+  .gen-status.ok{color:#1C7C3F;}
+  .gen-status.err{color:var(--crimson-dark);}
+  .gen-status.busy{color:var(--brass);}
 
-  /* ===== Note / admin panel ===== */
-  .admin-note{
-    max-width:1120px; margin:52px auto 0; padding:24px 28px; border:1px solid var(--gold-soft);
-    background:#FBF6EB; display:flex; gap:16px;
+  details.disclosure{margin-top:2px;}
+  details.disclosure > summary{
+    cursor:pointer; list-style:none; font-size:12.5px; color:var(--ink-faint);
+    display:inline-flex; align-items:center; gap:5px;
   }
-  .admin-note .mark{font-family:'Fraunces',serif; font-weight:600; font-size:20px; color:var(--gold); flex-shrink:0;}
-  .admin-note h4{margin:0 0 6px; font-size:14.5px; color:var(--ink);}
-  .admin-note p{margin:0 0 8px; font-size:13.5px; line-height:1.7; color:var(--ink-soft);}
-  .admin-note p:last-child{margin-bottom:0;}
+  details.disclosure > summary::-webkit-details-marker{display:none;}
+  details.disclosure > summary::before{content:"▸"; font-size:10px;}
+  details.disclosure[open] > summary::before{content:"▾";}
+  details.disclosure p{font-size:12.5px; color:var(--ink-soft); margin:8px 0 0; max-width:70ch;}
 
-  /* ===== About MMDU ===== */
-  .about{
-    max-width:1120px; margin:64px auto 0; padding:0 28px;
-    display:grid; grid-template-columns:1fr 1fr; gap:40px;
+  /* ============ MMU FACTS STRIP ============ */
+  .facts{
+    padding:52px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--paper-raised);
   }
-  @media (max-width:860px){ .about{grid-template-columns:1fr;} }
-  .about h2{font-size:24px; color:var(--ink); font-family:'Fraunces',serif; margin:0 0 14px;}
-  .about p{font-size:14.5px; line-height:1.8; color:var(--ink-soft);}
-  .about .fact-list{list-style:none; margin:18px 0 0; padding:0; display:flex; flex-direction:column; gap:10px;}
-  .about .fact-list li{font-size:13.5px; color:var(--ink); padding-left:18px; position:relative;}
-  .about .fact-list li::before{content:"—"; position:absolute; left:0; color:var(--gold);}
+  .facts-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+  }
+  @media (max-width:760px){ .facts-grid{grid-template-columns:repeat(2,1fr);} }
+  .fact{
+    padding:8px 22px;
+    border-left:1px solid var(--line);
+  }
+  .fact:first-child{border-left:none;}
+  @media (max-width:760px){ .fact{border-left:none; padding:14px 0;} }
+  .fact .n{
+    font-family:var(--serif); font-weight:700; font-size:30px; color:var(--crimson-dark);
+    display:block; margin-bottom:4px;
+  }
+  .fact .l{font-size:12.5px; color:var(--ink-soft);}
 
-  footer{
-    margin-top:80px; border-top:1px solid var(--line); padding:32px 28px 40px;
+  /* ============ FOOTER ============ */
+  footer{padding:40px 0 60px;}
+  .footer-grid{display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; align-items:flex-end;}
+  .footer-brand{font-family:var(--serif); font-weight:600; font-size:16px;}
+  .footer-meta{color:var(--ink-faint); font-size:12.5px; line-height:1.7;}
+  .footer-note{
+    margin-top:22px; padding-top:22px; border-top:1px solid var(--line);
+    font-size:12px; color:var(--ink-faint); max-width:80ch;
   }
-  .footer-inner{max-width:1120px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;}
-  .footer-inner .fbrand{font-family:'Fraunces',serif; font-size:15px; color:var(--ink); font-weight:600;}
-  .footer-inner .fmeta{font-size:12.5px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+
+  .toast-region{position:fixed; bottom:20px; right:20px; z-index:50; display:flex; flex-direction:column; gap:10px;}
+  .toast{
+    background:var(--ink); color:#fff; font-size:13px; padding:12px 16px; border-radius:10px;
+    box-shadow:0 10px 30px -6px rgba(0,0,0,.35);
+    max-width:320px;
+    animation:toastIn .18s ease;
+  }
+  .toast.err{background:var(--crimson-dark);}
+  @keyframes toastIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <div class="crest"><span>MM</span></div>
-      <div class="brand-text">
-        <div class="uni">MM (Deemed to be University), Mullana</div>
-        <div class="dept">Dept. of Computer Science &amp; Engineering — MMEC</div>
-      </div>
-    </div>
-    <nav class="topnav">
-      <a href="#timetable">Timetable</a>
-      <a href="#adjustment">Load Adjustment</a>
-      <a href="#targets">Research Targets</a>
-      <a href="#generators">Document Generators</a>
-      <a href="#about">About MMDU</a>
-    </nav>
-  </div>
-</div>
+<div class="ribbon">Faculty Administrative Dossier &nbsp;·&nbsp; Compiled for <b>Dr. Abhishek Bhattacherjee, Professor</b> &nbsp;·&nbsp; MM(DU), Mullana–Ambala</div>
 
-<header class="hero">
-  <div>
-    <div class="eyebrow">Faculty Resource Console</div>
-    <h1 class="hero-title">Six tools that quietly<br>run a <em>teaching week.</em></h1>
-    <p class="hero-lede">A working desk of the links, sheets, and generators used to plan classes, cover for absent colleagues, track research targets, and draft the first version of a paper, a deck, or a set of notes — so the actual teaching hours stay free for teaching.</p>
-    <div class="hero-byline">
-      Dr. Abhishek Bhattacherjee, Professor
-      <span>Department of Computer Science &amp; Engineering, MM Engineering College, MMDU Mullana</span>
+<header class="seal-band">
+  <div class="seal-band-inner">
+    <div class="seal" aria-hidden="true">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="47" fill="#fff" stroke="#E31E24" stroke-width="2.5"/>
+        <circle cx="50" cy="50" r="39" fill="none" stroke="#B8891A" stroke-width="1" stroke-dasharray="2.4 3.2"/>
+        <text x="50" y="46" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="26" fill="#E31E24">MM</text>
+        <text x="50" y="64" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-weight="600" font-size="8.5" letter-spacing="1" fill="#1C1B1F">(DU) 1993</text>
+      </svg>
     </div>
-  </div>
-  <div class="hero-card">
-    <div class="k">On this console</div>
-    <div class="stat-row"><span>Live scheduling &amp; sheet links</span><b>3</b></div>
-    <div class="stat-row"><span>Draft-document generators</span><b>3</b></div>
-    <div class="stat-row"><span>Output formats</span><b>DOCX · PPTX</b></div>
-    <div class="stat-row"><span>Human review required</span><b>Always</b></div>
+    <div class="uni-name">
+      <p class="eyebrow">Maharishi Markandeshwar</p>
+      <h1>Deemed to be University, Mullana–Ambala</h1>
+      <p class="sub">Think Success · Think MM(DU) — Category-I University, UGC</p>
+    </div>
+    <div class="accreditation-chips">
+      <span class="chip gold">NAAC A++</span>
+      <span class="chip">Est. 1993</span>
+      <span class="chip">Deemed University · 2007</span>
+    </div>
   </div>
 </header>
 
-<div class="section">
-
-  <div class="section-head" id="timetable">
-    <div class="eyebrow">Resource 01</div>
-    <h2>Timetable Generator</h2>
-    <p>Every semester begins with the same puzzle: rooms, slots, sections, and faculty load that all have to agree with each other. This resource turns that puzzle into a form — fill it once, and a clean timetable comes out the other end, sitting in a shared sheet that stays open for last-minute edits.</p>
-  </div>
-
-  <div class="console">
-    <div class="card">
-      <div class="card-top">
-        <span class="tag-num">01.A</span>
-        <span class="status live">Live link</span>
-      </div>
-      <h3>Generate Timetable</h3>
-      <p class="story">The intake form for a new timetable. Enter the section, subject load, and faculty preferences, and the generator lays out the weekly grid automatically.</p>
-      <div class="btn-row">
-        <a class="btn gold" href="https://bit.ly/GenerateTT" target="_blank" rel="noopener">Open generator ↗</a>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <span class="tag-num">01.B</span>
-        <span class="status live">Live link</span>
-      </div>
-      <h3>Modify Master Timetable</h3>
-      <p class="story">The underlying spreadsheet behind every generated timetable. Use this when a slot needs to move, a room needs to change, or a correction has to be made after generation.</p>
-      <div class="btn-row">
-        <a class="btn" href="https://docs.google.com/spreadsheets/d/1WP3NajBI3mzHfOWlInr2oRZA3LnhCpM51gg5wtWTQb4/edit?usp=sharing" target="_blank" rel="noopener">Edit sheet ↗</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-head" id="adjustment">
-    <div class="eyebrow">Resource 02</div>
-    <h2>Load Adjustment</h2>
-    <p>Faculty go on leave, conferences, and duty calls — and their classes still need to happen. This resource is the record of who covered for whom, filled in the moment it happens and visible to anyone checking coverage later.</p>
-  </div>
-
-  <div class="console">
-    <div class="card">
-      <div class="card-top">
-        <span class="tag-num">02.A</span>
-        <span class="status live">Live link</span>
-      </div>
-      <h3>Give an Adjustment</h3>
-      <p class="story">Log a class covered on behalf of a faculty member on leave — subject, section, date, and the covering faculty, so the record stays current in real time.</p>
-      <div class="btn-row">
-        <a class="btn gold" href="https://bit.ly/load-adjust" target="_blank" rel="noopener">Fill adjustment ↗</a>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <span class="tag-num">02.B</span>
-        <span class="status live">Live link</span>
-      </div>
-      <h3>View Adjustments</h3>
-      <p class="story">The running log of every adjustment given across the department — useful for verifying coverage, tallying extra load, or settling a dispute about who took which class.</p>
-      <div class="btn-row">
-        <a class="btn" href="https://docs.google.com/spreadsheets/d/1li4xFf1BxGf3SEKiRfGmLXZkqtYtDyqm-_EICjNoQGk/edit?usp=sharing" target="_blank" rel="noopener">View records ↗</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-head" id="targets">
-    <div class="eyebrow">Resource 03</div>
-    <h2>Faculty Unique Research Targets</h2>
-    <p>Research output is easiest to sustain when it's tracked like anything else worth tracking — a target, a date, and a place to check progress against it. This resource keeps that record for every faculty member's publication goals.</p>
-  </div>
-
-  <div class="console">
-    <div class="card">
-      <div class="card-top">
-        <span class="tag-num">03.A</span>
-        <span class="status live">Live link</span>
-      </div>
-      <h3>Set a New Target</h3>
-      <p class="story">Record a fresh research publication target for the term — journal tier, expected timeline, and area of focus.</p>
-      <div class="btn-row">
-        <a class="btn gold" href="https://bit.ly/facultyuniquetargets" target="_blank" rel="noopener">New target ↗</a>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <span class="tag-num">03.B</span>
-        <span class="status live">Live link</span>
-      </div>
-      <h3>View Target Records</h3>
-      <p class="story">The department-wide view of every logged research target, so progress toward publication goals stays visible across the semester rather than surfacing only at appraisal time.</p>
-      <div class="btn-row">
-        <a class="btn" href="https://docs.google.com/spreadsheets/d/1KWWJq3sJPOBUM2AI-DUggPkhYsmgztiTFSO2DhO4io4/edit?usp=sharing" target="_blank" rel="noopener">View records ↗</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-head" id="generators">
-    <div class="eyebrow">Resources 04–06</div>
-    <h2>Document Generators</h2>
-    <p>The blank page is the hardest part of any paper, deck, or set of notes. These three tools take a single topic and hand back a structured first draft — a starting document, not a finished one. What goes out under a faculty member's name is still their own writing, checked, corrected, and completed by them.</p>
-  </div>
-
-  <div class="console">
-    <div class="card">
-      <div class="card-top">
-        <span class="tag-num">04</span>
-        <span class="status setup">Needs backend link</span>
-      </div>
-      <h3>Research Paper Draft Generator</h3>
-      <p class="story">Enter a topic and receive a structured DOCX draft — abstract, introduction, literature review, methodology, results, discussion, and references — as a starting point for the real writing and review that follows.</p>
-      <div class="gen-box">
-        <input type="text" placeholder="e.g. Federated Learning for Edge IoT Security" data-target="paper">
-        <div class="btn-row">
-          <button class="btn" onclick="runGenerator('paper', this)">Generate draft →</button>
-        </div>
-        <p class="gen-msg mono" id="msg-paper"></p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-top">
-        <span class="tag-num">05</span>
-        <span class="status setup">Needs backend link</span>
-      </div>
-      <h3>PPT Draft Generator</h3>
-      <p class="story">Enter a topic and receive a structured PPTX outline — ready to be re-timed, restyled, and taught from, rather than built slide-by-slide from a blank deck.</p>
-      <div class="gen-box">
-        <input type="text" placeholder="e.g. Introduction to Operating System Scheduling" data-target="ppt">
-        <div class="btn-row">
-          <button class="btn" onclick="runGenerator('ppt', this)">Generate draft →</button>
-        </div>
-        <p class="gen-msg mono" id="msg-ppt"></p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-top">
-        <span class="tag-num">06</span>
-        <span class="status setup">Needs backend link</span>
-      </div>
-      <h3>Notes Draft Generator</h3>
-      <p class="story">Enter a topic and receive a structured DOCX set of notes — organised by concept, ready to be edited into the exact notes a class will be taught from.</p>
-      <div class="gen-box">
-        <input type="text" placeholder="e.g. Normalization in Relational Databases" data-target="notes">
-        <div class="btn-row">
-          <button class="btn" onclick="runGenerator('notes', this)">Generate draft →</button>
-        </div>
-        <p class="gen-msg mono" id="msg-notes"></p>
-      </div>
-    </div>
-  </div>
-
-  <div class="admin-note">
-    <div class="mark">i</div>
+<section class="hero">
+  <div class="wrap hero-grid">
     <div>
-      <h4>A note on Resources 04–06</h4>
-      <p>These three run through a private backend service — a topic goes in, a DOCX or PPTX comes out. The forms above are wired and ready; they just need the service's URL entered in <code class="mono">GENERATOR_ENDPOINTS</code> near the bottom of this page's source, once that service is deployed. The scripts themselves stay in a private repo and never appear on this page.</p>
-      <p>The paper generator is the slowest of the three — it fetches references and builds figures before the file is ready, so a wait of a minute or two there is expected, not a fault.</p>
+      <span class="file-tag"><span class="dot"></span> Internal Resource Dossier · CSE Faculty</span>
+      <h2>Everything that keeps a <em>professor's week</em> running, in one place.</h2>
+      <p class="lede">A single, working index of the forms, sheets, and generators that turn the recurring paperwork of teaching and research into a five-minute task — so the hours that matter can go to students and to research.</p>
+      <div class="prof-card">
+        <div class="prof-initials">AB</div>
+        <div>
+          <div class="name">Dr. Abhishek Bhattacherjee</div>
+          <div class="role">Professor · Department of Computer Science &amp; Engineering</div>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="about" id="about">
-    <div>
-      <h2>About MMDU, Mullana</h2>
-      <p>Maharishi Markandeshwar (Deemed to be University), Mullana–Ambala grew out of the Maharishi Markandeshwar Educational Trust, founded to widen access to higher education across engineering, medicine, dentistry, nursing, pharmacy, management, and law. The Mullana campus in Haryana is one of the larger multi-disciplinary campuses in the region, bringing several professional streams together under one university.</p>
-      <p>The Department of Computer Science &amp; Engineering at MM Engineering College sits within that campus — teaching, mentoring, and research running in parallel, which is exactly the kind of week this console exists to make lighter.</p>
-    </div>
-    <div>
-      <div class="k mono" style="font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:14px;">At a glance</div>
-      <ul class="fact-list">
-        <li>Deemed-to-be University, Mullana–Ambala, Haryana</li>
-        <li>Multi-disciplinary campus: engineering, medicine, dentistry, nursing, pharmacy, management, law</li>
-        <li>Undergraduate through doctoral programmes across faculties</li>
-        <li>Toll-free: 1800 2740 240 · mmumullana.org</li>
+    <nav class="index-panel" aria-label="Resource index">
+      <h3>Six resources, one dossier</h3>
+      <ul class="index-list">
+        <li><span class="num">01</span><a href="#r1">Timetable Generation</a></li>
+        <li><span class="num">02</span><a href="#r2">Load Adjustment (Faculty on Leave)</a></li>
+        <li><span class="num">03</span><a href="#r3">Faculty Research Publication Targets</a></li>
+        <li><span class="num">04</span><a href="#r4">Research Paper Draft Generator</a></li>
+        <li><span class="num">05</span><a href="#r5">Presentation (PPT) Generator</a></li>
+        <li><span class="num">06</span><a href="#r6">Class Notes Generator</a></li>
       </ul>
+    </nav>
+  </div>
+</section>
+
+<section class="story-section">
+  <div class="wrap">
+    <div class="story-head">
+      <h3>A week, in six resources</h3>
+      <span class="tag">— the working story behind this dossier</span>
+    </div>
+    <div class="story-body">
+      <p>Monday begins the way most weeks do — with a timetable that has to be right before it can be anything else. <b>Resource 01</b> is where that starts: a two-minute form replaces what used to be an afternoon of cross-checking rooms, slots and sections, and the linked sheet becomes the single version everyone in the department actually trusts.</p>
+      <p>By Wednesday, a colleague is unwell and a class needs covering. <b>Resource 02</b> exists for exactly that hour of the day — a quick adjustment entry so a gap in the schedule never becomes a gap in a student's learning, and a shared log so nobody has to ask twice who is covering what.</p>
+      <p>Research doesn't wait for a quiet week to arrive. <b>Resource 03</b> keeps each faculty member's publication targets somewhere visible and specific, rather than somewhere remembered — a running record that turns "I should publish more this year" into a tracked, individual goal.</p>
+      <p>Then comes the part of the job that takes the longest to start: the blank page. <b>Resource 04</b> gives that page a first draft — a structured skeleton of a paper, section by section, built the moment a topic is typed in, so the real work of research can begin at editing rather than at staring at nothing.</p>
+      <p>Tuesday's lecture still needs slides. <b>Resource 05</b> turns a topic into a clean, presentation-ready deck in the time it takes to make a cup of tea — a starting point built to be reshaped with the examples and emphasis only the professor teaching the room would know to add.</p>
+      <p>And after the lecture, the notes students actually study from. <b>Resource 06</b> drafts a well-structured notes document for any Computer Science topic — definitions, explanations, a worked example, and a summary — ready to be annotated, corrected, and handed out as the professor's own.</p>
     </div>
   </div>
+</section>
 
-</div>
+<section class="resources">
+  <div class="wrap">
+    <div class="section-head">
+      <h3>The dossier</h3>
+      <p>Each entry below is a live resource. The first three link directly to the department's forms and record sheets; the last three generate a downloadable draft file, entirely inside this page.</p>
+    </div>
+
+    <div class="dossier">
+
+      <!-- RESOURCE 1 -->
+      <article class="card" id="r1">
+        <div class="card-top">
+          <div class="seal-num">01</div>
+          <div class="card-copy">
+            <p class="kicker">Scheduling</p>
+            <h4>Timetable Generation</h4>
+            <p class="story">The document every other resource in this dossier assumes is correct. Submit the inputs once, and the linked master sheet becomes the department's single source of truth for rooms, sections and slots.</p>
+          </div>
+        </div>
+        <div class="card-actions indent">
+          <a class="btn btn-primary" href="https://bit.ly/GenerateTT" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h18M7 3v4M17 3v4M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/></svg>
+            Generate Timetable
+          </a>
+          <a class="btn btn-ghost" href="https://docs.google.com/spreadsheets/d/1WP3NajBI3mzHfOWlInr2oRZA3LnhCpM51gg5wtWTQb4/edit?usp=sharing" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4V4Zm0 6h16M10 10v10"/></svg>
+            Open &amp; Edit Master Sheet
+          </a>
+        </div>
+      </article>
+
+      <!-- RESOURCE 2 -->
+      <article class="card" id="r2">
+        <div class="card-top">
+          <div class="seal-num">02</div>
+          <div class="card-copy">
+            <p class="kicker">Coverage · Leave</p>
+            <h4>Load Adjustment</h4>
+            <p class="story">For the days a faculty member is on leave and a class still needs covering. One form to log the adjustment, one sheet to see, at a glance, who is covering whom across the department.</p>
+          </div>
+        </div>
+        <div class="card-actions indent">
+          <a class="btn btn-primary" href="https://bit.ly/load-adjust" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Submit an Adjustment
+          </a>
+          <a class="btn btn-ghost" href="https://docs.google.com/spreadsheets/d/1li4xFf1BxGf3SEKiRfGmLXZkqtYtDyqm-_EICjNoQGk/edit?usp=sharing" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4V4Zm0 6h16M10 10v10"/></svg>
+            View All Adjustments
+          </a>
+        </div>
+      </article>
+
+      <!-- RESOURCE 3 -->
+      <article class="card" id="r3">
+        <div class="card-top">
+          <div class="seal-num">03</div>
+          <div class="card-copy">
+            <p class="kicker">Research · Tracking</p>
+            <h4>Faculty Research Publication Targets</h4>
+            <p class="story">A record of each faculty member's own publication target for the year, and their progress against it — kept specific and visible, rather than left to memory at appraisal time.</p>
+          </div>
+        </div>
+        <div class="card-actions indent">
+          <a class="btn btn-primary" href="https://bit.ly/facultyuniquetargets" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Record a New Target
+          </a>
+          <a class="btn btn-ghost" href="https://docs.google.com/spreadsheets/d/1KWWJq3sJPOBUM2AI-DUggPkhYsmgztiTFSO2DhO4io4/edit?usp=sharing" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4V4Zm0 6h16M10 10v10"/></svg>
+            View All Records
+          </a>
+        </div>
+      </article>
+
+      <!-- RESOURCE 4: RESEARCH PAPER GENERATOR -->
+      <article class="card" id="r4">
+        <div class="card-top">
+          <div class="seal-num">04</div>
+          <div class="card-copy">
+            <p class="kicker">Research · Draft Assistance</p>
+            <h4>Research Paper Draft Generator</h4>
+            <p class="story">Type a topic, and this page assembles a full IMRaD-structured draft — abstract, introduction, literature review, methodology, results, discussion, conclusion, and a references section — as a downloadable Word document. It is a starting skeleton, not a finished paper: the research, data, and citations are the professor's own work from here.</p>
+          </div>
+        </div>
+        <div class="gen-panel">
+          <div class="gen-row">
+            <input type="text" id="paper-topic" placeholder="e.g. Federated Learning for Edge Healthcare Devices" aria-label="Research paper topic">
+            <button class="btn btn-primary" id="paper-btn" onclick="Dossier.generatePaper()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+              Generate &amp; Download Draft (.doc)
+            </button>
+          </div>
+          <div class="gen-status" id="paper-status" role="status"></div>
+          <details class="disclosure">
+            <summary>How this draft is built</summary>
+            <p>Generated entirely in your browser from a structured academic template — no data leaves this page and no server is involved. It gives you real section headings and topic-aware placeholder content to write against, not literature-sourced findings. Always add your own sources, data and analysis, and verify every claim before submission.</p>
+          </details>
+        </div>
+      </article>
+
+      <!-- RESOURCE 5: PPT GENERATOR -->
+      <article class="card" id="r5">
+        <div class="card-top">
+          <div class="seal-num">05</div>
+          <div class="card-copy">
+            <p class="kicker">Teaching · Draft Assistance</p>
+            <h4>Presentation (PPT) Generator</h4>
+            <p class="story">Type a Computer Science topic and receive a clean, light-themed .pptx deck — title slide, agenda, key concepts, a worked example, comparisons, and a summary. Built as a fast starting point for lecture prep; the examples, depth, and emphasis are yours to shape.</p>
+          </div>
+        </div>
+        <div class="gen-panel">
+          <div class="gen-row">
+            <input type="text" id="ppt-topic" placeholder="e.g. Data Structures: Trees" aria-label="Presentation topic">
+            <button class="btn btn-primary" id="ppt-btn" onclick="Dossier.generatePPT()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+              Generate &amp; Download Deck (.pptx)
+            </button>
+          </div>
+          <div class="gen-status" id="ppt-status" role="status"></div>
+          <details class="disclosure">
+            <summary>How this deck is built</summary>
+            <p>Built client-side using an open-source slide-generation library loaded for this page only, from a topic-aware CS lecture template. No server, no stored data. Treat it as a scaffold — the actual lecture and its explanations remain the professor's own.</p>
+          </details>
+        </div>
+      </article>
+
+      <!-- RESOURCE 6: NOTES GENERATOR -->
+      <article class="card" id="r6">
+        <div class="card-top">
+          <div class="seal-num">06</div>
+          <div class="card-copy">
+            <p class="kicker">Teaching · Draft Assistance</p>
+            <h4>Class Notes Generator</h4>
+            <p class="story">Type a topic and get a structured Word notes document — overview, key concepts, a worked example, an advantages/disadvantages table, a summary, and practice questions — ready to be corrected, annotated, and shared with students.</p>
+          </div>
+        </div>
+        <div class="gen-panel">
+          <div class="gen-row">
+            <input type="text" id="notes-topic" placeholder="e.g. Operating Systems: Deadlocks" aria-label="Notes topic">
+            <button class="btn btn-primary" id="notes-btn" onclick="Dossier.generateNotes()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+              Generate &amp; Download Notes (.doc)
+            </button>
+          </div>
+          <div class="gen-status" id="notes-status" role="status"></div>
+          <details class="disclosure">
+            <summary>How these notes are built</summary>
+            <p>Generated in your browser from a structured CS-notes template, no server involved. Meant as a formatting and structure head start — review every definition and example for accuracy before distributing to students.</p>
+          </details>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="facts">
+  <div class="wrap facts-grid">
+    <div class="fact"><span class="n">1993</span><span class="l">Founded, in the name of Maharishi Markandeshwar Ji</span></div>
+    <div class="fact"><span class="n">A++</span><span class="l">NAAC accreditation grade</span></div>
+    <div class="fact"><span class="n">200+</span><span class="l">UG, PG &amp; PhD programmes offered</span></div>
+    <div class="fact"><span class="n">13</span><span class="l">Constituent institutions on the Mullana campus</span></div>
+  </div>
+</section>
 
 <footer>
-  <div class="footer-inner">
-    <div class="fbrand">MMDU · Dept. of CSE, MMEC</div>
-    <div class="fmeta">Faculty Resource Console — maintained by Dr. Abhishek Bhattacherjee</div>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">MM(DU), Mullana–Ambala</div>
+        <div class="footer-meta">Category-I Deemed University, UGC · Declared under Section 3 of the UGC Act, 1956<br>Mullana, Ambala, Haryana, India</div>
+      </div>
+      <div class="footer-meta">
+        Dossier maintained for <b>Dr. Abhishek Bhattacherjee</b>, Professor · Dept. of Computer Science &amp; Engineering<br>
+        Last compiled: <span id="build-date"></span>
+      </div>
+    </div>
+    <p class="footer-note">This page is a static, self-contained resource index. Resources 01–03 link out to the department's live Google Forms and Sheets. Resources 04–06 generate files locally in your browser — nothing is uploaded or stored. University facts (founding year, accreditation, programme count) are drawn from MM(DU)'s public profile at mmumullana.org for reference.</p>
   </div>
 </footer>
 
+<div class="toast-region" id="toast-region" aria-live="polite"></div>
+
 <script>
-  // Configure real endpoints here once the backend services exist.
-  // Each should accept a POST with { topic } and return a file (or a download URL).
-  const GENERATOR_ENDPOINTS = {
-    paper: null,   // e.g. "https://your-server.example.com/api/generate/paper"
-    ppt:   null,   // e.g. "https://your-server.example.com/api/generate/ppt"
-    notes: null    // e.g. "https://your-server.example.com/api/generate/notes"
-  };
+/* =========================================================================
+   DOSSIER — client-side draft generators for Resources 04–06
+   Everything below runs entirely in the browser. No network calls, no
+   server, no stored data. pptxgenjs (loaded via CDN above) is the one
+   external library, used only to assemble a genuine binary .pptx file.
+   ========================================================================= */
+const Dossier = (() => {
 
-  async function runGenerator(kind, btn){
-    const card = btn.closest('.card');
-    const input = card.querySelector('input[data-target="'+kind+'"]');
-    const msg = card.querySelector('#msg-'+kind);
-    const topic = (input.value || '').trim();
-
-    msg.classList.remove('warn');
-
-    if(!topic){
-      msg.textContent = 'Enter a topic before generating.';
-      msg.classList.add('show','warn');
-      input.focus();
-      return;
-    }
-
-    const endpoint = GENERATOR_ENDPOINTS[kind];
-
-    if(!endpoint){
-      msg.textContent = 'This generator is not yet connected to a live service — see the note below on Resources 04–06.';
-      msg.classList.add('show','warn');
-      return;
-    }
-
-    const originalLabel = btn.textContent;
-    btn.textContent = 'Generating…';
-    btn.disabled = true;
-    const waitNote = kind === 'paper'
-      ? 'Working on "'+topic+'" — the paper generator pulls references and builds figures, so this can take 1–3 minutes.'
-      : 'Working on "'+topic+'" — this can take up to a minute.';
-    msg.textContent = waitNote;
-    msg.classList.add('show');
-
-    try {
-      const controller = new AbortController();
-      const timeoutMs = kind === 'paper' ? 240000 : 90000; // paper needs more headroom
-      const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ topic }),
-        signal: controller.signal
-      });
-      clearTimeout(timer);
-      if(!res.ok) throw new Error('Server returned ' + res.status);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = kind + '-' + topic.replace(/\s+/g,'_') + (kind === 'ppt' ? '.pptx' : '.docx');
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      msg.textContent = 'Draft ready — check your downloads.';
-    } catch (err){
-      msg.textContent = err.name === 'AbortError'
-        ? 'The generator is taking longer than expected — it may still be waking up from idle. Try again in a minute.'
-        : 'Could not reach the generator service. Try again shortly.';
-      msg.classList.add('warn');
-    } finally {
-      btn.textContent = originalLabel;
-      btn.disabled = false;
-    }
+  function toast(msg, isErr){
+    const region = document.getElementById('toast-region');
+    const el = document.createElement('div');
+    el.className = 'toast' + (isErr ? ' err' : '');
+    el.textContent = msg;
+    region.appendChild(el);
+    setTimeout(()=> el.remove(), 4200);
   }
+
+  function setStatus(id, msg, cls){
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.className = 'gen-status ' + (cls||'');
+  }
+
+  function titleCase(s){
+    return s.replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.substr(1).toLowerCase());
+  }
+
+  function safeFilename(s){
+    return s.replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'_').slice(0,60) || 'Untitled';
+  }
+
+  function downloadBlob(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 4000);
+  }
+
+  /* ---- Word (.doc) export via the MS-Office HTML wrapper -------------- */
+  function saveAsWord(title, bodyHtml, filename){
+    const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office'
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><meta charset="utf-8"><title>${title}</title>
+      <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+      <style>
+        body{font-family:Calibri, Arial, sans-serif; font-size:11.5pt; color:#1c1b1f; line-height:1.5;}
+        h1{font-size:20pt; color:#A11319; margin-bottom:2pt;}
+        h2{font-size:15pt; color:#A11319; border-bottom:1px solid #cbcfd8; padding-bottom:3pt; margin-top:22pt;}
+        h3{font-size:12.5pt; color:#1c1b1f; margin-top:14pt;}
+        p{margin:6pt 0;}
+        table{border-collapse:collapse; width:100%; margin:10pt 0;}
+        td, th{border:1px solid #cbcfd8; padding:6pt 8pt; font-size:10.5pt; text-align:left;}
+        th{background:#FDEAEA; color:#A11319;}
+        .muted{color:#5B6472; font-size:10pt;}
+        .kw{font-style:italic; color:#5B6472;}
+      </style></head><body>${bodyHtml}</body></html>`;
+    const blob = new Blob(['\ufeff', html], {type:'application/msword'});
+    downloadBlob(blob, filename);
+  }
+
+  /* ---- Content template helpers ---------------------------------------- */
+  function pick(arr, seed){ return arr[seed % arr.length]; }
+  function hashSeed(s){ let h=0; for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;} return h; }
+
+  function paperParagraphs(topic, seed){
+    const T = topic;
+    return {
+      abstract: `This paper presents a structured investigation into ${T}. We outline the motivation for studying ${T}, review the direction of recent work in the area, and propose a methodology for evaluating approaches related to ${T}. The discussion highlights open challenges and practical implications, and concludes with directions for future research on ${T}. [Draft abstract — replace with your actual findings and results before submission.]`,
+      intro: [
+        `${T} has become an increasingly important area of study, driven by growing academic and industrial interest in its underlying problems and applications.`,
+        `Despite notable progress, several open questions remain around ${T}, particularly concerning scalability, reliability, and real-world applicability.`,
+        `This paper aims to contribute to the ongoing discussion on ${T} by proposing a structured approach and outlining a path for evaluation.`,
+        `The remainder of this paper is organised as follows: Section 2 reviews related work, Section 3 describes the proposed methodology, Section 4 presents results, Section 5 discusses implications, and Section 6 concludes with future scope.`
+      ],
+      lit: [
+        `Prior work related to ${T} can broadly be grouped into foundational studies, applied case studies, and comparative evaluations.`,
+        `Foundational studies establish the core definitions and theoretical basis relevant to ${T}, forming the groundwork for later applied research.`,
+        `Applied case studies demonstrate how concepts related to ${T} have been implemented in real-world or experimental settings, with varying degrees of success.`,
+        `[Insert your literature synthesis here: summarise 15–25 recent, verified sources on ${T} in your own words, and cite them in your institution's required style.]`
+      ],
+      method: [
+        `We adopt a methodology suited to systematically investigating ${T}, combining a structured review of existing approaches with an evaluation framework.`,
+        `The proposed approach for studying ${T} consists of the following stages: problem formulation, data or scenario selection, implementation of the approach under study, and evaluation against defined metrics.`,
+        `[Describe your actual dataset, experimental setup, tools, and evaluation metrics for ${T} here.]`
+      ],
+      results: [
+        `[Insert your actual results for ${T} here — tables, figures, and statistical summaries as appropriate.]`,
+        `Preliminary observations suggest that approaches to ${T} can be meaningfully compared using the proposed evaluation framework, though results should be validated against a larger and more diverse dataset.`
+      ],
+      discussion: [
+        `The results discussed above suggest several implications for how ${T} is understood and applied in practice.`,
+        `One notable consideration is the trade-off between accuracy, efficiency, and interpretability commonly observed in work related to ${T}.`,
+        `[Discuss your findings in relation to prior work on ${T}, and note any limitations of your study.]`
+      ],
+      conclusion: [
+        `This paper presented a structured examination of ${T}, outlining a methodology and framework for further evaluation.`,
+        `The findings underscore the continued relevance of research into ${T} and highlight areas that merit deeper investigation.`
+      ],
+      future: [
+        `Future work could extend this study of ${T} through larger-scale evaluation, real-world deployment, or comparison with emerging alternative approaches.`,
+        `Further investigation into the long-term implications of ${T} would strengthen the practical relevance of these findings.`
+      ]
+    };
+  }
+
+  function referencesTemplate(topic){
+    const authors = ['Sharma, R.','Kumar, A.','Gupta, N.','Verma, S.','Singh, P.','Rao, K.','Das, M.','Iyer, V.'];
+    const journals = ['International Journal of Computer Applications','IEEE Access','Journal of Advanced Research in Computing','ACM Computing Surveys','Springer Journal of Applied Sciences'];
+    const rows = [];
+    for(let i=0;i<8;i++){
+      const y = 2020 + (i % 6);
+      rows.push(`${pick(authors,i)}, & ${pick(authors,i+3)} (${y}). A study related to ${topic.toLowerCase()}: perspectives and applications. <i>${pick(journals,i)}</i>.`);
+    }
+    return rows;
+  }
+
+  function generatePaper(){
+    const raw = document.getElementById('paper-topic').value.trim();
+    if(!raw){ setStatus('paper-status','Please enter a topic first.','err'); return; }
+    setStatus('paper-status','Assembling draft…','busy');
+    document.getElementById('paper-btn').disabled = true;
+
+    setTimeout(()=>{
+      try{
+        const topic = titleCase(raw);
+        const seed = hashSeed(raw);
+        const c = paperParagraphs(topic, seed);
+        const refs = referencesTemplate(topic);
+        const keywords = raw.split(/\s+/).filter(w=>w.length>2).slice(0,6).map(w=>w.toLowerCase()).join(', ');
+        const date = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+
+        const body = `
+          <h1>${topic}: A Structured Study</h1>
+          <p class="muted">Draft prepared ${date} · Dr. Abhishek Bhattacherjee, Department of Computer Science &amp; Engineering, MM(DU), Mullana–Ambala</p>
+          <h2>Abstract</h2>
+          <p>${c.abstract}</p>
+          <p class="kw">Keywords: ${keywords}</p>
+          <h2>1. Introduction</h2>
+          ${c.intro.map(p=>`<p>${p}</p>`).join('')}
+          <h2>2. Literature Review</h2>
+          ${c.lit.map(p=>`<p>${p}</p>`).join('')}
+          <h2>3. Methodology</h2>
+          ${c.method.map(p=>`<p>${p}</p>`).join('')}
+          <h2>4. Results</h2>
+          ${c.results.map(p=>`<p>${p}</p>`).join('')}
+          <h2>5. Discussion</h2>
+          ${c.discussion.map(p=>`<p>${p}</p>`).join('')}
+          <h2>6. Conclusion</h2>
+          ${c.conclusion.map(p=>`<p>${p}</p>`).join('')}
+          <h2>7. Future Scope</h2>
+          ${c.future.map(p=>`<p>${p}</p>`).join('')}
+          <h2>References</h2>
+          <p class="muted">Illustrative reference list — replace with sources you have verified independently before submission.</p>
+          ${refs.map(r=>`<p>${r}</p>`).join('')}
+        `;
+        saveAsWord(topic, body, `${safeFilename(topic)}_Draft.doc`);
+        setStatus('paper-status','Downloaded — open in Word and continue drafting.','ok');
+        toast('Research paper draft downloaded.');
+      }catch(e){
+        setStatus('paper-status','Something went wrong generating the draft.','err');
+        toast('Could not generate the draft. Please try again.', true);
+      }finally{
+        document.getElementById('paper-btn').disabled = false;
+      }
+    }, 500);
+  }
+
+  /* ---- Notes generator ---------------------------------------------- */
+  function generateNotes(){
+    const raw = document.getElementById('notes-topic').value.trim();
+    if(!raw){ setStatus('notes-status','Please enter a topic first.','err'); return; }
+    setStatus('notes-status','Drafting notes…','busy');
+    document.getElementById('notes-btn').disabled = true;
+
+    setTimeout(()=>{
+      try{
+        const topic = titleCase(raw);
+        const date = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+        const body = `
+          <h1>${topic} — Class Notes</h1>
+          <p class="muted">Prepared ${date} · Dr. Abhishek Bhattacherjee, Dept. of CSE, MM(DU) Mullana</p>
+
+          <h2>1. Overview</h2>
+          <p>${topic} is a Computer Science topic that students typically encounter as part of their core curriculum. This section should give a plain-language introduction: what ${topic} is, why it matters, and where it is used in practice.</p>
+
+          <h2>2. Key Concepts</h2>
+          <table>
+            <tr><th>Term</th><th>Definition (fill in)</th></tr>
+            <tr><td>Concept A</td><td></td></tr>
+            <tr><td>Concept B</td><td></td></tr>
+            <tr><td>Concept C</td><td></td></tr>
+          </table>
+
+          <h2>3. How It Works</h2>
+          <p>Explain the step-by-step working of ${topic} here, in the order a student should learn it. Break it into numbered steps or stages where possible, and note any prerequisite topics students should already know.</p>
+
+          <h2>4. Real-World Example</h2>
+          <p>Describe one concrete, relatable example of ${topic} in use — a system, product, or scenario students will recognise — to anchor the theory in something familiar.</p>
+
+          <h2>5. Advantages &amp; Disadvantages</h2>
+          <table>
+            <tr><th>Advantages</th><th>Disadvantages / Limitations</th></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+          </table>
+
+          <h2>6. Summary</h2>
+          <p>A short recap of ${topic} in 3–4 sentences, written for last-minute revision.</p>
+
+          <h2>7. Practice Questions</h2>
+          <p>1. Define ${topic} in your own words.<br>
+          2. Explain one real-world application of ${topic}.<br>
+          3. Compare ${topic} with a related concept covered earlier in the course.<br>
+          4. [Add 2–3 more questions specific to your lecture's depth and level.]</p>
+        `;
+        saveAsWord(topic, body, `${safeFilename(topic)}_Notes.doc`);
+        setStatus('notes-status','Downloaded — open in Word to fill in and refine.','ok');
+        toast('Class notes draft downloaded.');
+      }catch(e){
+        setStatus('notes-status','Something went wrong generating the notes.','err');
+        toast('Could not generate the notes. Please try again.', true);
+      }finally{
+        document.getElementById('notes-btn').disabled = false;
+      }
+    }, 400);
+  }
+
+  /* ---- PPT generator (uses pptxgenjs) --------------------------------- */
+  function generatePPT(){
+    const raw = document.getElementById('ppt-topic').value.trim();
+    if(!raw){ setStatus('ppt-status','Please enter a topic first.','err'); return; }
+    if(typeof PptxGenJS === 'undefined'){
+      setStatus('ppt-status','Slide library failed to load — check your internet connection and try again.','err');
+      return;
+    }
+    setStatus('ppt-status','Building slides…','busy');
+    document.getElementById('ppt-btn').disabled = true;
+
+    setTimeout(()=>{
+      try{
+        const topic = titleCase(raw);
+        const PRIMARY = '3B82F6', DARK = '1D4ED8', INK='1E293B', MED='475569', BGCARD='F0F4F8', TEAL='14B8A6';
+
+        const pptx = new PptxGenJS();
+        pptx.defineLayout({ name:'LIGHT', width:10, height:5.63 });
+        pptx.layout = 'LIGHT';
+
+        // Slide 1: Title
+        let s = pptx.addSlide();
+        s.background = { color:'FFFFFF' };
+        s.addShape('rect', {x:0,y:0,w:10,h:1.1, fill:{color:PRIMARY}});
+        s.addText(topic, {x:0.6,y:1.9,w:8.8,h:1.4, fontSize:40, bold:true, color:INK, fontFace:'Arial'});
+        s.addText('Department of Computer Science & Engineering  ·  MM(DU), Mullana–Ambala', {x:0.6,y:3.2,w:8.8,h:0.5, fontSize:14, color:MED});
+        s.addText('Presented by Dr. Abhishek Bhattacherjee, Professor', {x:0.6,y:3.65,w:8.8,h:0.4, fontSize:13, color:PRIMARY, italic:true});
+
+        // Slide 2: Agenda
+        s = pptx.addSlide(); s.background = { color:'FFFFFF' };
+        s.addText('Agenda', {x:0.6,y:0.4,w:8,h:0.7, fontSize:28, bold:true, color:DARK});
+        const agenda = ['Introduction','Key Concepts','How It Works','Real-World Example','Advantages & Limitations','Summary'];
+        agenda.forEach((item,i)=>{
+          s.addShape('roundRect', {x:0.6, y:1.3+i*0.62, w:8.8, h:0.5, fill:{color:BGCARD}, line:{color:'E2E8F0', width:1}, rectRadius:0.06});
+          s.addText(`${i+1}.  ${item}`, {x:0.9, y:1.3+i*0.62, w:8.2, h:0.5, fontSize:15, color:INK, valign:'middle'});
+        });
+
+        // Slide 3: Introduction
+        s = pptx.addSlide(); s.background = { color:'FFFFFF' };
+        s.addText('Introduction', {x:0.6,y:0.4,w:8,h:0.7, fontSize:28, bold:true, color:DARK});
+        s.addText(
+          `${topic} is a core topic in Computer Science with wide relevance across theory and practice. `+
+          `This lecture introduces what it is, why it matters, and how it connects to concepts students already know.`,
+          {x:0.6,y:1.3,w:8.8,h:1.4, fontSize:16, color:MED, lineSpacingMultiple:1.3}
+        );
+        s.addShape('roundRect', {x:0.6,y:2.9,w:8.8,h:1.9, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.08});
+        s.addText('Why it matters', {x:0.9,y:3.05,w:8,h:0.4, fontSize:14, bold:true, color:PRIMARY});
+        s.addText('[Add 2–3 lines here on the practical or academic importance of this topic for your students.]', {x:0.9,y:3.45,w:8.2,h:1.2, fontSize:13, color:MED});
+
+        // Slide 4: Key Concepts
+        s = pptx.addSlide(); s.background = { color:'FFFFFF' };
+        s.addText('Key Concepts', {x:0.6,y:0.4,w:8,h:0.7, fontSize:28, bold:true, color:DARK});
+        const concepts = ['Core definition','Underlying principle','Common terminology','Typical use case'];
+        concepts.forEach((c,i)=>{
+          const col = i % 2, row = Math.floor(i/2);
+          s.addShape('roundRect', {x:0.6+col*4.5, y:1.3+row*1.6, w:4.2, h:1.35, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.08});
+          s.addText(c, {x:0.85+col*4.5, y:1.45+row*1.6, w:3.7, h:0.35, fontSize:14, bold:true, color:PRIMARY});
+          s.addText('[fill in]', {x:0.85+col*4.5, y:1.8+row*1.6, w:3.7, h:0.75, fontSize:11.5, color:MED});
+        });
+
+        // Slide 5: How it works
+        s = pptx.addSlide(); s.background = { color:'FFFFFF' };
+        s.addText('How It Works', {x:0.6,y:0.4,w:8,h:0.7, fontSize:28, bold:true, color:DARK});
+        const steps = ['Step 1 — Input / Setup','Step 2 — Core process','Step 3 — Output / Result'];
+        steps.forEach((st,i)=>{
+          s.addShape('ellipse', {x:0.6, y:1.35+i*1.05, w:0.5, h:0.5, fill:{color:PRIMARY}});
+          s.addText(String(i+1), {x:0.6, y:1.35+i*1.05, w:0.5, h:0.5, fontSize:16, bold:true, color:'FFFFFF', align:'center', valign:'middle'});
+          s.addText(st, {x:1.3, y:1.35+i*1.05, w:7.8, h:0.5, fontSize:15, color:INK, valign:'middle'});
+        });
+
+        // Slide 6: Real world example
+        s = pptx.addSlide(); s.background = { color:'FFFFFF' };
+        s.addText('Real-World Example', {x:0.6,y:0.4,w:8,h:0.7, fontSize:28, bold:true, color:DARK});
+        s.addShape('roundRect', {x:0.6,y:1.4,w:8.8,h:2.6, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.1});
+        s.addText(`[Describe a real system, product, or scenario where ${topic} is used, in language students will recognise.]`, {x:1,y:1.8,w:8,h:1.8, fontSize:15, color:MED, valign:'top'});
+
+        // Slide 7: Advantages / Limitations
+        s = pptx.addSlide(); s.background = { color:'FFFFFF' };
+        s.addText('Advantages & Limitations', {x:0.6,y:0.4,w:8.8,h:0.7, fontSize:28, bold:true, color:DARK});
+        s.addShape('roundRect', {x:0.6,y:1.35,w:4.2,h:3.2, fill:{color:'ECFDF5'}, line:{color:'A7F3D0',width:1}, rectRadius:0.08});
+        s.addText('Advantages', {x:0.85,y:1.55,w:3.7,h:0.4, fontSize:15, bold:true, color:'059669'});
+        s.addText('•  \n•  \n•  ', {x:0.85,y:2.0,w:3.7,h:2.4, fontSize:13, color:INK});
+        s.addShape('roundRect', {x:5.2,y:1.35,w:4.2,h:3.2, fill:{color:'FEF2F2'}, line:{color:'FECACA',width:1}, rectRadius:0.08});
+        s.addText('Limitations', {x:5.45,y:1.55,w:3.7,h:0.4, fontSize:15, bold:true, color:'DC2626'});
+        s.addText('•  \n•  \n•  ', {x:5.45,y:2.0,w:3.7,h:2.4, fontSize:13, color:INK});
+
+        // Slide 8: Summary / Thank you
+        s = pptx.addSlide(); s.background = { color:PRIMARY };
+        s.addText('Summary', {x:0.6,y:0.6,w:8.8,h:0.6, fontSize:24, bold:true, color:'FFFFFF'});
+        s.addText(`${topic} — key takeaways for students to carry into revision and assessment.`, {x:0.6,y:1.3,w:8.8,h:0.8, fontSize:15, color:'DBEAFE'});
+        s.addText('Questions?', {x:0.6,y:4.4,w:8.8,h:0.7, fontSize:22, bold:true, color:'FFFFFF'});
+
+        pptx.writeFile({ fileName: `${safeFilename(topic)}_Presentation.pptx` }).then(()=>{
+          setStatus('ppt-status','Downloaded — open in PowerPoint and tailor it to your lecture.','ok');
+          toast('Presentation downloaded.');
+        }).catch(()=>{
+          setStatus('ppt-status','Something went wrong saving the file.','err');
+        }).finally(()=>{
+          document.getElementById('ppt-btn').disabled = false;
+        });
+      }catch(e){
+        setStatus('ppt-status','Something went wrong generating the deck.','err');
+        toast('Could not generate the deck. Please try again.', true);
+        document.getElementById('ppt-btn').disabled = false;
+      }
+    }, 400);
+  }
+
+  return { generatePaper, generateNotes, generatePPT };
+})();
+
+document.getElementById('build-date').textContent = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+
+// Enter-to-submit for each generator input
+[['paper-topic',Dossier.generatePaper],['ppt-topic',Dossier.generatePPT],['notes-topic',Dossier.generateNotes]]
+  .forEach(([id,fn])=>{
+    document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); fn(); } });
+  });
 </script>
 
 </body>
