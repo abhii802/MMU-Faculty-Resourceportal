@@ -727,8 +727,8 @@
           <label for="quiz-provider" style="display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">AI provider — pick whichever key you have (or switch if one runs low on credit)</label>
           <select id="quiz-provider" style="width:100%; padding:11px 14px; border:1px solid var(--line-strong); border-radius:9px; font-family:var(--sans); font-size:14px; background:#fff; margin-bottom:14px;">
             <option value="anthropic">Anthropic — Claude</option>
-            <option value="openai">OpenAI — ChatGPT</option>
-            <option value="gemini">Google — Gemini</option>
+            <option value="openai">OpenAI — ChatGPT (no free credits)</option>
+            <option value="gemini">Google — Gemini (free tier)</option>
           </select>
 
           <label for="quiz-key-input" style="display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">API key — needed once, to write the questions</label>
@@ -754,9 +754,9 @@
           <details class="disclosure">
             <summary>How this quiz is built, and how to get a key from each provider</summary>
             <p>Unlike the other generators on this page, this one calls an AI provider's API directly from your browser using your own key, so the questions are genuinely written for the topic you type rather than assembled from a template — the topic (not the key) is what gets sent. Each provider's key is stored only in this browser's local storage, in its own slot: never written into the downloaded quiz file, never sent anywhere else, and switching providers in the dropdown never touches the other two keys.</p>
-            <p><b>Anthropic (Claude) — most reliable option here:</b> go to console.anthropic.com and sign in or create a free account → open <i>Settings → API Keys</i> → click <i>Create Key</i>, name it anything, and copy the key (starts with <code>sk-ant-</code>). New accounts get a small free credit; add more under <i>Plans &amp; Billing</i> if it runs out.</p>
-            <p><b>OpenAI (ChatGPT):</b> go to platform.openai.com and sign in or create a free account → open <i>API keys</i> in the left sidebar → click <i>Create new secret key</i>, name it anything, and copy it (starts with <code>sk-</code>). Add a small amount of credit under <i>Settings → Billing</i> if needed. Note: OpenAI blocks direct requests from a browser page for most accounts (a restriction on their end, not this page) — if this option fails immediately, that's why; Anthropic is the dependable fallback.</p>
-            <p><b>Google (Gemini):</b> go to aistudio.google.com/apikey and sign in with a Google account → click <i>Create API key</i> (choose or create a Google Cloud project if prompted) → copy the generated key (starts with <code>AIza</code>). Gemini has a generous free tier, but like OpenAI, Google also blocks direct browser requests for most accounts — the same fallback applies.</p>
+            <p><b>Google (Gemini) — try this first if you're out of credit elsewhere:</b> go to aistudio.google.com/apikey and sign in with a Google account → click <i>Create API key</i> (choose or create a Google Cloud project if prompted) → copy the generated key (starts with <code>AIza</code>). Gemini has a genuine, ongoing free tier — no card, no expiry, generous daily limits — the only real "free" option of the three. It can still occasionally block direct browser requests (CORS) for some accounts; if so, try Anthropic instead.</p>
+            <p><b>Anthropic (Claude) — the most consistently reliable option here:</b> go to console.anthropic.com and sign in or create a free account → open <i>Settings → API Keys</i> → click <i>Create Key</i>, name it anything, and copy the key (starts with <code>sk-ant-</code>). New accounts get a small one-time free trial credit (around $5, phone verification, no card needed) — once that's used up, add credit under <i>Plans &amp; Billing</i> to keep going.</p>
+            <p><b>OpenAI (ChatGPT):</b> go to platform.openai.com and sign in or create a free account → open <i>API keys</i> in the left sidebar → click <i>Create new secret key</i>, name it anything, and copy it (starts with <code>sk-</code>). OpenAI no longer gives free trial credit to new accounts, so a small top-up under <i>Settings → Billing</i> is needed before this key will work at all — and like Google, OpenAI also blocks direct browser requests for some accounts (CORS), so it may still fail even when funded.</p>
           </details>
         </div>
       </article>
@@ -2394,13 +2394,13 @@ const Dossier = (() => {
       label: 'OpenAI', fullLabel: 'OpenAI (ChatGPT)',
       lsKey: 'mmu_quiz_key_openai', placeholder: 'sk-...',
       getKeyUrl: 'https://platform.openai.com/api-keys', getKeyHost: 'platform.openai.com',
-      corsNote: 'OpenAI blocks direct browser requests for most accounts (CORS) — this option may fail immediately even with a valid, funded key. Anthropic is the reliable option on this page.'
+      corsNote: 'OpenAI has no free tier for new accounts and blocks direct browser requests for most accounts (CORS) — this option needs a funded key and may still fail immediately. Try Gemini (free) or Anthropic instead.'
     },
     gemini: {
       label: 'Google', fullLabel: 'Google (Gemini)',
       lsKey: 'mmu_quiz_key_gemini', placeholder: 'AIza...',
       getKeyUrl: 'https://aistudio.google.com/apikey', getKeyHost: 'aistudio.google.com',
-      corsNote: 'Google also blocks direct browser requests for most accounts (CORS) — this option may fail immediately even with a valid, funded key. Anthropic is the reliable option on this page.'
+      corsNote: 'Google AI Studio has a genuine free tier (no card, no expiry) — worth trying first if you\'re out of credit elsewhere. It can still block direct browser requests for some accounts (CORS); if it fails immediately, try Anthropic instead.'
     }
   };
 
@@ -2453,6 +2453,7 @@ const Dossier = (() => {
     err.status = status;
     err.isCreditIssue = /credit balance|insufficient_quota|exceeded.*quota|billing/i.test(friendly || errText || '');
     err.isAuthIssue = status === 401 || status === 403 || /invalid.*api.?key|api key not valid/i.test(friendly || errText || '');
+    err.isModelIssue = /no longer available|not found|is not supported for|deprecated/i.test(friendly || errText || '');
     return err;
   }
 
@@ -2494,7 +2495,7 @@ const Dossier = (() => {
   }
 
   async function callGeminiForQuiz(apiKey, prompt){
-    const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
+    const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -2695,6 +2696,8 @@ quizSection.addEventListener('submit', (e) => {
       quizLog('Failed: ' + err.message, 'err');
       if(err instanceof TypeError){
         setStatus('quiz-status', `${profile.fullLabel} blocked this request from the browser (a CORS restriction on their side, not a bug here). Try Anthropic instead, or run this from an environment that can proxy the request.`, 'err');
+      } else if(err.isModelIssue){
+        setStatus('quiz-status', `${profile.fullLabel} has retired the specific model this page calls. This is a page-code fix, not something you can fix from here — please let whoever maintains this page know so the model name can be updated.`, 'err');
       } else if(err.isCreditIssue){
         setStatus('quiz-status', `This ${profile.fullLabel} account has no remaining credit or quota. Add credit / check usage limits at ${profile.getKeyHost}, then try again with the same key.`, 'err');
       } else if(err.isAuthIssue){
