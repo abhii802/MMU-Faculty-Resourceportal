@@ -724,10 +724,18 @@
           </div>
         </div>
         <div class="gen-panel">
-          <label for="quiz-key-input" style="display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">Anthropic API key — needed once, to write the questions</label>
+          <label for="quiz-provider" style="display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">AI provider — pick whichever key you have (or switch if one runs low on credit)</label>
+          <select id="quiz-provider" style="width:100%; padding:11px 14px; border:1px solid var(--line-strong); border-radius:9px; font-family:var(--sans); font-size:14px; background:#fff; margin-bottom:14px;">
+            <option value="anthropic">Anthropic — Claude</option>
+            <option value="openai">OpenAI — ChatGPT</option>
+            <option value="gemini">Google — Gemini</option>
+          </select>
+
+          <label for="quiz-key-input" style="display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">API key — needed once, to write the questions</label>
           <div id="quiz-key-input-row">
             <input type="password" id="quiz-key-input" placeholder="sk-ant-..." style="width:100%;">
-            <p class="gen-hint">Get one free at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>. Saved only in this browser (localStorage) — never written into the downloaded quiz file, never sent anywhere but Anthropic.</p>
+            <p class="gen-hint" id="quiz-key-hint">Get one free at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>. Saved only in this browser (localStorage) — never written into the downloaded quiz file, never sent anywhere but the provider you picked above.</p>
+            <p class="gen-hint" id="quiz-cors-warn" style="display:none; color:var(--crimson-dark);"></p>
           </div>
           <div id="quiz-key-saved-row" class="key-saved" style="display:none;">
             <span class="ok">✓ key saved in this browser</span>
@@ -744,8 +752,11 @@
           <div class="gen-log" id="quiz-log"></div>
           <div class="gen-status" id="quiz-status" role="status"></div>
           <details class="disclosure">
-            <summary>How this quiz is built</summary>
-            <p>Unlike the other generators on this page, this one calls the Anthropic API directly from your browser using your own key, so the questions are genuinely written for the topic you type rather than assembled from a template — the topic (not the key) is what gets sent to Anthropic. The key is stored only in this browser's local storage: never written into the downloaded quiz file, never sent anywhere else. The result is a single offline file — 30 shuffled, self-graded questions — that students can open and take with no key, login, or server of their own.</p>
+            <summary>How this quiz is built, and how to get a key from each provider</summary>
+            <p>Unlike the other generators on this page, this one calls an AI provider's API directly from your browser using your own key, so the questions are genuinely written for the topic you type rather than assembled from a template — the topic (not the key) is what gets sent. Each provider's key is stored only in this browser's local storage, in its own slot: never written into the downloaded quiz file, never sent anywhere else, and switching providers in the dropdown never touches the other two keys.</p>
+            <p><b>Anthropic (Claude) — most reliable option here:</b> go to console.anthropic.com and sign in or create a free account → open <i>Settings → API Keys</i> → click <i>Create Key</i>, name it anything, and copy the key (starts with <code>sk-ant-</code>). New accounts get a small free credit; add more under <i>Plans &amp; Billing</i> if it runs out.</p>
+            <p><b>OpenAI (ChatGPT):</b> go to platform.openai.com and sign in or create a free account → open <i>API keys</i> in the left sidebar → click <i>Create new secret key</i>, name it anything, and copy it (starts with <code>sk-</code>). Add a small amount of credit under <i>Settings → Billing</i> if needed. Note: OpenAI blocks direct requests from a browser page for most accounts (a restriction on their end, not this page) — if this option fails immediately, that's why; Anthropic is the dependable fallback.</p>
+            <p><b>Google (Gemini):</b> go to aistudio.google.com/apikey and sign in with a Google account → click <i>Create API key</i> (choose or create a Google Cloud project if prompted) → copy the generated key (starts with <code>AIza</code>). Gemini has a generous free tier, but like OpenAI, Google also blocks direct browser requests for most accounts — the same fallback applies.</p>
           </details>
         </div>
       </article>
@@ -2359,19 +2370,60 @@ const Dossier = (() => {
 
   /* =======================================================================
      QUIZ GENERATOR — Resource 08
-     The one generator on this page that isn't fully offline: it calls the
-     Anthropic API directly from the browser, using the professor's own
-     API key, to write genuinely topic-specific questions. The key never
-     leaves this browser's local storage and is never written into the
-     downloaded quiz file.
+     The one generator on this page that isn't fully offline: it calls an
+     AI provider's API directly from the browser, using the professor's own
+     key, to write genuinely topic-specific questions. Keys never leave this
+     browser's local storage (one slot per provider) and are never written
+     into the downloaded quiz file.
+
+     Only Anthropic officially supports direct browser requests (via the
+     anthropic-dangerous-direct-browser-access header). OpenAI and Google
+     generally block them with CORS for ordinary accounts — that's a
+     restriction on their end, not a bug here — so those two options are
+     offered for convenience but may fail immediately depending on the
+     account; Anthropic is the dependable fallback.
      ======================================================================= */
-  const QUIZ_LS_KEY = 'mmu_quiz_anthropic_key';
+  const QUIZ_PROVIDERS = {
+    anthropic: {
+      label: 'Anthropic', fullLabel: 'Anthropic (Claude)',
+      lsKey: 'mmu_quiz_key_anthropic', placeholder: 'sk-ant-...',
+      getKeyUrl: 'https://console.anthropic.com/settings/keys', getKeyHost: 'console.anthropic.com',
+      corsNote: null
+    },
+    openai: {
+      label: 'OpenAI', fullLabel: 'OpenAI (ChatGPT)',
+      lsKey: 'mmu_quiz_key_openai', placeholder: 'sk-...',
+      getKeyUrl: 'https://platform.openai.com/api-keys', getKeyHost: 'platform.openai.com',
+      corsNote: 'OpenAI blocks direct browser requests for most accounts (CORS) — this option may fail immediately even with a valid, funded key. Anthropic is the reliable option on this page.'
+    },
+    gemini: {
+      label: 'Google', fullLabel: 'Google (Gemini)',
+      lsKey: 'mmu_quiz_key_gemini', placeholder: 'AIza...',
+      getKeyUrl: 'https://aistudio.google.com/apikey', getKeyHost: 'aistudio.google.com',
+      corsNote: 'Google also blocks direct browser requests for most accounts (CORS) — this option may fail immediately even with a valid, funded key. Anthropic is the reliable option on this page.'
+    }
+  };
+
+  function currentQuizProvider(){
+    const sel = document.getElementById('quiz-provider');
+    return (sel && sel.value) || 'anthropic';
+  }
 
   function refreshQuizKeyUI(){
-    const saved = localStorage.getItem(QUIZ_LS_KEY);
+    const profile = QUIZ_PROVIDERS[currentQuizProvider()];
+    const saved = localStorage.getItem(profile.lsKey);
     const inputRow = document.getElementById('quiz-key-input-row');
     const savedRow = document.getElementById('quiz-key-saved-row');
+    const keyInput = document.getElementById('quiz-key-input');
+    const hint = document.getElementById('quiz-key-hint');
+    const corsWarn = document.getElementById('quiz-cors-warn');
     if(!inputRow || !savedRow) return;
+    if(keyInput) keyInput.placeholder = profile.placeholder;
+    if(hint) hint.innerHTML = `Get one free at <a href="${profile.getKeyUrl}" target="_blank" rel="noopener">${profile.getKeyHost}</a>. Saved only in this browser (localStorage) — never written into the downloaded quiz file, never sent anywhere but ${profile.label}.`;
+    if(corsWarn){
+      if(profile.corsNote){ corsWarn.textContent = profile.corsNote; corsWarn.style.display = 'block'; }
+      else{ corsWarn.style.display = 'none'; corsWarn.textContent=''; }
+    }
     if(saved){ inputRow.style.display = 'none'; savedRow.style.display = 'flex'; }
     else{ inputRow.style.display = 'block'; savedRow.style.display = 'none'; }
   }
@@ -2386,7 +2438,25 @@ const Dossier = (() => {
     el.scrollTop = el.scrollHeight;
   }
 
-  async function callClaudeForQuiz(apiKey, prompt){
+  function quizParseJson(text){
+    const clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  }
+
+  function quizApiError(status, errText){
+    let friendly = null;
+    try{
+      const parsed = JSON.parse(errText);
+      friendly = (parsed.error && parsed.error.message) || parsed.message || null;
+    }catch(e){ /* not JSON — fall through to raw text */ }
+    const err = new Error(friendly || `API error ${status}: ${errText.slice(0,200)}`);
+    err.status = status;
+    err.isCreditIssue = /credit balance|insufficient_quota|exceeded.*quota|billing/i.test(friendly || errText || '');
+    err.isAuthIssue = status === 401 || status === 403 || /invalid.*api.?key|api key not valid/i.test(friendly || errText || '');
+    return err;
+  }
+
+  async function callAnthropicForQuiz(apiKey, prompt){
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -2401,15 +2471,44 @@ const Dossier = (() => {
         messages: [{ role: 'user', content: prompt }]
       })
     });
-    if(!res.ok){
-      const errText = await res.text();
-      throw new Error(`API error ${res.status}: ${errText.slice(0,200)}`);
-    }
+    if(!res.ok) throw quizApiError(res.status, await res.text());
     const data = await res.json();
     const text = data.content.map(b => b.text || '').join('');
-    const clean = text.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
+    return quizParseJson(text);
   }
+
+  async function callOpenAIForQuiz(apiKey, prompt){
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 4000
+      })
+    });
+    if(!res.ok) throw quizApiError(res.status, await res.text());
+    const data = await res.json();
+    const text = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+    return quizParseJson(text);
+  }
+
+  async function callGeminiForQuiz(apiKey, prompt){
+    const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    });
+    if(!res.ok) throw quizApiError(res.status, await res.text());
+    const data = await res.json();
+    const text = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                  data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                  data.candidates[0].content.parts[0].text) || '';
+    return quizParseJson(text);
+  }
+
+  const QUIZ_CALL_FN = { anthropic: callAnthropicForQuiz, openai: callOpenAIForQuiz, gemini: callGeminiForQuiz };
+
 
   function quizBatchPrompt(topic, count, bloomLevels){
     return `Write ${count} multiple-choice quiz questions on the topic "${topic}", for a college-level test.
@@ -2552,13 +2651,15 @@ quizSection.addEventListener('submit', (e) => {
   }
 
   async function generateQuiz(){
+    const providerKey = currentQuizProvider();
+    const profile = QUIZ_PROVIDERS[providerKey];
     const keyInputEl = document.getElementById('quiz-key-input');
     const typedKey = keyInputEl.value.trim();
-    if(typedKey) localStorage.setItem(QUIZ_LS_KEY, typedKey);
-    const apiKey = localStorage.getItem(QUIZ_LS_KEY);
+    if(typedKey) localStorage.setItem(profile.lsKey, typedKey);
+    const apiKey = localStorage.getItem(profile.lsKey);
     const topic = document.getElementById('quiz-topic').value.trim();
 
-    if(!apiKey){ setStatus('quiz-status','Please add your Anthropic API key first.','err'); return; }
+    if(!apiKey){ setStatus('quiz-status', `Please add your ${profile.fullLabel} API key first.`, 'err'); return; }
     if(!topic){ setStatus('quiz-status','Please enter a topic first.','err'); return; }
 
     refreshQuizKeyUI();
@@ -2571,12 +2672,13 @@ quizSection.addEventListener('submit', (e) => {
       { count: 10, levels: 'apply, analyze' },
       { count: 10, levels: 'analyze, evaluate' }
     ];
+    const callFn = QUIZ_CALL_FN[providerKey];
 
     let all = [];
     try{
       for(let b = 0; b < batches.length; b++){
-        quizLog(`Writing questions ${b*10+1}-${b*10+10}…`);
-        const qs = await callClaudeForQuiz(apiKey, quizBatchPrompt(topic, batches[b].count, batches[b].levels));
+        quizLog(`Writing questions ${b*10+1}-${b*10+10} via ${profile.fullLabel}…`);
+        const qs = await callFn(apiKey, quizBatchPrompt(topic, batches[b].count, batches[b].levels));
         all = all.concat(qs);
         quizLog(`Got ${qs.length} questions.`, 'ok');
       }
@@ -2591,7 +2693,15 @@ quizSection.addEventListener('submit', (e) => {
     }catch(err){
       console.error(err);
       quizLog('Failed: ' + err.message, 'err');
-      setStatus('quiz-status','Something went wrong writing the quiz. Check your API key and try again.','err');
+      if(err instanceof TypeError){
+        setStatus('quiz-status', `${profile.fullLabel} blocked this request from the browser (a CORS restriction on their side, not a bug here). Try Anthropic instead, or run this from an environment that can proxy the request.`, 'err');
+      } else if(err.isCreditIssue){
+        setStatus('quiz-status', `This ${profile.fullLabel} account has no remaining credit or quota. Add credit / check usage limits at ${profile.getKeyHost}, then try again with the same key.`, 'err');
+      } else if(err.isAuthIssue){
+        setStatus('quiz-status', `That ${profile.fullLabel} API key was rejected. Use "change" above to enter a valid key.`, 'err');
+      } else {
+        setStatus('quiz-status', 'Something went wrong writing the quiz: ' + err.message, 'err');
+      }
       toast('Could not generate the quiz.', true);
     }finally{
       document.getElementById('quiz-btn').disabled = false;
@@ -2599,10 +2709,18 @@ quizSection.addEventListener('submit', (e) => {
   }
 
   refreshQuizKeyUI();
+  const quizProviderSel = document.getElementById('quiz-provider');
+  if(quizProviderSel){
+    quizProviderSel.addEventListener('change', () => {
+      document.getElementById('quiz-key-input').value = '';
+      refreshQuizKeyUI();
+    });
+  }
   const quizChangeKeyBtn = document.getElementById('quiz-change-key-btn');
   if(quizChangeKeyBtn){
     quizChangeKeyBtn.addEventListener('click', () => {
-      localStorage.removeItem(QUIZ_LS_KEY);
+      const profile = QUIZ_PROVIDERS[currentQuizProvider()];
+      localStorage.removeItem(profile.lsKey);
       document.getElementById('quiz-key-input').value = '';
       refreshQuizKeyUI();
     });
@@ -2610,6 +2728,7 @@ quizSection.addEventListener('submit', (e) => {
 
   return { generatePaper, generateNotes, generatePPT, generateProjects, generateQuiz };
 })();
+
 
 document.getElementById('build-date').textContent = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
 
