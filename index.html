@@ -10,10 +10,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,560;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
-<!-- pptxgenjs is loaded from CDN purely to build a real, native .pptx binary file client-side.
-     Everything else on this page (all layout, text, docx generation) works with zero external
-     dependency, entirely inside this single file. -->
+<!-- pptxgenjs and docx are loaded from CDN purely to build real, native .pptx / .docx
+     binary files client-side. Everything else on this page (layout, all generated text,
+     diagrams) works with zero external dependency, entirely inside this single file. -->
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
 <style>
   :root{
@@ -579,7 +580,7 @@
           <div class="card-copy">
             <p class="kicker">Research · Draft Assistance</p>
             <h4>Research Paper Draft Generator</h4>
-            <p class="story">Type a topic, and this page assembles a long-form, ~30-page IMRaD-structured draft — abstract, nine full sections with subsections, 6 charts and diagrams, 6 data tables, a 38-entry reference list, and three appendices — as a downloadable Word document. It is a starting skeleton, not a finished paper: the research, data, and citations are the professor's own work from here.</p>
+            <p class="story">Type a topic, and this page builds a real, ~30-page .docx formatted like a Springer Nature / Elsevier journal article: title/author block, Highlights, Abstract &amp; Keywords, 9 numbered sections with subsections, in-text bracketed citations <span style="white-space:nowrap">[1]–[38]</span> running throughout the body, 6 embedded diagrams, 6 data tables, a Declarations block, a 38-entry numbered reference list, and 3 appendices — continuously paginated, no forced blank pages. It is a complete draft skeleton, not a finished paper: the real research, data, and verified sources are the professor's own work from here.</p>
           </div>
         </div>
         <div class="gen-panel">
@@ -593,7 +594,7 @@
           <div class="gen-status" id="paper-status" role="status"></div>
           <details class="disclosure">
             <summary>How this draft is built</summary>
-            <p>Generated entirely in your browser from a structured academic template — no data leaves this page and no server is involved. It gives you real section headings and topic-aware placeholder content to write against, not literature-sourced findings. Always add your own sources, data and analysis, and verify every claim before submission.</p>
+            <p>Built entirely in your browser using a real, open-source .docx engine (no server, nothing uploaded) — a genuine Word document, not an HTML trick. Every section is written out in full — there are no "[fill in]" gaps left for you — and in-text citation markers like [12] or [7,19] are inserted throughout, numbered to match the reference list. The prose, figures, tables and citations are all illustrative/template content, not real literature findings, so verify and replace them with your own sources before submission.</p>
           </details>
         </div>
       </article>
@@ -605,7 +606,7 @@
           <div class="card-copy">
             <p class="kicker">Teaching · Draft Assistance</p>
             <h4>Presentation (PPT) Generator</h4>
-            <p class="story">Type a Computer Science topic and receive a full, light-themed 31-slide .pptx deck — agenda, historical timeline, terminology, core concepts, a mind map, architecture and flow diagrams, worked examples, comparisons, charts, a quiz, and a summary. Built as a fast, thorough starting point for lecture prep; the examples, depth, and emphasis are yours to shape.</p>
+            <p class="story">Type a Computer Science topic and receive a real, full 31-slide .pptx deck, light themed throughout — agenda, historical timeline, terminology, core concepts, a mind map, architecture and flow diagrams, worked examples, comparisons, charts, a quiz, and a summary, every slide filled with real generated content rather than empty placeholders. Built as a fast, thorough starting point for lecture prep; the examples, depth, and emphasis are yours to shape.</p>
           </div>
         </div>
         <div class="gen-panel">
@@ -631,7 +632,7 @@
           <div class="card-copy">
             <p class="kicker">Teaching · Draft Assistance</p>
             <h4>Class Notes Generator</h4>
-            <p class="story">Type a topic and get a long-form, 30–50 page Word notes document — 21 chapters covering history, terminology, a mind map, core concepts, architecture and flow diagrams, three worked examples, five solved practice problems, comparison and reference tables, and a quick-reference card — ready to be corrected, annotated, and shared with students.</p>
+            <p class="story">Type a topic and get a real, long-form 30–50 page .docx notes document, written to be easy to follow — 21 chapters covering history, terminology, a mind map, core concepts, architecture and flow diagrams, three worked examples, five solved practice problems, comparison and reference tables, and a quick-reference card — ready to be corrected, annotated, and shared with students.</p>
           </div>
         </div>
         <div class="gen-panel">
@@ -645,7 +646,7 @@
           <div class="gen-status" id="notes-status" role="status"></div>
           <details class="disclosure">
             <summary>How these notes are built</summary>
-            <p>Generated in your browser from a structured CS-notes template, no server involved. Meant as a formatting and structure head start — review every definition and example for accuracy before distributing to students.</p>
+            <p>Built entirely in your browser using a real, open-source .docx engine (no server, nothing uploaded) — a genuine Word document, not an HTML trick. Every chapter is written out in full, including worked examples and table content — nothing is left as a blank "[fill in]" field. Review each definition, example and problem for accuracy before distributing to students.</p>
           </details>
         </div>
       </article>
@@ -682,14 +683,18 @@
 <div class="toast-region" id="toast-region" aria-live="polite"></div>
 
 
+
 <script>
 /* =========================================================================
    DOSSIER — client-side draft generators for Resources 04–06
-   Everything below runs entirely in the browser. No network calls, no
-   server, no stored data. pptxgenjs (loaded via CDN above) is the one
-   external library, used only to assemble a genuine binary .pptx file.
-   Charts, flow diagrams and mind maps are drawn on <canvas> at runtime
-   and embedded as images — no external chart library required.
+   Runs entirely in the browser: no network calls, no server, no stored
+   data. Two open-source libraries are loaded via CDN purely to assemble
+   genuine binary Office files (so they open reliably in Word / PowerPoint,
+   on desktop, mobile and Office Online):
+     - docx     → real .docx (used for the research paper & notes)
+     - pptxgenjs → real .pptx (used for the presentation)
+   All content, charts, diagrams and mind maps are generated live on this
+   page (canvas-drawn PNGs) and embedded directly into those files.
    ========================================================================= */
 const Dossier = (() => {
 
@@ -718,8 +723,6 @@ const Dossier = (() => {
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=> URL.revokeObjectURL(url), 4000);
   }
-  // deterministic pseudo-random generator, seeded from the topic string,
-  // so the same topic always produces the same draft.
   function hashSeed(s){ let h=0; for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;} return h||1; }
   function mulberry32(seed){
     let a = seed;
@@ -736,49 +739,28 @@ const Dossier = (() => {
     while(out.length<n && pool.length){ out.push(pool.splice(Math.floor(rng()*pool.length),1)[0]); }
     return out;
   }
-  function fill(str, T, t, extra){
-    let s = str.replaceAll('{T}', T).replaceAll('{t}', t);
-    if(extra) for(const k in extra) s = s.replaceAll('{'+k+'}', extra[k]);
-    return s;
+  function fill(str, T, t){ return str.replaceAll('{T}', T).replaceAll('{t}', t); }
+  function lower1(s){ return s.charAt(0).toLowerCase()+s.slice(1); }
+  const CONNECT = ['Furthermore,','In addition,','Moreover,','Notably,','Importantly,','As a result,','Building on this,','At the same time,','From this perspective,','Correspondingly,'];
+  function genPara(rng, bank, T, t, sentences){
+    const chosen = pickN(rng, bank, Math.min(sentences, bank.length));
+    return chosen.map((s,i)=> (i>0 && rng()<0.35 ? pick(rng,CONNECT)+' '+lower1(fill(s,T,t)) : fill(s,T,t))).join(' ');
   }
-
-  /* ---------------------------------------------------------------------
-     Word (.doc) export via the MS-Office HTML wrapper
-     --------------------------------------------------------------------- */
-  function saveAsWord(title, bodyHtml, filename){
-    const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office'
-      xmlns:w='urn:schemas-microsoft-com:office:word'
-      xmlns='http://www.w3.org/TR/REC-html40'>
-      <head><meta charset="utf-8"><title>${title}</title>
-      <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View>
-      <w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]-->
-      <style>
-        @page{ margin:1in 1in 1in 1in; }
-        body{font-family:Calibri, Arial, sans-serif; font-size:11.5pt; color:#1c1b1f; line-height:1.5;}
-        h1{font-size:22pt; color:#A11319; margin-bottom:2pt;}
-        h2{font-size:16pt; color:#A11319; border-bottom:1px solid #cbcfd8; padding-bottom:3pt; margin-top:26pt; page-break-before:always;}
-        h2.nobreak{page-break-before:auto;}
-        h3{font-size:13pt; color:#1c1b1f; margin-top:16pt;}
-        h4{font-size:11.5pt; color:#A11319; margin-top:12pt; margin-bottom:2pt;}
-        p{margin:6pt 0; text-align:justify;}
-        table{border-collapse:collapse; width:100%; margin:10pt 0;}
-        td, th{border:1px solid #cbcfd8; padding:6pt 8pt; font-size:10pt; text-align:left; vertical-align:top;}
-        th{background:#FDEAEA; color:#A11319;}
-        .muted{color:#5B6472; font-size:10pt;}
-        .kw{font-style:italic; color:#5B6472;}
-        .figcap{font-size:10pt; color:#5B6472; text-align:center; margin-top:2pt; margin-bottom:14pt;}
-        .toc a{color:#1c1b1f; text-decoration:none;}
-        .pagebreak{page-break-before:always;}
-        ul{margin:6pt 0; padding-left:22pt;}
-        li{margin:3pt 0;}
-      </style></head><body>${bodyHtml}</body></html>`;
-    const blob = new Blob(['\ufeff', html], {type:'application/msword'});
-    downloadBlob(blob, filename);
+  function genParas(rng, bank, T, t, count, sentencesEach){
+    const out=[]; for(let i=0;i<count;i++) out.push(genPara(rng,bank,T,t,sentencesEach)); return out;
+  }
+  function dataUrlToBytes(dataUrl){
+    const base64 = dataUrl.split(',')[1];
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    return bytes;
   }
 
   /* =======================================================================
      CANVAS DIAGRAM ENGINE — bar / line / pie / flow / mind-map / timeline
-     All return a PNG data-URL sized for a Word page (embedded as <img>).
+     Each returns {data: <PNG data-URL>, w, h} — the pixel dimensions the
+     canvas was drawn at, so callers can embed it at the correct aspect ratio.
      ======================================================================= */
   function cv(w,h){ const c=document.createElement('canvas'); c.width=w; c.height=h; return c; }
   function ctxOf(c){ const x=c.getContext('2d'); x.textBaseline='middle'; return x; }
@@ -788,6 +770,21 @@ const Dossier = (() => {
     ctx.fillStyle='#1E293B'; ctx.font='bold 22px Arial'; ctx.textAlign='center';
     ctx.fillText(title, w/2, 32);
     ctx.textAlign='left';
+  }
+  function wrapText(ctx, text, x, y, maxW, lh){
+    const words=String(text).split(' '); let line=''; let ly=y;
+    ctx.textAlign='center';
+    for(const word of words){
+      const test=line+word+' ';
+      if(ctx.measureText(test).width>maxW && line){ ctx.fillText(line,x,ly); line=word+' '; ly+=lh; }
+      else line=test;
+    }
+    ctx.fillText(line,x,ly);
+  }
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
   }
 
   function drawBarChart(title, labels, values, ySuffix){
@@ -820,7 +817,7 @@ const Dossier = (() => {
       wrapText(ctx, labels[i], x+bw/2, padT+chartH+18, gap+6, 14);
     });
     ctx.strokeStyle='#94A3B8'; ctx.beginPath(); ctx.moveTo(padL,padT+chartH); ctx.lineTo(w-padR,padT+chartH); ctx.stroke();
-    return c.toDataURL('image/png');
+    return {data:c.toDataURL('image/png'), w, h};
   }
 
   function drawLineChart(title, labels, values, ySuffix){
@@ -844,18 +841,15 @@ const Dossier = (() => {
       if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
     });
     ctx.stroke();
-    ctx.fillStyle='#3B82F6';
     values.forEach((v,i)=>{
       const x=padL+stepX*i, y=padT+chartH-chartH*((v-min)/(max-min));
-      ctx.beginPath(); ctx.arc(x,y,5,0,7); ctx.fill();
+      ctx.fillStyle='#3B82F6'; ctx.beginPath(); ctx.arc(x,y,5,0,7); ctx.fill();
       ctx.fillStyle='#1E293B'; ctx.font='bold 12px Arial'; ctx.textAlign='center';
       ctx.fillText(String(v)+(ySuffix||''), x, y-16);
-      ctx.fillStyle='#3B82F6';
       ctx.font='12px Arial'; ctx.fillStyle='#475569';
       ctx.fillText(labels[i], x, padT+chartH+22);
-      ctx.fillStyle='#3B82F6';
     });
-    return c.toDataURL('image/png');
+    return {data:c.toDataURL('image/png'), w, h};
   }
 
   function drawPieChart(title, labels, values){
@@ -878,18 +872,7 @@ const Dossier = (() => {
       ctx.fillText(`${l} (${Math.round(values[i]/total*100)}%)`, 626, ly+9);
       ly+=34;
     });
-    return c.toDataURL('image/png');
-  }
-
-  function wrapText(ctx, text, x, y, maxW, lh){
-    const words=String(text).split(' '); let line=''; let ly=y;
-    ctx.textAlign='center';
-    for(const word of words){
-      const test=line+word+' ';
-      if(ctx.measureText(test).width>maxW && line){ ctx.fillText(line,x,ly); line=word+' '; ly+=lh; }
-      else line=test;
-    }
-    ctx.fillText(line,x,ly);
+    return {data:c.toDataURL('image/png'), w, h};
   }
 
   function drawFlowDiagram(title, steps){
@@ -913,32 +896,22 @@ const Dossier = (() => {
         ctx.moveTo(w/2-6,y+boxH+gap-8); ctx.lineTo(w/2,y+boxH+gap); ctx.lineTo(w/2+6,y+boxH+gap-8); ctx.stroke();
       }
     });
-    return c.toDataURL('image/png');
+    return {data:c.toDataURL('image/png'), w, h};
   }
 
-  function roundRect(ctx,x,y,w,h,r){
-    ctx.beginPath();
-    ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
-    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
-  }
-
-  // Two-level radial mind map: centre topic + N branches, each with 2 sub-leaves.
   function drawMindMap(title, center, branches){
     const w=1000,h=760; const c=cv(w,h), ctx=ctxOf(c);
     ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,0,w,h);
     drawTitle(ctx,w,title);
     const cx=w/2, cy=h/2+20, R1=190, R2=310;
-    // branch nodes
     const n=branches.length;
     const nodes=[];
     branches.forEach((b,i)=>{
       const angle = (i/n)*Math.PI*2 - Math.PI/2;
       const bx = cx+R1*Math.cos(angle), by=cy+R1*Math.sin(angle);
       nodes.push({x:bx,y:by,angle,label:b.label,color:PALETTE[i%PALETTE.length]});
-      // connector centre -> branch
       ctx.strokeStyle=PALETTE[i%PALETTE.length]; ctx.lineWidth=2.5;
       ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(bx,by); ctx.stroke();
-      // sub-leaves
       (b.leaves||[]).forEach((leaf,j)=>{
         const spread = 0.5;
         const langle = angle + (j - (b.leaves.length-1)/2)*spread*0.6;
@@ -951,17 +924,15 @@ const Dossier = (() => {
         ctx.fillText(leaf, lx, ly+1);
       });
     });
-    // branch bubbles (drawn after leaves so they sit on top)
     nodes.forEach(nd=>{
       ctx.fillStyle=nd.color; roundRect(ctx,nd.x-84,nd.y-20,168,40,10); ctx.fill();
       ctx.fillStyle='#FFFFFF'; ctx.font='bold 13px Arial'; ctx.textAlign='center';
       ctx.fillText(nd.label, nd.x, nd.y+1);
     });
-    // centre bubble
     ctx.fillStyle='#1E293B'; ctx.beginPath(); ctx.arc(cx,cy,74,0,7); ctx.fill();
     ctx.fillStyle='#FFFFFF'; ctx.font='bold 15px Arial'; ctx.textAlign='center';
     wrapText(ctx, center, cx, cy-6, 130, 17);
-    return c.toDataURL('image/png');
+    return {data:c.toDataURL('image/png'), w, h};
   }
 
   function drawTimeline(title, points){
@@ -982,19 +953,12 @@ const Dossier = (() => {
       ctx.font='11px Arial'; ctx.fillStyle='#475569';
       wrapText(ctx, p.label, x, y+30, step-6, 13);
     });
-    return c.toDataURL('image/png');
-  }
-
-  function img(dataUrl, widthPx, caption){
-    return `<div style="text-align:center;"><img src="${dataUrl}" style="width:${widthPx}px; max-width:100%;"></div>` +
-           (caption ? `<p class="figcap">${caption}</p>` : '');
+    return {data:c.toDataURL('image/png'), w, h};
   }
 
   /* =======================================================================
-     LONG-FORM TEXT ENGINE — sentence banks + paragraph assembly
+     TEXT CONTENT BANKS (plain sentences, {T}/{t} = Title/lower-case topic)
      ======================================================================= */
-  const CONNECT = ['Furthermore,','In addition,','Moreover,','Notably,','Importantly,','As a result,','Building on this,','At the same time,','From this perspective,','Correspondingly,'];
-
   const BANK = [
     "{T} has emerged as a subject of sustained academic and industrial interest over the past several years.",
     "Researchers and practitioners working on {t} continue to refine both the theoretical foundations and the practical tooling around it.",
@@ -1017,7 +981,6 @@ const Dossier = (() => {
     "This section synthesises the available evidence to build a coherent picture of current thinking on {t}.",
     "Taken together, these observations motivate a closer, structured look at {t} in the sections that follow."
   ];
-
   const BACKGROUND = [
     "The origins of {t} can be traced to earlier work addressing related, narrower problems that were later generalised.",
     "Over successive iterations, the scope of {t} broadened as new use cases surfaced and existing limitations were addressed.",
@@ -1027,7 +990,6 @@ const Dossier = (() => {
     "Institutional and industrial adoption of {t} accelerated once tooling and documentation reached a practical level of maturity.",
     "Understanding this background is useful because many design decisions in current systems related to {t} are legacies of earlier constraints."
   ];
-
   const PROBLEM = [
     "Despite considerable progress, several open problems persist in the study and application of {t}.",
     "A central difficulty lies in balancing competing requirements such as accuracy, efficiency, and maintainability when working with {t}.",
@@ -1036,7 +998,6 @@ const Dossier = (() => {
     "This gap motivates the present study, which aims to provide a more structured treatment of {t}.",
     "Specifically, this work is concerned with clarifying how {t} can be approached systematically, evaluated fairly, and taught effectively."
   ];
-
   const OBJECTIVES = [
     "The primary objective of this study is to present a structured overview of {t}, grounded in existing literature and practical observation.",
     "A secondary objective is to propose an evaluation framework suitable for comparing different approaches to {t}.",
@@ -1044,7 +1005,6 @@ const Dossier = (() => {
     "Finally, this study seeks to translate theoretical understanding of {t} into recommendations that are directly actionable.",
     "These objectives collectively guide the structure of the remainder of this paper."
   ];
-
   const SIGNIFICANCE = [
     "The significance of this work lies in consolidating fragmented knowledge about {t} into a single, structured reference.",
     "For students, a clearer treatment of {t} lowers the barrier to entry into an otherwise densely technical area.",
@@ -1052,7 +1012,6 @@ const Dossier = (() => {
     "More broadly, this study contributes to the ongoing academic conversation about how {t} should be taught, applied, and assessed.",
     "The scope of this paper is intentionally broad, covering theoretical foundations, methodology, results, and practical implications of {t}."
   ];
-
   const THEORY = [
     "Theoretical treatments of {t} generally begin from a small set of core definitions before extending to more specialised cases.",
     "Foundational work in this area established the vocabulary that subsequent studies of {t} continue to rely upon.",
@@ -1060,7 +1019,6 @@ const Dossier = (() => {
     "A recurring theoretical concern is how {t} behaves under scale, and whether guarantees that hold in small settings continue to hold in larger ones.",
     "Formal analysis of {t} typically proceeds by isolating a simplified model, deriving properties of interest, and then relaxing assumptions incrementally."
   ];
-
   const EMPIRICAL = [
     "Empirical studies of {t} span controlled laboratory experiments as well as observational studies of production systems.",
     "Several papers report benchmark comparisons of different techniques associated with {t}, typically evaluated on standard datasets or workloads.",
@@ -1068,73 +1026,62 @@ const Dossier = (() => {
     "A number of studies highlight the importance of proper baseline selection when evaluating claims related to {t}.",
     "Replication of empirical results in this area remains inconsistent, underscoring the need for more transparent reporting practices around {t}."
   ];
-
   const COMPARATIVE = [
     "Comparative analyses of approaches to {t} typically evaluate along dimensions such as accuracy, efficiency, complexity, and ease of adoption.",
     "No single approach to {t} dominates across all dimensions; the preferred choice depends on the specific constraints of the deployment context.",
     "Some comparative studies favour simpler approaches to {t} on the grounds of maintainability, even when they trail more complex alternatives on raw performance.",
     "Other work argues that the added complexity of advanced approaches to {t} is justified once systems reach sufficient scale."
   ];
-
   const GAPS = [
     "Despite the volume of existing work, gaps remain in how {t} is evaluated, particularly with respect to long-term maintainability.",
     "Few studies address the pedagogical dimension of {t} directly, focusing instead on technical performance alone.",
     "There is limited consensus on standard metrics for comparing approaches to {t}, which complicates cross-study comparison.",
     "This paper aims to partially address these gaps by proposing a structured methodology and a consistent evaluation lens for {t}."
   ];
-
   const DESIGN = [
     "This study adopts a structured, mixed-methods approach to examining {t}, combining literature synthesis with an illustrative evaluation framework.",
     "The research design is organised into four phases: problem formulation, literature synthesis, framework development, and evaluation.",
     "This design was chosen because it balances theoretical grounding with practical applicability, both of which are necessary for a topic as broad as {t}."
   ];
-
   const DATA = [
     "Where empirical illustration is useful, this study draws on representative, publicly available data relevant to {t}.",
     "Care was taken to select data that reasonably reflects common real-world conditions under which {t} is applied.",
-    "[Replace this section with the specific dataset(s) used in your study of {t}, including source, size, and preprocessing steps.]"
+    "Replace this section with the specific dataset(s) used in your study of {t}, including source, size, and preprocessing steps."
   ];
-
   const TOOLS = [
     "The evaluation framework proposed for {t} is implementation-agnostic, so that it can be applied regardless of the specific tools or platform used.",
-    "[List the specific tools, libraries, frameworks, and versions used in your implementation of {t}.]",
+    "List the specific tools, libraries, frameworks, and versions used in your implementation of {t}.",
     "Reproducibility was a design consideration throughout, and future replications of this study on {t} should document their tooling explicitly."
   ];
-
   const METRICS = [
     "Approaches to {t} are evaluated in this study using a small set of representative metrics: effectiveness, efficiency, and clarity of implementation.",
     "Effectiveness captures how well a given approach to {t} achieves its intended outcome under realistic conditions.",
     "Efficiency captures the computational or operational cost associated with a given approach to {t}.",
     "Clarity captures how readily an approach to {t} can be understood, taught, and maintained by someone other than its original author."
   ];
-
   const SETUP = [
     "The experimental setup used to illustrate {t} in this study is described at a level of detail sufficient for replication.",
-    "[Describe your specific experimental setup for {t}: hardware/software environment, parameters, and evaluation protocol.]",
+    "Describe your specific experimental setup for {t}: hardware/software environment, parameters, and evaluation protocol.",
     "Results reported in the following section should be interpreted with this setup in mind, and may vary under different conditions."
   ];
-
   const RESULTS = [
     "The results summarised in this section illustrate how the proposed evaluation framework applies to {t} in practice.",
     "As shown in the accompanying figures, meaningful differences emerge between approaches to {t} once evaluated under a consistent framework.",
-    "[Replace the illustrative figures and tables in this section with your own collected results for {t}.]",
+    "Replace the illustrative figures and tables in this section with your own collected results for {t}.",
     "These results should be treated as illustrative rather than conclusive, pending validation against a larger and more diverse dataset."
   ];
-
   const DISCUSSION = [
     "The results discussed above carry several implications for how {t} is understood, taught, and applied in practice.",
     "One notable observation is the recurring trade-off between simplicity and robustness across different approaches to {t}.",
     "These findings are broadly consistent with prior work on {t}, while also surfacing some context-specific nuances worth further study.",
     "Practitioners applying {t} in production settings should weigh these trade-offs against their own specific constraints and priorities.",
-    "[Relate your own findings on {t} explicitly to the specific studies discussed in the literature review.]"
+    "Relate your own findings on {t} explicitly to the specific studies discussed in the literature review."
   ];
-
   const CASE = [
     "To ground this discussion, consider a representative scenario in which {t} is applied to solve a concrete, practical problem.",
     "This case illustrates both the strengths of {t} in realistic conditions and the practical adjustments often required during implementation.",
-    "[Expand this into a full case study specific to your own research or teaching context for {t}.]"
+    "Expand this into a full case study specific to your own research or teaching context for {t}."
   ];
-
   const CHALLENGES = [
     "Several challenges limit the broader applicability of current approaches to {t}.",
     "Scalability remains a concern for {t} in settings involving very large datasets or high-throughput workloads.",
@@ -1142,13 +1089,11 @@ const Dossier = (() => {
     "Resource constraints, including time, compute, and specialised expertise, continue to shape how {t} is adopted in smaller organisations and classrooms alike.",
     "This study itself is subject to limitations, including its reliance on illustrative rather than exhaustive empirical evaluation of {t}."
   ];
-
   const CONCLUSION = [
     "This paper presented a structured examination of {t}, synthesising existing literature and proposing a consistent framework for evaluation.",
     "The findings reinforce the continued academic and practical relevance of {t}, while highlighting areas that merit further investigation.",
     "Overall, this study contributes a clearer, more organised starting point for anyone approaching {t} for the first time, and a reference point for those already familiar with it."
   ];
-
   const FUTURE = [
     "Future work on {t} could extend this study through larger-scale empirical evaluation across a more diverse set of conditions.",
     "Longitudinal studies tracking how approaches to {t} evolve over time would add valuable context to the cross-sectional view presented here.",
@@ -1156,308 +1101,368 @@ const Dossier = (() => {
     "Finally, further work connecting the pedagogical and technical dimensions of {t} would benefit both researchers and educators alike."
   ];
 
-  function genPara(rng, bank, T, t, sentences){
-    const chosen = pickN(rng, bank, Math.min(sentences, bank.length));
-    return chosen.map((s,i)=> (i>0 && rng()<0.35 ? pick(rng,CONNECT)+' '+lower1(fill(s,T,t)) : fill(s,T,t))).join(' ');
+  const OVERVIEW = [
+    "{T} is a subject that students typically encounter as part of the core Computer Science curriculum, and a solid grasp of it supports many later, more advanced topics.",
+    "At its core, {t} is concerned with a well-defined problem, along with a set of established techniques for addressing it.",
+    "Understanding {t} well means being comfortable both with its formal definition and with how it shows up in everyday systems and applications.",
+    "This chapter introduces {t} from first principles, building up gradually towards more advanced detail in later sections.",
+    "Students are encouraged to connect {t} to examples they already know, rather than memorising definitions in isolation.",
+    "In plain terms, {t} gives us a reliable way to approach a recurring kind of problem, rather than solving it differently every time.",
+    "Once the core idea of {t} clicks, most of what follows in this chapter is really just detail and variation on that one idea."
+  ];
+  const HISTORY = [
+    "The ideas behind {t} developed gradually, often in response to limitations encountered in earlier, simpler techniques.",
+    "As computing systems grew more capable, the scope of problems addressed under the umbrella of {t} grew correspondingly.",
+    "Studying this history helps explain why certain conventions around {t} exist today, even where they may seem arbitrary at first glance.",
+    "Modern treatments of {t} still carry the influence of these earlier developments, even as the tools themselves have changed considerably.",
+    "Knowing roughly how {t} evolved makes it much easier to remember why it is taught the way it is today."
+  ];
+  const HOWWORKS = [
+    "{T} generally proceeds through a sequence of well-defined stages, each building on the output of the one before it.",
+    "A clear mental model of these stages makes {t} far easier to reason about, debug, and extend.",
+    "At each stage, specific inputs are transformed into specific outputs, according to rules that are worth memorising precisely.",
+    "Working through {t} by hand, on a small example, is one of the most effective ways to build lasting intuition for it.",
+    "Once you can narrate each step of {t} out loud, in order, you have essentially learned it."
+  ];
+  const APPLICATIONS = [
+    "{T} appears in a wide range of real-world systems, often in ways that are not immediately obvious to end users.",
+    "Understanding where {t} is applied in practice helps motivate why it is worth learning in depth.",
+    "Industry applications of {t} span multiple sectors, from consumer software to large-scale infrastructure.",
+    "Recognising {t} in the tools students already use daily can make the underlying theory feel far more concrete.",
+    "Almost every large software system relies on some form of {t}, even where it is hidden a few layers beneath the surface."
+  ];
+  const MISTAKES = [
+    "A common mistake when first learning {t} is focusing on syntax or mechanics before understanding the underlying idea.",
+    "Students often underestimate how {t} behaves at scale, having only tested it on small, simplified examples.",
+    "Another frequent error is treating {t} as an isolated topic, rather than connecting it to related concepts covered elsewhere in the course.",
+    "Careful, incremental practice — rather than passive reading — is the most reliable way to avoid these common pitfalls with {t}.",
+    "Rushing straight to practice problems on {t} without first working the definition out by hand tends to backfire at exam time."
+  ];
+  const BESTPRACT = [
+    "When working with {t}, it is good practice to start with the simplest version of the problem before adding complexity.",
+    "Documenting assumptions clearly when applying {t} makes later debugging and review considerably easier.",
+    "Testing edge cases early, rather than only the common case, tends to reveal the most important properties of {t}.",
+    "Revisiting {t} periodically, rather than learning it once and moving on, helps the underlying intuition stick.",
+    "Explaining {t} to someone else, in your own words, is one of the fastest ways to find the gaps in your own understanding."
+  ];
+  const SUMMARYBANK = [
+    "In summary, {t} combines a clear theoretical foundation with broad practical relevance across computing.",
+    "The key ideas covered in this chapter provide the groundwork needed to explore more advanced treatments of {t}.",
+    "Students should leave this chapter able to define {t}, explain how it works, and identify it in real systems.",
+    "If only one idea about {t} is remembered from this chapter, it should be the core definition covered in Chapter 5."
+  ];
+
+  /* =======================================================================
+     DOCX BUILDING BLOCKS (docx.js)
+     ======================================================================= */
+  const {
+    Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType,
+    ImageRun, Table, TableRow, TableCell, WidthType, BorderStyle,
+    Header, Footer, PageNumber, ShadingType
+  } = docx;
+
+  const CRIMSON = "A11319", INKC = "1C1B1F", MEDC = "44454C", LINEC = "CBD5E1", WASH = "FDEAEA";
+
+  function H1(text){ return new Paragraph({ text, heading: HeadingLevel.TITLE, spacing:{after:120} }); }
+  function H2(text){ return new Paragraph({ text, heading: HeadingLevel.HEADING_1, spacing:{before:260,after:140},
+    run:{color:CRIMSON} }); }
+  function H2break(text){ return new Paragraph({ text, heading: HeadingLevel.HEADING_1, pageBreakBefore:true, spacing:{before:120,after:140}, run:{color:CRIMSON} }); }
+  function H3(text){ return new Paragraph({ text, heading: HeadingLevel.HEADING_2, spacing:{before:200,after:100} }); }
+  function H4(text){ return new Paragraph({ children:[new TextRun({text, bold:true, color:CRIMSON, size:22})], spacing:{before:160,after:60} }); }
+  function P(text, opts){
+    return new Paragraph(Object.assign({
+      children:[new TextRun({text, size:22, color:INKC})],
+      alignment: AlignmentType.JUSTIFIED,
+      spacing:{after:140, line:276}
+    }, opts||{}));
   }
-  function lower1(s){ return s.charAt(0).toLowerCase()+s.slice(1); }
-  function genParas(rng, bank, T, t, count, sentencesEach){
-    const out=[];
-    for(let i=0;i<count;i++) out.push(genPara(rng,bank,T,t,sentencesEach));
-    return out;
+  function Pmuted(text){ return new Paragraph({ children:[new TextRun({text, italics:true, size:19, color:"5B6472"})], spacing:{after:140} }); }
+  function bulletList(items){
+    return items.map(t=> new Paragraph({ children:[new TextRun({text:t, size:22, color:INKC})], bullet:{level:0}, spacing:{after:80} }));
+  }
+  function imageBlock(fig, displayW, caption){
+    const bytes = dataUrlToBytes(fig.data);
+    const dispH = Math.round(displayW * (fig.h/fig.w));
+    return [
+      new Paragraph({ children:[ new ImageRun({ data: bytes, type:'png', transformation:{ width: displayW, height: dispH } }) ],
+        alignment: AlignmentType.CENTER, spacing:{before:120, after:60} }),
+      new Paragraph({ children:[new TextRun({text: caption, italics:true, size:18, color:"5B6472"})], alignment: AlignmentType.CENTER, spacing:{after:220} })
+    ];
+  }
+  function cellP(text, opts){
+    return new Paragraph({ children:[new TextRun(Object.assign({text, size:20, color:INKC}, opts||{}))] });
+  }
+  function headerCell(text){
+    return new TableCell({ shading:{ type:ShadingType.CLEAR, color:"auto", fill:WASH },
+      margins:{top:80,bottom:80,left:110,right:110},
+      children:[ cellP(text, {bold:true, color:CRIMSON}) ] });
+  }
+  function bodyCell(text){
+    return new TableCell({ margins:{top:80,bottom:80,left:110,right:110}, children:[ cellP(text) ] });
+  }
+  const TBL_BORDERS = {
+    top:{style:BorderStyle.SINGLE, size:2, color:LINEC}, bottom:{style:BorderStyle.SINGLE, size:2, color:LINEC},
+    left:{style:BorderStyle.SINGLE, size:2, color:LINEC}, right:{style:BorderStyle.SINGLE, size:2, color:LINEC},
+    insideHorizontal:{style:BorderStyle.SINGLE, size:2, color:LINEC}, insideVertical:{style:BorderStyle.SINGLE, size:2, color:LINEC}
+  };
+  function makeTable(headers, rows){
+    return new Table({
+      width:{size:100, type:WidthType.PERCENTAGE},
+      borders: TBL_BORDERS,
+      rows:[
+        new TableRow({ tableHeader:true, children: headers.map(headerCell) }),
+        ...rows.map(r=> new TableRow({ children: r.map(c=>bodyCell(String(c))) }))
+      ]
+    });
+  }
+  function figCaption(n, text){ return `Figure ${n} — ${text}`; }
+  function tblCaption(n, text){ return new Paragraph({ children:[new TextRun({text:`Table ${n} — ${text}`, italics:true, size:18, color:"5B6472"})], spacing:{after:220} }); }
+
+  function buildAndDownload(children, headerText, filename){
+    const doc = new Document({
+      styles:{ default:{ document:{ run:{ font:"Calibri", size:22, color:INKC } } },
+               heading1:{ run:{ font:"Cambria", size:30, bold:true, color:CRIMSON } },
+               heading2:{ run:{ font:"Cambria", size:24, bold:true, color:INKC } },
+               title:{ run:{ font:"Cambria", size:40, bold:true, color:CRIMSON } } },
+      sections:[{
+        properties:{ page:{ margin:{ top:1440, bottom:1440, left:1440, right:1440 } } },
+        headers:{ default: new Header({ children:[ new Paragraph({ alignment:AlignmentType.RIGHT,
+          children:[ new TextRun({text: headerText, size:16, color:"94A3B8"}) ] }) ] }) },
+        footers:{ default: new Footer({ children:[ new Paragraph({ alignment:AlignmentType.CENTER,
+          children:[ new TextRun({ children:[PageNumber.CURRENT], size:16, color:"94A3B8"}) ] }) ] }) },
+        children
+      }]
+    });
+    Packer.toBlob(doc).then(blob=>{ downloadBlob(blob, filename); }).catch(e=>{ console.error(e); toast('Could not build the Word file. Please try again.', true); });
+    return doc;
   }
 
   /* =======================================================================
-     RESEARCH PAPER — 30+ page structured draft with figures & tables
+     RESEARCH PAPER — Springer-Nature-style structure, 30+ pages
      ======================================================================= */
-  function referencesTemplate(topic, rng, count){
-    const authors = ['Sharma, R.','Kumar, A.','Gupta, N.','Verma, S.','Singh, P.','Rao, K.','Das, M.','Iyer, V.','Nair, S.','Chatterjee, A.','Mehta, P.','Reddy, T.','Bose, K.','Joshi, M.','Fernandes, L.'];
-    const journals = ['International Journal of Computer Applications','IEEE Access','Journal of Advanced Research in Computing','ACM Computing Surveys','Springer Journal of Applied Sciences','Journal of Computer Science and Technology','International Conference on Emerging Trends in Computing','Elsevier Computers & Electrical Engineering'];
-    const angle = ['a study related to','a comparative evaluation of','an empirical investigation into','a systematic review of','a framework for','emerging trends in','practical applications of','a critical analysis of'];
-    const rows = [];
+  function referencesList(topic, rng, count){
+    const authors = ['Sharma R','Kumar A','Gupta N','Verma S','Singh P','Rao K','Das M','Iyer V','Nair S','Chatterjee A','Mehta P','Reddy T','Bose K','Joshi M','Fernandes L'];
+    const journals = ['Journal of Advanced Computing Research','IEEE Access','ACM Computing Surveys','Journal of Big Data','Neural Computing and Applications','Springer Journal of Applied Sciences','International Journal of Computer Applications','Computing (Springer)'];
+    const angle = ['A study related to','A comparative evaluation of','An empirical investigation into','A systematic review of','A framework for','Emerging trends in','Practical applications of','A critical analysis of'];
+    const out=[];
     for(let i=0;i<count;i++){
       const y = 2020 + (i % 6);
-      const a1 = pick(rng,authors), a2 = pick(rng,authors);
-      rows.push(`${a1}, &amp; ${a2} (${y}). ${titleCase(pick(rng,angle))} ${topic.toLowerCase()}. <i>${pick(rng,journals)}</i>.`);
+      const a1 = pick(rng,authors), a2 = pick(rng,authors), a3=pick(rng,authors);
+      out.push(`[${i+1}] ${a1}, ${a2}, ${a3}. ${pick(rng,angle)} ${topic.toLowerCase()}. ${pick(rng,journals)}. ${y};${10+(i%40)}(${1+(i%4)}):${100+i*7}-${112+i*7}.`);
     }
-    return rows;
+    return out;
   }
-
-  function litReviewTable(topic, rng){
-    const focus = ['Foundational theory','Applied case study','Performance benchmarking','Comparative evaluation','Tooling & implementation','Educational framing'];
-    const rows = focus.map((f,i)=>{
-      const y = 2020+(i%6);
-      return `<tr><td>Study ${i+1}</td><td>${y}</td><td>${f}</td><td>Reports findings relevant to ${topic.toLowerCase()}, with implications discussed in Section 2.</td></tr>`;
-    });
-    return `<table><tr><th>Reference</th><th>Year</th><th>Focus Area</th><th>Key Contribution</th></tr>${rows.join('')}</table>`;
-  }
-
-  function datasetTable(topic){
-    return `<table>
-      <tr><th>Attribute</th><th>Description</th></tr>
-      <tr><td>Scope</td><td>Representative scenario relevant to ${topic}</td></tr>
-      <tr><td>Sample size</td><td>[fill in]</td></tr>
-      <tr><td>Time period</td><td>2020–2026</td></tr>
-      <tr><td>Source</td><td>[fill in — cite your actual data source]</td></tr>
-      <tr><td>Preprocessing</td><td>[fill in]</td></tr>
-    </table>`;
-  }
-
-  function resultsTable(topic, rng){
-    const methods=['Baseline Approach','Approach A','Approach B','Proposed / Hybrid Approach'];
-    const rows = methods.map(m=>{
-      const acc=(70+rng()*22).toFixed(1), eff=(60+rng()*30).toFixed(1), clar=(55+rng()*35).toFixed(1);
-      return `<tr><td>${m}</td><td>${acc}%</td><td>${eff}%</td><td>${clar}%</td></tr>`;
-    });
-    return `<table><tr><th>Method</th><th>Effectiveness</th><th>Efficiency</th><th>Clarity</th></tr>${rows.join('')}</table>`;
-  }
-
-  function comparisonMatrixTable(topic){
-    return `<table>
-      <tr><th>Dimension</th><th>Traditional Approach</th><th>Contemporary Approach to ${topic}</th></tr>
-      <tr><td>Setup complexity</td><td>Lower</td><td>Moderate to higher</td></tr>
-      <tr><td>Scalability</td><td>Limited</td><td>Generally stronger</td></tr>
-      <tr><td>Maintainability</td><td>Straightforward</td><td>Depends on tooling maturity</td></tr>
-      <tr><td>Learning curve</td><td>Gentle</td><td>Steeper initially</td></tr>
-      <tr><td>Typical use case</td><td>Small-scale, well-understood problems</td><td>Larger-scale or evolving problems</td></tr>
-    </table>`;
+  // Embeds bracketed, numbered in-text citations into generated body text —
+  // e.g. "...as shown in prior work [7]." — matching the numbered reference list.
+  function citeInjector(rng, refCount){
+    const pool = Array.from({length:refCount}, (_,i)=>i+1);
+    return function cite(text){
+      const sentences = text.split(/(?<=[.!?])\s+/);
+      return sentences.map((s,i)=>{
+        if(!s || !/[.!?]$/.test(s)) return s;
+        if(rng() < 0.55){
+          const twoRefs = rng() < 0.22;
+          let n1 = pick(rng,pool), n2 = twoRefs ? pick(rng,pool) : null;
+          if(n2!==null && n2===n1) n2 = (n2 % refCount) + 1;
+          const nums = n2!==null ? [n1,n2].sort((a,b)=>a-b) : [n1];
+          return s.slice(0,-1) + ` [${nums.join(',')}]` + s.slice(-1);
+        }
+        return s;
+      }).join(' ');
+    };
   }
 
   function generatePaper(){
     const raw = document.getElementById('paper-topic').value.trim();
     if(!raw){ setStatus('paper-status','Please enter a topic first.','err'); return; }
-    setStatus('paper-status','Assembling a 30+ page draft — writing sections, drawing figures…','busy');
+    if(typeof docx === 'undefined'){
+      setStatus('paper-status','Document library failed to load — check your internet connection and try again.','err'); return;
+    }
+    setStatus('paper-status','Assembling a 30+ page Springer-Nature-style draft — writing sections, drawing figures…','busy');
     document.getElementById('paper-btn').disabled = true;
 
     setTimeout(()=>{
       try{
         const topic = titleCase(raw);
         const t = raw.toLowerCase();
-        const seed = hashSeed(raw);
-        const rng = mulberry32(seed);
+        const rng = mulberry32(hashSeed(raw));
         const keywords = raw.split(/\s+/).filter(w=>w.length>2).slice(0,6).map(w=>w.toLowerCase()).join(', ') || t;
         const date = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+        const REF_COUNT = 38;
+        const cite = citeInjector(rng, REF_COUNT);
+        function CP(bank, paras, sentences){ return genParas(rng,bank,topic,t,paras,sentences).map(x=>P(cite(x))); }
+        function Cp(text){ return P(cite(text)); }
 
         // ---- Figures ----
-        const catCount=5;
         const catLabels=['Approach A','Approach B','Approach C','Approach D','Proposed'];
-        const catValues=catLabels.map(()=>Math.round(55+rng()*40));
-        const fig1 = drawBarChart(`Fig. 1 — Comparative Performance Across Approaches to ${topic}`, catLabels, catValues, '%');
-
+        const fig1 = drawBarChart(`Fig. 1 — Comparative Performance Across Approaches to ${topic}`, catLabels, catLabels.map(()=>Math.round(55+rng()*40)), '%');
         const years=['2021','2022','2023','2024','2025','2026'];
-        const trend=years.map((y,i)=>Math.round(20+i*8+rng()*10));
-        const fig2 = drawLineChart(`Fig. 2 — Publication / Adoption Trend Related to ${topic} (2021–2026)`, years, trend);
-
+        const fig2 = drawLineChart(`Fig. 2 — Publication / Adoption Trend Related to ${topic} (2021–2026)`, years, years.map((y,i)=>Math.round(20+i*8+rng()*10)));
         const pieLabels=['Theoretical','Applied','Comparative','Educational'];
-        const pieValues=pieLabels.map(()=>Math.round(15+rng()*35));
-        const fig3 = drawPieChart(`Fig. 3 — Distribution of Study Focus in Literature on ${topic}`, pieLabels, pieValues);
-
+        const fig3 = drawPieChart(`Fig. 3 — Distribution of Study Focus in Literature on ${topic}`, pieLabels, pieLabels.map(()=>Math.round(15+rng()*35)));
         const fig4 = drawFlowDiagram(`Fig. 4 — Proposed Methodology Pipeline for Studying ${topic}`,
           ['Problem Formulation','Literature Synthesis','Framework / Instrument Design','Data Collection or Selection','Evaluation Against Metrics','Interpretation & Reporting']);
-
         const metricLabels=['Effectiveness','Efficiency','Clarity','Robustness'];
-        const metricValues=metricLabels.map(()=>Math.round(50+rng()*45));
-        const fig5 = drawBarChart(`Fig. 5 — Evaluation Metrics Observed for ${topic}`, metricLabels, metricValues, '%');
+        const fig5 = drawBarChart(`Fig. 5 — Evaluation Metrics Observed for ${topic}`, metricLabels, metricLabels.map(()=>Math.round(50+rng()*45)), '%');
+        const fig6 = drawLineChart(`Fig. 6 — Supplementary Comparison for ${topic}`, ['2024','2025','2026'], ['2024','2025','2026'].map(()=>Math.round(40+rng()*40)), '%');
 
-        const supplLabels=['2024','2025','2026'];
-        const supplValues=supplLabels.map(()=>Math.round(40+rng()*40));
-        const fig6 = drawLineChart(`Fig. 6 — Supplementary Comparison for ${topic}`, supplLabels, supplValues, '%');
+        function litRows(){
+          const focus = ['Foundational theory','Applied case study','Performance benchmarking','Comparative evaluation','Tooling & implementation','Educational framing','Scalability analysis','Longitudinal observation'];
+          return focus.map((f,i)=>[`[${i+1}]`, 2020+(i%6), f, `Reports findings relevant to ${topic.toLowerCase()}, discussed in Sect. 2.`]);
+        }
+        function resultRows(){
+          return ['Baseline Approach','Approach A','Approach B','Proposed / Hybrid Approach'].map(m=>[
+            m, (70+rng()*22).toFixed(1)+'%', (60+rng()*30).toFixed(1)+'%', (55+rng()*35).toFixed(1)+'%'
+          ]);
+        }
+        const abbr1 = (raw.split(/\s+/).map(w=>w[0]).join('').toUpperCase()).slice(0,4) || 'TBD';
 
-        const body = `
-          <h1>${topic}: A Structured Study, Framework, and Evaluation</h1>
-          <p class="muted">Draft prepared ${date} · Dr. Abhishek Bhattacherjee, Department of Computer Science &amp; Engineering, MM(DU), Mullana–Ambala</p>
+        const highlights = [
+          `Proposes a structured, replicable framework for evaluating approaches to ${t}.`,
+          `Synthesises current literature on ${t} into four comparative dimensions: effectiveness, efficiency, clarity and robustness.`,
+          `Presents illustrative empirical results comparing baseline and proposed approaches to ${t}.`,
+          `Identifies open challenges and concrete future research directions for ${t}.`
+        ];
 
-          <h2 class="nobreak">Abstract</h2>
-          <p>This paper presents a structured investigation into ${topic}. We review the direction of recent work in the area, propose a consistent methodology for evaluating approaches related to ${topic}, and present an illustrative empirical framework together with representative results. The discussion synthesises implications for practice and pedagogy, addresses common challenges and limitations, and closes with concrete directions for future research. This draft is intended as a complete structural skeleton — every figure, table and reference is illustrative and must be replaced with the author's own data, sources and analysis prior to submission.</p>
-          <p class="kw">Keywords: ${keywords}</p>
+        const children = [
+          H1(topic),
+          new Paragraph({ children:[new TextRun({text:`A Structured Study, Framework and Evaluation`, italics:true, size:26, color:MEDC})], spacing:{after:240} }),
+          Pmuted(`Draft prepared ${date}`),
+          new Paragraph({ children:[new TextRun({text:"Dr. Abhishek Bhattacherjee", bold:true, size:22})], spacing:{after:20} }),
+          P("Department of Computer Science & Engineering, Maharishi Markandeshwar (Deemed to be University), Mullana–Ambala, Haryana, India", {spacing:{after:20}}),
+          P(`Corresponding author: abhishek.bhattacherjee@mmumullana.org  ·  ORCID: 0000-0000-0000-0000`, {spacing:{after:220}}),
 
-          <h2>Table of Contents</h2>
-          <p class="toc">
-          1. Introduction &nbsp;·&nbsp; 2. Literature Review &nbsp;·&nbsp; 3. Methodology &nbsp;·&nbsp; 4. Results &nbsp;·&nbsp;
-          5. Discussion &nbsp;·&nbsp; 6. Comparative Analysis &amp; Case Study &nbsp;·&nbsp; 7. Challenges &amp; Limitations &nbsp;·&nbsp;
-          8. Conclusion &nbsp;·&nbsp; 9. Future Scope &nbsp;·&nbsp; References &nbsp;·&nbsp; Appendices A–C
-          </p>
+          H4("Highlights"), ...bulletList(highlights),
+          new Paragraph({spacing:{after:120}, children:[]}),
 
-          <h2>1. Introduction</h2>
-          <h3>1.1 Background</h3>
-          ${genParas(rng,BACKGROUND,topic,t,3,5).map(p=>`<p>${p}</p>`).join('')}
-          <h3>1.2 Problem Statement</h3>
-          ${genParas(rng,PROBLEM,topic,t,2,5).map(p=>`<p>${p}</p>`).join('')}
-          <h3>1.3 Objectives of the Study</h3>
-          ${genParas(rng,OBJECTIVES,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
-          <h3>1.4 Significance and Scope</h3>
-          ${genParas(rng,SIGNIFICANCE,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
-          <h3>1.5 Overview of Sections</h3>
-          <p>${genPara(rng,BANK,topic,t,3)} Section 2 reviews related work; Section 3 describes the proposed methodology; Section 4 presents results; Section 5 discusses their implications; Section 6 offers a comparative analysis and illustrative case study; Section 7 addresses challenges and limitations; and Sections 8–9 conclude with a summary and future directions.</p>
+          H4("Abstract"),
+          P(`This paper presents a structured investigation into ${topic}. We review the direction of recent work in the area, propose a consistent methodology for evaluating approaches related to ${topic}, and present an illustrative empirical framework together with representative results. The discussion synthesises implications for practice and pedagogy, addresses common challenges and limitations, and closes with concrete directions for future research. This draft is a complete structural and stylistic skeleton, formatted in the numbered-citation style common to Springer Nature and Elsevier journals — every figure, table, reference and citation marker is illustrative and must be replaced with the author's own data, sources and verified citations prior to submission.`),
+          H4("Keywords"),
+          P(keywords, {spacing:{after:200}}),
 
-          <h2>2. Literature Review</h2>
-          <h3>2.1 Theoretical Foundations</h3>
-          ${genParas(rng,THEORY,topic,t,3,5).map(p=>`<p>${p}</p>`).join('')}
-          <h3>2.2 Empirical Studies</h3>
-          ${genParas(rng,EMPIRICAL,topic,t,3,5).map(p=>`<p>${p}</p>`).join('')}
-          <h3>2.3 Comparative Perspectives</h3>
-          ${genParas(rng,COMPARATIVE,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
-          <h3>2.4 Summary of Reviewed Studies</h3>
-          ${litReviewTable(topic, rng)}
-          <p class="figcap">Table 1 — Illustrative summary of studies related to ${topic} discussed in this review.</p>
-          <h3>2.5 Research Gaps</h3>
-          ${genParas(rng,GAPS,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
+          H2("1 Introduction"),
+          H3("1.1 Background"), ...CP(BACKGROUND,3,5),
+          H3("1.2 Problem Statement"), ...CP(PROBLEM,2,5),
+          H3("1.3 Objectives of the Study"), ...CP(OBJECTIVES,2,4),
+          H3("1.4 Significance and Scope"), ...CP(SIGNIFICANCE,2,4),
+          H3("1.5 Overview of Sections"),
+          P(`${cite(genPara(rng,BANK,topic,t,3))} Section 2 reviews related work; Sect. 3 describes the proposed methodology; Sect. 4 presents results; Sect. 5 discusses their implications; Sect. 6 offers a comparative analysis and illustrative case study; Sect. 7 addresses challenges and limitations; and Sects. 8–9 conclude with a summary and future directions.`),
 
-          <h2>3. Methodology</h2>
-          <h3>3.1 Research Design</h3>
-          ${genParas(rng,DESIGN,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
-          ${img(fig4, 620, `Figure 4 — Proposed methodology pipeline for studying ${topic}.`)}
-          <h3>3.2 Data Collection / Selection</h3>
-          ${genParas(rng,DATA,topic,t,2,3).map(p=>`<p>${p}</p>`).join('')}
-          ${datasetTable(topic)}
-          <p class="figcap">Table 2 — Illustrative dataset / scenario characteristics.</p>
-          <h3>3.3 Tools and Technologies</h3>
-          ${genParas(rng,TOOLS,topic,t,2,3).map(p=>`<p>${p}</p>`).join('')}
-          <h3>3.4 Evaluation Metrics</h3>
-          ${genParas(rng,METRICS,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
-          <h3>3.5 Experimental Setup</h3>
-          ${genParas(rng,SETUP,topic,t,2,3).map(p=>`<p>${p}</p>`).join('')}
+          H2("2 Literature Review"),
+          H3("2.1 Theoretical Foundations"), ...CP(THEORY,3,5),
+          H3("2.2 Empirical Studies"), ...CP(EMPIRICAL,3,5),
+          H3("2.3 Comparative Perspectives"), ...CP(COMPARATIVE,2,4),
+          H3("2.4 Summary of Reviewed Studies"),
+          makeTable(['Ref.','Year','Focus Area','Key Contribution'], litRows()),
+          tblCaption(1, `Summary of studies related to ${topic} discussed in this review, cross-referenced to the numbered reference list.`),
+          H3("2.5 Research Gaps"), ...CP(GAPS,2,4),
 
-          <h2>4. Results</h2>
-          <h3>4.1 Comparative Performance</h3>
-          ${genParas(rng,RESULTS,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
-          ${img(fig1, 620, `Figure 1 — Comparative performance across approaches to ${topic} (illustrative).`)}
-          <h3>4.2 Adoption / Trend Analysis</h3>
-          ${img(fig2, 620, `Figure 2 — Illustrative trend, 2021–2026.`)}
-          <h3>4.3 Distribution of Research Focus</h3>
-          ${img(fig3, 620, `Figure 3 — Distribution of study focus areas in the reviewed literature.`)}
-          <h3>4.4 Detailed Metric Comparison</h3>
-          ${resultsTable(topic, rng)}
-          <p class="figcap">Table 3 — Illustrative results across evaluated methods.</p>
+          H2("3 Methodology"),
+          H3("3.1 Research Design"), ...CP(DESIGN,2,4),
+          ...imageBlock(fig4, 520, figCaption(4, `Proposed methodology pipeline for studying ${topic}.`)),
+          H3("3.2 Data Collection / Selection"), ...CP(DATA,2,3),
+          makeTable(['Attribute','Description'], [
+            ['Scope', `Representative scenario relevant to ${topic}`],
+            ['Sample size', '≈1,000 representative instances (illustrative — replace with your actual N)'],
+            ['Time period', '2020–2026'],
+            ['Source', 'Publicly available benchmark data relevant to the domain (illustrative placeholder)'],
+            ['Preprocessing', 'Standard cleaning, normalisation, and train/validation/test partitioning']
+          ]),
+          tblCaption(2, 'Dataset / scenario characteristics (illustrative).'),
+          H3("3.3 Tools and Technologies"), ...CP(TOOLS,2,3),
+          H3("3.4 Evaluation Metrics"), ...CP(METRICS,2,4),
+          H3("3.5 Experimental Setup"), ...CP(SETUP,2,3),
 
-          <h2>5. Discussion</h2>
-          <h3>5.1 Interpretation of Findings</h3>
-          ${genParas(rng,DISCUSSION,topic,t,3,5).map(p=>`<p>${p}</p>`).join('')}
-          <h3>5.2 Evaluation Against Objectives</h3>
-          ${img(fig5, 600, `Figure 5 — Evaluation metrics observed for ${topic} (illustrative).`)}
-          <h3>5.3 Implications for Practice</h3>
-          ${genParas(rng,DISCUSSION,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
-          <h3>5.4 Implications for Pedagogy</h3>
-          <p>${genPara(rng,BANK,topic,t,4)} These implications are particularly relevant for institutions such as MM(DU) that emphasise applied, project-based learning around topics like ${t}.</p>
+          H2("4 Results"),
+          H3("4.1 Comparative Performance"), ...CP(RESULTS,2,4),
+          ...imageBlock(fig1, 520, figCaption(1, `Comparative performance across approaches to ${topic} (illustrative).`)),
+          H3("4.2 Adoption / Trend Analysis"),
+          ...imageBlock(fig2, 520, figCaption(2, `Illustrative trend, 2021–2026.`)),
+          H3("4.3 Distribution of Research Focus"),
+          ...imageBlock(fig3, 520, figCaption(3, `Distribution of study focus areas in the reviewed literature.`)),
+          H3("4.4 Detailed Metric Comparison"),
+          makeTable(['Method','Effectiveness','Efficiency','Clarity'], resultRows()),
+          tblCaption(3, 'Results across evaluated methods (illustrative).'),
 
-          <h2>6. Comparative Analysis and Illustrative Case Study</h2>
-          <h3>6.1 Traditional vs. Contemporary Approaches</h3>
-          ${comparisonMatrixTable(topic)}
-          <p class="figcap">Table 4 — Illustrative comparison matrix.</p>
-          <h3>6.2 Case Study</h3>
-          ${genParas(rng,CASE,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
+          H2("5 Discussion"),
+          H3("5.1 Interpretation of Findings"), ...CP(DISCUSSION,3,5),
+          H3("5.2 Evaluation Against Objectives"),
+          ...imageBlock(fig5, 500, figCaption(5, `Evaluation metrics observed for ${topic} (illustrative).`)),
+          H3("5.3 Implications for Practice"), ...CP(DISCUSSION,2,4),
+          H3("5.4 Implications for Pedagogy"),
+          Cp(`${genPara(rng,BANK,topic,t,4)} These implications are particularly relevant for institutions such as MM(DU) that emphasise applied, project-based learning around topics like ${t}.`),
 
-          <h2>7. Challenges and Limitations</h2>
-          ${genParas(rng,CHALLENGES,topic,t,3,5).map(p=>`<p>${p}</p>`).join('')}
+          H2("6 Comparative Analysis and Illustrative Case Study"),
+          H3("6.1 Traditional vs. Contemporary Approaches"),
+          makeTable(['Dimension','Traditional Approach', `Contemporary Approach to ${topic}`], [
+            ['Setup complexity','Lower','Moderate to higher'],
+            ['Scalability','Limited','Generally stronger'],
+            ['Maintainability','Straightforward','Depends on tooling maturity'],
+            ['Learning curve','Gentle','Steeper initially'],
+            ['Typical use case','Small-scale, well-understood problems','Larger-scale or evolving problems']
+          ]),
+          tblCaption(4, 'Comparison matrix (illustrative).'),
+          H3("6.2 Case Study"), ...CP(CASE,2,4),
 
-          <h2>8. Conclusion</h2>
-          ${genParas(rng,CONCLUSION,topic,t,2,4).map(p=>`<p>${p}</p>`).join('')}
+          H2("7 Challenges and Limitations"), ...CP(CHALLENGES,3,5),
 
-          <h2>9. Future Scope</h2>
-          ${genParas(rng,FUTURE,topic,t,4,5).map(p=>`<p>${p}</p>`).join('')}
+          H2("8 Conclusion"), ...CP(CONCLUSION,2,4),
 
-          <h2>References</h2>
-          <p class="muted">Illustrative reference list, formatted in APA style — replace with sources you have verified independently before submission.</p>
-          ${referencesTemplate(topic, rng, 38).map(r=>`<p>${r}</p>`).join('')}
+          H2("9 Future Scope"), ...CP(FUTURE,4,5),
 
-          <h2>Appendix A: List of Abbreviations</h2>
-          <table><tr><th>Abbreviation</th><th>Expansion</th></tr>
-          <tr><td>${(raw.split(/\s+/).map(w=>w[0]).join('').toUpperCase()).slice(0,4) || 'TBD'}</td><td>${topic} (working abbreviation — replace with the standard one, if any)</td></tr>
-          <tr><td>[Abbr.]</td><td>[fill in]</td></tr>
-          <tr><td>[Abbr.]</td><td>[fill in]</td></tr>
-          <tr><td>[Abbr.]</td><td>[fill in]</td></tr></table>
+          H2("Declarations"),
+          H4("Funding"), P("This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors."),
+          H4("Conflict of Interest / Competing Interests"), P("The author declares no conflict of interest or competing interests relevant to the content of this article."),
+          H4("Ethics Approval"), P("This study did not involve human participants, human data, or animal subjects, and formal ethics approval was therefore not required."),
+          H4("Consent to Participate"), P("Not applicable — this study did not involve individual participants."),
+          H4("Consent for Publication"), P("Not applicable."),
+          H4("Availability of Data and Materials"), P("The datasets used to illustrate this framework are publicly available benchmark resources; the specific dataset(s) used in the author's own study should be named here, along with access details or the reason access is restricted."),
+          H4("Code Availability"), P("Custom code developed for this study, if any, will be made available from the corresponding author upon reasonable request."),
+          H4("Authors' Contributions"), P(`Dr. Abhishek Bhattacherjee is the sole author of this manuscript and is responsible for its conceptualisation, methodology, analysis, and preparation, including writing — original draft and writing — review & editing.`, {spacing:{after:200}}),
 
-          <h2>Appendix B: Supplementary Data</h2>
-          <p>${genPara(rng,RESULTS,topic,t,3)}</p>
-          ${resultsTable(topic, rng)}
-          <p class="figcap">Table 5 — Supplementary illustrative results for ${topic}.</p>
-          ${img(fig6, 600, `Figure 6 — Supplementary comparison chart for ${topic}.`)}
+          H2break("References"),
+          Pmuted("Numbered reference list (Vancouver / Elsevier–Springer style), matching the bracketed in-text citations used throughout this draft. Replace every entry with sources you have verified independently before submission."),
+          ...referencesList(topic, rng, REF_COUNT).map(r=>P(r, {alignment:AlignmentType.LEFT, spacing:{after:90}})),
 
-          <h2>Appendix C: Author Note</h2>
-          <p>This draft was assembled as a structural starting point for a paper on ${topic}, prepared for Dr. Abhishek Bhattacherjee, Department of Computer Science &amp; Engineering, MM(DU), Mullana–Ambala. All figures, tables, and references above are illustrative placeholders generated to demonstrate structure and formatting; they must be replaced with the author's genuine research, data, and verified citations before the paper is submitted anywhere.</p>
-        `;
-        saveAsWord(topic, body, `${safeFilename(topic)}_Research_Paper_Draft.doc`);
-        setStatus('paper-status','Downloaded — a long-form draft with 6 figures, 6 tables, 3 appendices and full section structure. Open in Word to continue.','ok');
+          H2("Appendix A: List of Abbreviations"),
+          makeTable(['Abbreviation','Expansion'], [
+            [abbr1, `${topic} (working abbreviation used throughout this draft — replace with the standard one, if any, in your field)`],
+            ['IMRaD', 'Introduction, Methods, Results, and Discussion — the structure this draft follows'],
+            ['N/A', 'Not applicable']
+          ]),
+
+          H2("Appendix B: Supplementary Data"),
+          Cp(genPara(rng,RESULTS,topic,t,3)),
+          makeTable(['Method','Effectiveness','Efficiency','Clarity'], resultRows()),
+          tblCaption(5, `Supplementary results for ${topic} (illustrative).`),
+          ...imageBlock(fig6, 480, figCaption(6, `Supplementary comparison chart for ${topic}.`)),
+
+          H2("Appendix C: Author Note"),
+          P(`This draft was assembled as a structural and stylistic starting point for a paper on ${topic}, prepared for Dr. Abhishek Bhattacherjee, Department of Computer Science & Engineering, MM(DU), Mullana–Ambala, formatted to resemble a Springer Nature / Elsevier journal article, including numbered in-text citations. All figures, tables, citation markers and references above are illustrative placeholders generated to demonstrate structure and formatting; they must be replaced with the author's genuine research, data, and verified citations before the paper is submitted anywhere.`)
+        ];
+
+        buildAndDownload(children, topic.slice(0,50), `${safeFilename(topic)}_Research_Paper_Draft.docx`);
+        setStatus('paper-status','Downloaded a real .docx — Highlights, Abstract, 9 cited sections, 6 figures, 6 tables, Declarations, 38 numbered references with in-text citations, 3 appendices. Open in Word to continue.','ok');
         toast('Research paper draft downloaded.');
       }catch(e){
         console.error(e);
-        setStatus('paper-status','Something went wrong generating the draft.','err');
+        setStatus('paper-status','Something went wrong generating the draft. Please try again.','err');
         toast('Could not generate the draft. Please try again.', true);
       }finally{
         document.getElementById('paper-btn').disabled = false;
       }
-    }, 300);
+    }, 250);
   }
 
   /* =======================================================================
-     NOTES — 30–50 page structured notes with diagrams & a mind map
+     NOTES — real .docx, 30–50 pages, diagrams + mind map, easy-to-read
      ======================================================================= */
-  const OVERVIEW = [
-    "{T} is a subject that students typically encounter as part of the core Computer Science curriculum, and a solid grasp of it supports many later, more advanced topics.",
-    "At its core, {t} is concerned with a well-defined problem, along with a set of established techniques for addressing it.",
-    "Understanding {t} well means being comfortable both with its formal definition and with how it shows up in everyday systems and applications.",
-    "This chapter introduces {t} from first principles, building up gradually towards more advanced detail in later sections.",
-    "Students are encouraged to connect {t} to examples they already know, rather than memorising definitions in isolation."
-  ];
-  const HISTORY = [
-    "The ideas behind {t} developed gradually, often in response to limitations encountered in earlier, simpler techniques.",
-    "As computing systems grew more capable, the scope of problems addressed under the umbrella of {t} grew correspondingly.",
-    "Studying this history helps explain why certain conventions around {t} exist today, even where they may seem arbitrary at first glance.",
-    "Modern treatments of {t} still carry the influence of these earlier developments, even as the tools themselves have changed considerably."
-  ];
-  const HOWWORKS = [
-    "{T} generally proceeds through a sequence of well-defined stages, each building on the output of the one before it.",
-    "A clear mental model of these stages makes {t} far easier to reason about, debug, and extend.",
-    "At each stage, specific inputs are transformed into specific outputs, according to rules that are worth memorising precisely.",
-    "Working through {t} by hand, on a small example, is one of the most effective ways to build lasting intuition for it."
-  ];
-  const APPLICATIONS = [
-    "{T} appears in a wide range of real-world systems, often in ways that are not immediately obvious to end users.",
-    "Understanding where {t} is applied in practice helps motivate why it is worth learning in depth.",
-    "Industry applications of {t} span multiple sectors, from consumer software to large-scale infrastructure.",
-    "Recognising {t} in the tools students already use daily can make the underlying theory feel far more concrete."
-  ];
-  const MISTAKES = [
-    "A common mistake when first learning {t} is focusing on syntax or mechanics before understanding the underlying idea.",
-    "Students often underestimate how {t} behaves at scale, having only tested it on small, simplified examples.",
-    "Another frequent error is treating {t} as an isolated topic, rather than connecting it to related concepts covered elsewhere in the course.",
-    "Careful, incremental practice — rather than passive reading — is the most reliable way to avoid these common pitfalls with {t}."
-  ];
-  const BESTPRACT = [
-    "When working with {t}, it is good practice to start with the simplest version of the problem before adding complexity.",
-    "Documenting assumptions clearly when applying {t} makes later debugging and review considerably easier.",
-    "Testing edge cases early, rather than only the common case, tends to reveal the most important properties of {t}.",
-    "Revisiting {t} periodically, rather than learning it once and moving on, helps the underlying intuition stick."
-  ];
-  const SUMMARYBANK = [
-    "In summary, {t} combines a clear theoretical foundation with broad practical relevance across computing.",
-    "The key ideas covered in this chapter provide the groundwork needed to explore more advanced treatments of {t}.",
-    "Students should leave this chapter able to define {t}, explain how it works, and identify it in real systems."
-  ];
-
-  function glossaryTable(topic, rng){
-    const terms = ['Core Definition','Key Property 1','Key Property 2','Common Variant','Related Concept','Standard Notation','Typical Metric','Edge Case','Common Tool','Alternative Approach'];
-    const rows = terms.map(term=>`<tr><td><b>${term}</b></td><td>[Define this term precisely as it relates to ${topic}.]</td></tr>`);
-    return `<table><tr><th>Term</th><th>Definition</th></tr>${rows.join('')}</table>`;
-  }
-  function compareTable(topic){
-    return `<table>
-      <tr><th>Aspect</th><th>${topic}</th><th>Related / Contrasting Concept</th></tr>
-      <tr><td>Primary purpose</td><td>[fill in]</td><td>[fill in]</td></tr>
-      <tr><td>Typical use case</td><td>[fill in]</td><td>[fill in]</td></tr>
-      <tr><td>Complexity</td><td>[fill in]</td><td>[fill in]</td></tr>
-      <tr><td>Strengths</td><td>[fill in]</td><td>[fill in]</td></tr>
-      <tr><td>Weaknesses</td><td>[fill in]</td><td>[fill in]</td></tr>
-    </table>`;
-  }
-  function prosConsTable(){
-    return `<table><tr><th>Advantages</th><th>Disadvantages / Limitations</th></tr>
-      <tr><td>•</td><td>•</td></tr><tr><td>•</td><td>•</td></tr><tr><td>•</td><td>•</td></tr></table>`;
-  }
-
   function generateNotes(){
     const raw = document.getElementById('notes-topic').value.trim();
     if(!raw){ setStatus('notes-status','Please enter a topic first.','err'); return; }
+    if(typeof docx === 'undefined'){
+      setStatus('notes-status','Document library failed to load — check your internet connection and try again.','err'); return;
+    }
     setStatus('notes-status','Drafting a long-form notes document — writing chapters, drawing the mind map…','busy');
     document.getElementById('notes-btn').disabled = true;
 
@@ -1465,241 +1470,216 @@ const Dossier = (() => {
       try{
         const topic = titleCase(raw);
         const t = raw.toLowerCase();
-        const seed = hashSeed(raw+'_notes');
-        const rng = mulberry32(seed);
+        const rng = mulberry32(hashSeed(raw+'_notes'));
         const date = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
 
         const timeline = drawTimeline(`Fig. A — Evolution of ${topic} Over Time`, [
-          {year:'Origins', label:'Early foundational work'},
-          {year:'Growth', label:'Broader adoption & tooling'},
-          {year:'Maturity', label:'Standardisation & best practice'},
-          {year:'Today', label:`Modern approaches to ${topic}`},
-        ]);
-
+          {year:'Origins', label:'Early foundational work'}, {year:'Growth', label:'Broader adoption & tooling'},
+          {year:'Maturity', label:'Standardisation & best practice'}, {year:'Today', label:`Modern approaches to ${topic}`} ]);
         const mindmap = drawMindMap(`Fig. B — Mind Map: ${topic}`, topic, [
-          {label:'Definition', leaves:['Core idea','Formal statement']},
-          {label:'Components', leaves:['Component 1','Component 2']},
-          {label:'How it Works', leaves:['Step-by-step flow','Key rules']},
-          {label:'Applications', leaves:['Real-world use 1','Real-world use 2']},
-          {label:'Related Concepts', leaves:['Concept A','Concept B']},
-          {label:'Challenges', leaves:['Common pitfall','Open question']},
-        ]);
-
+          {label:'Definition', leaves:['Core idea','Formal statement']}, {label:'Components', leaves:['Component 1','Component 2']},
+          {label:'How it Works', leaves:['Step-by-step flow','Key rules']}, {label:'Applications', leaves:['Real-world use 1','Real-world use 2']},
+          {label:'Related Concepts', leaves:['Concept A','Concept B']}, {label:'Challenges', leaves:['Common pitfall','Open question']} ]);
         const architecture = drawFlowDiagram(`Fig. C — Core Components of ${topic}`,
           ['Input / Preconditions','Core Processing Logic','Intermediate Representation','Output / Result','Validation & Edge-case Handling']);
-
         const flow = drawFlowDiagram(`Fig. D — Step-by-Step Working of ${topic}`,
           ['Identify inputs and constraints','Apply the core rule or algorithm','Handle special / edge cases','Produce and verify the output']);
-
-        const catLabels=['Ease of Understanding','Practical Relevance','Exam Weightage','Real-world Usage'];
-        const catValues=catLabels.map(()=>Math.round(55+rng()*40));
-        const relevanceChart = drawBarChart(`Fig. E — Relevance Snapshot: ${topic}`, catLabels, catValues, '%');
-
+        const relevanceChart = drawBarChart(`Fig. E — Relevance Snapshot: ${topic}`,
+          ['Ease of Understanding','Practical Relevance','Exam Weightage','Real-world Usage'],
+          [1,2,3,4].map(()=>Math.round(55+rng()*40)), '%');
         const comparisonChart = drawBarChart(`Fig. F — ${topic} vs. Related Concept, by Dimension`,
-          ['Complexity','Learning Curve','Performance','Flexibility'],
-          ['Complexity','Learning Curve','Performance','Flexibility'].map(()=>Math.round(45+rng()*45)), '%');
+          ['Complexity','Learning Curve','Performance','Flexibility'], [1,2,3,4].map(()=>Math.round(45+rng()*45)), '%');
 
-        function chapter(no, title, bank, paras, sentences, extraHtml){
-          return `<h2>${no}. ${title}</h2>` +
-            genParas(rng,bank,topic,t,paras,sentences).map(p=>`<p>${p}</p>`).join('') +
-            (extraHtml||'');
+        function glossaryRows(){
+          const banks = [OVERVIEW,THEORY,BANK,APPLICATIONS,HOWWORKS,COMPARATIVE,METRICS,MISTAKES,TOOLS,BESTPRACT];
+          const terms = ['Core Definition','Key Property 1','Key Property 2','Common Variant','Related Concept','Standard Notation','Typical Metric','Edge Case','Common Tool','Alternative Approach'];
+          return terms.map((term,i)=>[term, genPara(rng, banks[i%banks.length], topic, t, 1)]);
+        }
+        function appRows(){
+          const cats = ['Large-scale software systems','Everyday consumer applications','Academic and research tooling','Enterprise data platforms','Mobile and embedded devices','Emerging, fast-growing systems'];
+          return cats.map((c,i)=>[String(i+1), c, genPara(rng,APPLICATIONS,topic,t,1)]);
         }
 
-        const body = `
-          <h1>${topic} — Complete Class Notes</h1>
-          <p class="muted">Prepared ${date} · Dr. Abhishek Bhattacherjee, Department of Computer Science &amp; Engineering, MM(DU), Mullana–Ambala</p>
-          <p class="kw">A structured, self-study-ready reference covering theory, diagrams, worked examples and practice questions.</p>
+        const children = [
+          H1(`${topic}`),
+          new Paragraph({ children:[new TextRun({text:"Complete Class Notes", italics:true, size:26, color:MEDC})], spacing:{after:180} }),
+          Pmuted(`Prepared ${date}  ·  Dr. Abhishek Bhattacherjee  ·  Department of Computer Science & Engineering, MM(DU), Mullana–Ambala`),
+          P("A structured, self-study-ready reference covering theory, diagrams, worked examples and practice questions — written to be easy to follow, chapter by chapter.", {spacing:{after:260}}),
 
-          <h2>Table of Contents</h2>
-          <p class="toc">1. Introduction &amp; Motivation · 2. Historical Background · 3. Terminology &amp; Glossary · 4. Mind Map Overview ·
-          5–8. Core Concepts (Four Parts) · 9. Core Components / Architecture · 10. How It Works, Step by Step ·
-          11. Worked Example · 12. Real-World Applications · 13. Comparison with a Related Concept · 14. Advantages &amp; Disadvantages ·
-          15. Common Mistakes &amp; Misconceptions · 16. Best Practices &amp; Study Tips · 17. Solved Practice Problems ·
-          18. Practice Questions · 19. Summary &amp; Key Takeaways · 20. Quick-Reference Card · 21. Further Reading</p>
+          H2("1. Introduction and Motivation"),
+          ...genParas(rng,OVERVIEW,topic,t,5,6).map(x=>P(x)),
+          H3("1.1 Who This Chapter Is For"), P(genPara(rng,APPLICATIONS,topic,t,4)),
+          H3("1.2 How to Use These Notes"),
+          P(`${genPara(rng,BESTPRACT,topic,t,4)} Each chapter that follows builds on the last, so working through them in order — rather than jumping straight to the practice questions — will give the strongest foundation.`),
 
-          ${chapter(1,'Introduction and Motivation',OVERVIEW,5,6)}
-          <h3>1.1 Who This Chapter Is For</h3>
-          <p>${genPara(rng,APPLICATIONS,topic,t,4)}</p>
-          <h3>1.2 How to Use These Notes</h3>
-          <p>${genPara(rng,BESTPRACT,topic,t,4)} Each chapter that follows builds on the last, so working through them in order — rather than jumping straight to the practice questions — will give the strongest foundation.</p>
+          H2("2. Historical Background"),
+          ...genParas(rng,HISTORY,topic,t,4,5).map(x=>P(x)),
+          ...imageBlock(timeline, 480, figCaption('A', `A simplified evolution of ${topic}.`)),
+          H3("2.1 Why the History Matters"), P(genPara(rng,HISTORY,topic,t,4)),
 
-          ${chapter(2,'Historical Background',HISTORY,4,5, img(timeline,600,`Figure A — A simplified evolution of ${topic}.`))}
-          <h3>2.1 Why the History Matters</h3>
-          <p>${genPara(rng,HISTORY,topic,t,4)}</p>
+          H2("3. Terminology & Glossary"),
+          P(`Before going further, it helps to fix the vocabulary used throughout this chapter. ${genPara(rng,OVERVIEW,topic,t,3)} Fill in each definition below precisely, in your own words, as you study — writing a definition out by hand is one of the most reliable ways to confirm you actually understand it.`),
+          makeTable(['Term','Definition'], glossaryRows()),
+          P(genPara(rng,MISTAKES,topic,t,3)),
 
-          <h2>3. Terminology &amp; Glossary</h2>
-          <p>Before going further, it helps to fix the vocabulary used throughout this chapter. ${genPara(rng,OVERVIEW,topic,t,3)} Fill in each definition below precisely, in your own words, as you study — writing a definition out by hand is one of the most reliable ways to confirm you actually understand it.</p>
-          ${glossaryTable(topic, rng)}
-          <p>${genPara(rng,MISTAKES,topic,t,3)}</p>
+          H2("4. Mind Map Overview"),
+          P(`The map below gives a bird's-eye view of how the major pieces of ${topic} relate to one another. ${genPara(rng,OVERVIEW,topic,t,3)} Use it as a revision anchor — cover the leaves and try to recall them from memory before checking back against the chapters that follow.`),
+          ...imageBlock(mindmap, 500, figCaption('B', `Mind map of ${topic}.`)),
 
-          <h2>4. Mind Map Overview</h2>
-          <p>The map below gives a bird's-eye view of how the major pieces of ${topic} relate to one another. ${genPara(rng,OVERVIEW,topic,t,3)} Use it as a revision anchor — cover the leaves and try to recall them from memory before checking back against the chapters that follow.</p>
-          ${img(mindmap, 640, `Figure B — Mind map of ${topic}.`)}
+          H2("5. Core Concepts — Part I: Foundations"),
+          P(genPara(rng,OVERVIEW,topic,t,5)), P(genPara(rng,THEORY,topic,t,4)),
+          H3("5.1 Foundational Idea"), P(`${genPara(rng,OVERVIEW,topic,t,3)} ${genPara(rng,THEORY,topic,t,2)}`),
+          H3("5.2 Formal Statement"), P(`${genPara(rng,THEORY,topic,t,3)} ${genPara(rng,BANK,topic,t,2)}`),
+          H3("5.3 Why This Foundation Matters"), P(genPara(rng,SIGNIFICANCE,topic,t,4)),
 
-          <h2>5. Core Concepts — Part I: Foundations</h2>
-          <p>${genPara(rng,OVERVIEW,topic,t,5)}</p>
-          <p>${genPara(rng,THEORY,topic,t,4)}</p>
-          <h3>5.1 Foundational Idea</h3>
-          <p>${genPara(rng,OVERVIEW,topic,t,3)} [Explain the single most important idea behind ${topic} here, in plain language, building on the framing above.]</p>
-          <h3>5.2 Formal Statement</h3>
-          <p>${genPara(rng,THEORY,topic,t,3)} [Give the precise, textbook definition of ${topic} here, with notation if relevant.]</p>
-          <h3>5.3 Why This Foundation Matters</h3>
-          <p>${genPara(rng,SIGNIFICANCE,topic,t,4)}</p>
+          H2("6. Core Concepts — Part II: Building Blocks"),
+          P(genPara(rng,HOWWORKS,topic,t,4)),
+          H3("6.1 Key Component A"), P(`${genPara(rng,THEORY,topic,t,3)} ${genPara(rng,EMPIRICAL,topic,t,2)}`),
+          H3("6.2 Key Component B"), P(`${genPara(rng,EMPIRICAL,topic,t,3)} ${genPara(rng,THEORY,topic,t,2)}`),
+          H3("6.3 How the Components Interact"), P(`${genPara(rng,HOWWORKS,topic,t,4)} ${genPara(rng,BANK,topic,t,2)}`),
 
-          <h2>6. Core Concepts — Part II: Building Blocks</h2>
-          <p>${genPara(rng,HOWWORKS,topic,t,4)}</p>
-          <h3>6.1 Key Component A</h3>
-          <p>${genPara(rng,THEORY,topic,t,3)} [Explain the first major building block of ${topic}.]</p>
-          <h3>6.2 Key Component B</h3>
-          <p>${genPara(rng,EMPIRICAL,topic,t,3)} [Explain the second major building block of ${topic}.]</p>
-          <h3>6.3 How the Components Interact</h3>
-          <p>${genPara(rng,HOWWORKS,topic,t,4)} [Explain how the pieces above combine to produce the overall behaviour of ${topic}.]</p>
+          H2("7. Core Concepts — Part III: Variants & Special Cases"),
+          P(genPara(rng,COMPARATIVE,topic,t,4)),
+          H3("7.1 Common Variant 1"), P(`${genPara(rng,COMPARATIVE,topic,t,3)} ${genPara(rng,DESIGN,topic,t,1)}`),
+          H3("7.2 Common Variant 2"), P(`${genPara(rng,COMPARATIVE,topic,t,3)} ${genPara(rng,GAPS,topic,t,1)}`),
+          H3("7.3 Edge Cases to Remember"), P(`${genPara(rng,MISTAKES,topic,t,4)} ${genPara(rng,CHALLENGES,topic,t,2)}`),
 
-          <h2>7. Core Concepts — Part III: Variants &amp; Special Cases</h2>
-          <p>${genPara(rng,COMPARATIVE,topic,t,4)}</p>
-          <h3>7.1 Common Variant 1</h3>
-          <p>${genPara(rng,COMPARATIVE,topic,t,3)} [Describe a common variation of ${topic}, and when it is preferred.]</p>
-          <h3>7.2 Common Variant 2</h3>
-          <p>${genPara(rng,COMPARATIVE,topic,t,3)} [Describe another variation, and its trade-offs relative to the standard approach.]</p>
-          <h3>7.3 Edge Cases to Remember</h3>
-          <p>${genPara(rng,MISTAKES,topic,t,4)} [List 3–4 edge cases students commonly get wrong for ${topic}.]</p>
+          H2("8. Core Concepts — Part IV: Underlying Rules"),
+          P(genPara(rng,HOWWORKS,topic,t,5)), P(genPara(rng,BANK,topic,t,4)),
+          P(genPara(rng,METRICS,topic,t,3)),
 
-          <h2>8. Core Concepts — Part IV: Underlying Rules</h2>
-          <p>${genPara(rng,HOWWORKS,topic,t,5)}</p>
-          <p>${genPara(rng,BANK,topic,t,4)}</p>
-          <p>[Summarise the essential rules or laws governing ${topic} that students must memorise, in your own concise wording.]</p>
+          H2("9. Core Components / Architecture"),
+          P(`The diagram below breaks ${topic} into its constituent parts, in the order they are typically encountered. ${genPara(rng,HOWWORKS,topic,t,3)}`),
+          ...imageBlock(architecture, 500, figCaption('C', `Core components of ${topic}.`)),
+          P(genPara(rng,BANK,topic,t,3)),
 
-          <h2>9. Core Components / Architecture</h2>
-          <p>The diagram below breaks ${topic} into its constituent parts, in the order they are typically encountered. ${genPara(rng,HOWWORKS,topic,t,3)}</p>
-          ${img(architecture, 620, `Figure C — Core components of ${topic}.`)}
-          <p>${genPara(rng,BANK,topic,t,3)}</p>
+          H2("10. How It Works, Step by Step"),
+          ...genParas(rng,HOWWORKS,topic,t,4,5).map(x=>P(x)),
+          ...imageBlock(flow, 480, figCaption('D', `Step-by-step working of ${topic}.`)),
+          P(genPara(rng,BESTPRACT,topic,t,3)),
 
-          <h2>10. How It Works, Step by Step</h2>
-          ${genParas(rng,HOWWORKS,topic,t,4,5).map(p=>`<p>${p}</p>`).join('')}
-          ${img(flow, 600, `Figure D — Step-by-step working of ${topic}.`)}
-          <p>${genPara(rng,BESTPRACT,topic,t,3)}</p>
+          H2("11. Worked Examples"),
+          P(`${genPara(rng,OVERVIEW,topic,t,3)} Walk through each worked example carefully, and try to reproduce it without looking once you have read it through.`),
+          H3("11.1 Example 1 — Standard Case"),
+          P(`Problem: Consider a small, self-contained instance of ${topic} — just complex enough to exercise its core mechanism, simple enough to work through by hand.`),
+          P(`Step 1: Identify the specific inputs and any constraints that apply in this instance. Step 2: Apply the core rule or procedure that defines ${topic} to those inputs, one stage at a time. Step 3: Check the intermediate result against the constraints identified in Step 1. Result: The output satisfies the defining property of ${topic}; confirm this by tracing back through each step above.`),
+          H3("11.2 Example 2 — Edge Case"),
+          P(genPara(rng,MISTAKES,topic,t,2)),
+          P(`Problem: Consider a boundary or edge-case instance of ${topic} — one that sits right at the limit of the usual assumptions. Step 1: Identify which of the usual assumptions is being stretched or broken here. Step 2: Apply the same core procedure as Example 1, watching closely for where it behaves differently. Result: The outcome differs from the standard case precisely because of the assumption identified in Step 1 — this is exactly the kind of case that shows up in exam questions.`),
+          H3("11.3 Example 3 — Applied / Real-World Framing"),
+          P(`Scenario: ${genPara(rng,APPLICATIONS,topic,t,1)} Approach: The same core procedure from Example 1 applies here, translated into the vocabulary of this specific system. Outcome: ${genPara(rng,BANK,topic,t,1)}`),
 
-          <h2>11. Worked Examples</h2>
-          <p>${genPara(rng,OVERVIEW,topic,t,3)} Walk through each worked example carefully, and try to reproduce it without looking once you have read it through.</p>
-          <h3>11.1 Example 1 — Standard Case</h3>
-          <p><b>Problem:</b> [State a concrete, representative problem involving ${topic}.]</p>
-          <p><b>Step 1:</b> [First step of the solution.]<br>
-          <b>Step 2:</b> [Second step of the solution.]<br>
-          <b>Step 3:</b> [Third step of the solution.]<br>
-          <b>Result:</b> [Final answer and a one-line interpretation.]</p>
-          <h3>11.2 Example 2 — Edge Case</h3>
-          <p>${genPara(rng,MISTAKES,topic,t,2)}</p>
-          <p><b>Problem:</b> [State a trickier, edge-case example involving ${topic}.]</p>
-          <p><b>Step 1:</b> [First step of the solution.]<br>
-          <b>Step 2:</b> [Second step of the solution.]<br>
-          <b>Result:</b> [Final answer, noting what makes this case different from Example 1.]</p>
-          <h3>11.3 Example 3 — Applied / Real-World Framing</h3>
-          <p><b>Scenario:</b> [Describe a short real-world scenario involving ${topic}.]<br>
-          <b>Approach:</b> [Explain how the concept applies here.]<br>
-          <b>Outcome:</b> [State the result and what it demonstrates.]</p>
+          H2("12. Real-World Applications"),
+          ...genParas(rng,APPLICATIONS,topic,t,4,5).map(x=>P(x)),
+          makeTable(['#','Application Area','Why It Matters Here'], appRows()),
 
-          ${chapter(12,'Real-World Applications',APPLICATIONS,4,5,`
-            <table><tr><th>#</th><th>Application</th><th>Why ${topic} Matters Here</th></tr>
-            <tr><td>1</td><td>[Application 1]</td><td>[fill in]</td></tr>
-            <tr><td>2</td><td>[Application 2]</td><td>[fill in]</td></tr>
-            <tr><td>3</td><td>[Application 3]</td><td>[fill in]</td></tr>
-            <tr><td>4</td><td>[Application 4]</td><td>[fill in]</td></tr>
-            <tr><td>5</td><td>[Application 5]</td><td>[fill in]</td></tr>
-            <tr><td>6</td><td>[Application 6]</td><td>[fill in]</td></tr></table>
-          `)}
+          H2("13. Comparison with a Related Concept"),
+          P(`Comparing ${topic} against a related concept is one of the fastest ways to sharpen your understanding of both. ${genPara(rng,COMPARATIVE,topic,t,4)}`),
+          makeTable(['Aspect', topic, 'Related / Contrasting Concept'], [
+            ['Primary purpose', 'Solves the specific problem defined by its formal statement (Chapter 5).', 'Addresses a closely related but distinct problem, often confused with this one.'],
+            ['Typical use case', genPara(rng,APPLICATIONS,topic,t,1), 'Used in adjacent scenarios where the exact conditions above do not quite hold.'],
+            ['Complexity', genPara(rng,METRICS,topic,t,1), 'Generally comparable in practice, though the specific trade-offs differ.'],
+            ['Strengths', genPara(rng,SIGNIFICANCE,topic,t,1), 'Often simpler to reason about in the narrower cases it is designed for.'],
+            ['Weaknesses', genPara(rng,CHALLENGES,topic,t,1), `Can struggle exactly where ${t} is strongest, and vice versa.`]
+          ]),
+          ...imageBlock(comparisonChart, 460, figCaption('F', `Illustrative side-by-side comparison for ${topic}.`)),
 
-          <h2>13. Comparison with a Related Concept</h2>
-          <p>Comparing ${topic} against a related concept is one of the fastest ways to sharpen your understanding of both. ${genPara(rng,COMPARATIVE,topic,t,4)}</p>
-          ${compareTable(topic)}
-          ${img(comparisonChart, 560, `Figure F — Illustrative side-by-side comparison for ${topic}.`)}
+          H2("14. Advantages & Disadvantages"),
+          P(genPara(rng,CHALLENGES,topic,t,3)),
+          makeTable(['Advantages','Disadvantages / Limitations'], [
+            [genPara(rng,SIGNIFICANCE,topic,t,1), genPara(rng,CHALLENGES,topic,t,1)],
+            [genPara(rng,APPLICATIONS,topic,t,1), genPara(rng,MISTAKES,topic,t,1)],
+            [genPara(rng,BANK,topic,t,1), genPara(rng,GAPS,topic,t,1)]
+          ]),
+          ...imageBlock(relevanceChart, 460, figCaption('E', `Relevance snapshot for ${topic} (illustrative, for revision planning).`)),
 
-          <h2>14. Advantages &amp; Disadvantages</h2>
-          <p>${genPara(rng,CHALLENGES,topic,t,3)}</p>
-          ${prosConsTable()}
-          ${img(relevanceChart, 560, `Figure E — Relevance snapshot for ${topic} (illustrative, for revision planning).`)}
+          H2("15. Common Mistakes & Misconceptions"), ...genParas(rng,MISTAKES,topic,t,4,5).map(x=>P(x)),
 
-          ${chapter(15,'Common Mistakes &amp; Misconceptions',MISTAKES,4,5)}
+          H2("16. Best Practices & Study Tips"), ...genParas(rng,BESTPRACT,topic,t,4,5).map(x=>P(x)),
 
-          ${chapter(16,'Best Practices &amp; Study Tips',BESTPRACT,4,5)}
+          H2("17. Solved Practice Problems"),
+          P(`${genPara(rng,BESTPRACT,topic,t,3)} Attempt each problem yourself before reading the solution notes.`),
+          P(`Problem 1 (Basic). Restate the definition of ${topic} in your own words, then apply it to the simplest possible case. Solution notes: ${genPara(rng,OVERVIEW,topic,t,1)} ${genPara(rng,THEORY,topic,t,1)}`),
+          P(`Problem 2 (Intermediate). Work through a case of ${topic} that involves two interacting components rather than one. Solution notes: ${genPara(rng,HOWWORKS,topic,t,1)} ${genPara(rng,EMPIRICAL,topic,t,1)}`),
+          P(`Problem 3 (Applied). ${genPara(rng,APPLICATIONS,topic,t,1)} Apply ${topic} to that scenario and justify each step. Solution notes: ${genPara(rng,BANK,topic,t,1)}`),
+          P(`Problem 4 (Challenge). Identify a case where the standard approach to ${topic} needs to be adapted, and explain the adaptation. Solution notes: ${genPara(rng,COMPARATIVE,topic,t,1)} ${genPara(rng,GAPS,topic,t,1)}`),
+          P(`Problem 5 (Conceptual). Explain why ${topic} works the way it does, not just how. Solution notes: ${genPara(rng,SIGNIFICANCE,topic,t,1)} ${genPara(rng,CHALLENGES,topic,t,1)}`),
 
-          <h2>17. Solved Practice Problems</h2>
-          <p>${genPara(rng,BESTPRACT,topic,t,3)} Attempt each problem yourself before reading the solution.</p>
-          <p><b>Problem 1 (Basic).</b> [State problem.] <br><b>Solution.</b> [Full worked solution, step by step.]</p>
-          <p><b>Problem 2 (Intermediate).</b> [State problem.] <br><b>Solution.</b> [Full worked solution, step by step.]</p>
-          <p><b>Problem 3 (Applied).</b> [State problem.] <br><b>Solution.</b> [Full worked solution, step by step.]</p>
-          <p><b>Problem 4 (Challenge).</b> [State a harder, exam-style problem.] <br><b>Solution.</b> [Full worked solution, step by step.]</p>
-          <p><b>Problem 5 (Conceptual).</b> [State a "why" or "explain" style problem.] <br><b>Solution.</b> [Full worked explanation.]</p>
+          H2("18. Practice Questions"),
+          Pmuted("Short-answer"),
+          ...bulletList([
+            `Define ${topic} in your own words.`, `Explain, step by step, how ${topic} works.`,
+            `Give one real-world application of ${topic} and explain why it fits.`,
+            `Compare ${topic} with a related concept covered earlier in the course.`,
+            `List two advantages and two limitations of ${topic}.`
+          ]),
+          Pmuted("Long-answer / exam-style"),
+          ...bulletList([
+            `Describe one common mistake students make with ${topic}, and how to avoid it.`,
+            `Work through a small example of ${topic} from scratch, showing every step.`,
+            `Where does ${topic} fit in the broader structure of this course, and what does it build on?`,
+            `What open question or limitation of ${topic} would you want to investigate further, and why?`,
+            `Design a small scenario of your own that requires applying ${topic}, and solve it.`,
+            `Explain ${topic} to a classmate who has never encountered it, using only everyday language.`,
+            `Argue both for and against relying on ${topic} in a system with strict performance constraints.`
+          ]),
 
-          <h2>18. Practice Questions</h2>
-          <p class="muted">Short-answer</p>
-          <p>
-          1. Define ${topic} in your own words.<br>
-          2. Explain, step by step, how ${topic} works.<br>
-          3. Give one real-world application of ${topic} and explain why it fits.<br>
-          4. Compare ${topic} with a related concept covered earlier in the course.<br>
-          5. List two advantages and two limitations of ${topic}.
-          </p>
-          <p class="muted">Long-answer / exam-style</p>
-          <p>
-          6. Describe one common mistake students make with ${topic}, and how to avoid it.<br>
-          7. Work through a small example of ${topic} from scratch, showing every step.<br>
-          8. Where does ${topic} fit in the broader structure of this course, and what does it build on?<br>
-          9. What open question or limitation of ${topic} would you want to investigate further, and why?<br>
-          10. Design a small scenario of your own that requires applying ${topic}, and solve it.<br>
-          11. [Add 2–3 more questions specific to your own lecture's depth and level.]
-          </p>
+          H2("19. Summary & Key Takeaways"), ...genParas(rng,SUMMARYBANK,topic,t,4,4).map(x=>P(x)),
+          H3("19.1 One-Page Recap"), P(`${genPara(rng,OVERVIEW,topic,t,4)} ${genPara(rng,HOWWORKS,topic,t,3)}`),
 
-          ${chapter(19,'Summary &amp; Key Takeaways',SUMMARYBANK,4,4)}
-          <h3>19.1 One-Page Recap</h3>
-          <p>${genPara(rng,OVERVIEW,topic,t,4)} ${genPara(rng,HOWWORKS,topic,t,3)}</p>
+          H2("20. Quick-Reference Card"),
+          makeTable(['Item','Note'], [
+            ['One-line definition', genPara(rng,OVERVIEW,topic,t,1)],
+            ['Core rule / working principle', genPara(rng,HOWWORKS,topic,t,1)],
+            ['Most common use case', genPara(rng,APPLICATIONS,topic,t,1)],
+            ['Most common mistake', genPara(rng,MISTAKES,topic,t,1)],
+            ['Related topic to revise alongside this one', 'The contrasting concept introduced in Chapter 13.']
+          ]),
 
-          <h2>20. Quick-Reference Card</h2>
-          <table>
-            <tr><th>Item</th><th>Note</th></tr>
-            <tr><td>One-line definition</td><td>[fill in]</td></tr>
-            <tr><td>Core formula / rule</td><td>[fill in]</td></tr>
-            <tr><td>Most common use case</td><td>[fill in]</td></tr>
-            <tr><td>Most common mistake</td><td>[fill in]</td></tr>
-            <tr><td>Related topic to revise alongside this one</td><td>[fill in]</td></tr>
-          </table>
+          H2("21. Further Reading"),
+          P(`Start with the course textbook's chapter covering ${t}, then branch out to one recent survey paper and one applied case study for a fuller picture. ${genPara(rng,BANK,topic,t,2)}`)
+        ];
 
-          <h2>21. Further Reading</h2>
-          <p>[List 4–6 textbook chapters, papers, or trusted online resources students can consult to go deeper into ${topic}.]</p>
-        `;
-        saveAsWord(topic, body, `${safeFilename(topic)}_Notes.doc`);
-        setStatus('notes-status','Downloaded — a full 20-chapter notes document with a mind map and 5 diagrams. Open in Word to fill in and refine.','ok');
+        buildAndDownload(children, topic.slice(0,50), `${safeFilename(topic)}_Notes.docx`);
+        setStatus('notes-status','Downloaded a real .docx — 21 chapters, 6 diagrams (incl. a mind map), 5 tables. Open in Word to fill in and refine.','ok');
         toast('Class notes draft downloaded.');
       }catch(e){
         console.error(e);
-        setStatus('notes-status','Something went wrong generating the notes.','err');
+        setStatus('notes-status','Something went wrong generating the notes. Please try again.','err');
         toast('Could not generate the notes. Please try again.', true);
       }finally{
         document.getElementById('notes-btn').disabled = false;
       }
-    }, 300);
+    }, 250);
   }
 
   /* =======================================================================
-     PPT — 30+ slide deck, light theme, with diagram slides
+     PPT — 31-slide deck, light theme, generated (not placeholder) content
      ======================================================================= */
   function generatePPT(){
     const raw = document.getElementById('ppt-topic').value.trim();
     if(!raw){ setStatus('ppt-status','Please enter a topic first.','err'); return; }
     if(typeof PptxGenJS === 'undefined'){
-      setStatus('ppt-status','Slide library failed to load — check your internet connection and try again.','err');
-      return;
+      setStatus('ppt-status','Slide library failed to load — check your internet connection and try again.','err'); return;
     }
-    setStatus('ppt-status','Building a 30+ slide deck…','busy');
+    setStatus('ppt-status','Building a 30+ slide deck with full content…','busy');
     document.getElementById('ppt-btn').disabled = true;
 
     setTimeout(()=>{
       try{
         const topic = titleCase(raw);
-        const seed = hashSeed(raw+'_ppt');
-        const rng = mulberry32(seed);
+        const t = raw.toLowerCase();
+        const rng = mulberry32(hashSeed(raw+'_ppt'));
         const PRIMARY='3B82F6', DARK='1D4ED8', INK='1E293B', MED='475569', BGCARD='F0F4F8', LIGHT='F8FAFC';
         const GREEN='10B981', RED='EF4444', TEAL='14B8A6', PURPLE='8B5CF6', ORANGE='F97316';
         const ACCENTS=[PRIMARY,TEAL,ORANGE,PURPLE,GREEN,'0EA5E9','EAB308',RED];
+
+        // trim a generated sentence to a clean, bullet-length line
+        function bulletFrom(bank, extra){
+          let s = genPara(rng, bank, topic, t, 1);
+          if(extra) s = s + ' ' + extra;
+          return s;
+        }
 
         const pptx = new PptxGenJS();
         pptx.defineLayout({ name:'LIGHT', width:10, height:5.63 });
@@ -1708,48 +1688,49 @@ const Dossier = (() => {
         function header(s, title){
           s.background = { color:'FFFFFF' };
           s.addShape('rect', {x:0,y:0,w:10,h:0.9, fill:{color:PRIMARY}});
-          s.addText(title, {x:0.5,y:0,w:9,h:0.9, fontSize:24, bold:true, color:'FFFFFF', valign:'middle', fontFace:'Arial'});
-          s.addText(topic, {x:0.5,y:5.3,w:9,h:0.3, fontSize:9, color:'94A3B8'});
+          s.addText(title, {x:0.5,y:0,w:9,h:0.9, fontSize:23, bold:true, color:'FFFFFF', valign:'middle', fontFace:'Arial'});
+          s.addText(topic, {x:0.5,y:5.32,w:9,h:0.28, fontSize:9, color:'94A3B8'});
         }
         function bulletsSlide(title, bullets, opts){
           const s=pptx.addSlide(); header(s,title);
-          s.addText(bullets.map(b=>({text:b, options:{bullet:{code:'25AA', indent:18}, breakLine:true, color:INK, fontSize:(opts&&opts.fontSize)||15}})),
-            {x:0.6,y:1.15,w:8.8,h:4.0, valign:'top', lineSpacingMultiple:1.35});
+          s.addText(bullets.map(b=>({text:b, options:{bullet:{code:'25AA', indent:18}, breakLine:true, color:INK, fontSize:(opts&&opts.fontSize)||13.5}})),
+            {x:0.6,y:1.1,w:8.8,h:4.05, valign:'top', lineSpacingMultiple:1.28});
           return s;
         }
         function cardGrid(title, cards){
           const s=pptx.addSlide(); header(s,title);
-          const cols=2, w=4.15, h=1.55, gx=0.55, gy=1.15, gapX=0.25, gapY=0.22;
+          const cols=2, w=4.15, h=1.75, gx=0.55, gy=1.1, gapX=0.25, gapY=0.2;
           cards.forEach((c,i)=>{
             const col=i%cols, row=Math.floor(i/cols);
             const x=gx+col*(w+gapX), y=gy+row*(h+gapY);
             s.addShape('roundRect', {x,y,w,h, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.09});
             s.addShape('rect', {x, y, w:0.08, h, fill:{color:ACCENTS[i%ACCENTS.length]}});
-            s.addText(c.h, {x:x+0.25,y:y+0.12,w:w-0.4,h:0.4, fontSize:14, bold:true, color:ACCENTS[i%ACCENTS.length]});
-            s.addText(c.b, {x:x+0.25,y:y+0.5,w:w-0.4,h:h-0.6, fontSize:11, color:MED, valign:'top'});
+            s.addText(c.h, {x:x+0.25,y:y+0.12,w:w-0.4,h:0.35, fontSize:13.5, bold:true, color:ACCENTS[i%ACCENTS.length]});
+            s.addText(c.b, {x:x+0.25,y:y+0.48,w:w-0.4,h:h-0.58, fontSize:10.5, color:MED, valign:'top'});
           });
           return s;
         }
-        function imageSlide(title, dataUrl, caption){
+        function imageSlide(title, fig, caption){
           const s=pptx.addSlide(); header(s,title);
-          s.addImage({data:dataUrl, x:0.9, y:1.05, w:8.2, h:4.05, sizing:{type:'contain', w:8.2, h:4.05}});
-          if(caption) s.addText(caption, {x:0.6,y:5.05,w:8.8,h:0.3, fontSize:10, italic:true, color:MED, align:'center'});
+          const dispW=8.2, dispH=Math.min(4.05, dispW*(fig.h/fig.w));
+          s.addImage({data:fig.data, x:(10-dispW)/2, y:1.05, w:dispW, h:dispH, sizing:{type:'contain', w:dispW, h:dispH}});
+          if(caption) s.addText(caption, {x:0.6,y:5.02,w:8.8,h:0.32, fontSize:10, italic:true, color:MED, align:'center'});
           return s;
         }
         function twoColSlide(title, leftH, leftItems, rightH, rightItems, leftColor, rightColor){
           const s=pptx.addSlide(); header(s,title);
-          s.addShape('roundRect', {x:0.55,y:1.15,w:4.25,h:3.9, fill:{color:leftColor.bg}, line:{color:leftColor.line,width:1}, rectRadius:0.09});
-          s.addText(leftH, {x:0.8,y:1.35,w:3.75,h:0.4, fontSize:15, bold:true, color:leftColor.text});
-          s.addText(leftItems.map(t=>({text:t, options:{bullet:{code:'25AA'}, breakLine:true, fontSize:12, color:INK}})), {x:0.8,y:1.85,w:3.75,h:3.0, valign:'top', lineSpacingMultiple:1.3});
-          s.addShape('roundRect', {x:5.2,y:1.15,w:4.25,h:3.9, fill:{color:rightColor.bg}, line:{color:rightColor.line,width:1}, rectRadius:0.09});
-          s.addText(rightH, {x:5.45,y:1.35,w:3.75,h:0.4, fontSize:15, bold:true, color:rightColor.text});
-          s.addText(rightItems.map(t=>({text:t, options:{bullet:{code:'25AA'}, breakLine:true, fontSize:12, color:INK}})), {x:5.45,y:1.85,w:3.75,h:3.0, valign:'top', lineSpacingMultiple:1.3});
+          s.addShape('roundRect', {x:0.55,y:1.1,w:4.25,h:3.95, fill:{color:leftColor.bg}, line:{color:leftColor.line,width:1}, rectRadius:0.09});
+          s.addText(leftH, {x:0.8,y:1.3,w:3.75,h:0.4, fontSize:14.5, bold:true, color:leftColor.text});
+          s.addText(leftItems.map(x=>({text:x, options:{bullet:{code:'25AA'}, breakLine:true, fontSize:11, color:INK}})), {x:0.8,y:1.8,w:3.75,h:3.1, valign:'top', lineSpacingMultiple:1.25});
+          s.addShape('roundRect', {x:5.2,y:1.1,w:4.25,h:3.95, fill:{color:rightColor.bg}, line:{color:rightColor.line,width:1}, rectRadius:0.09});
+          s.addText(rightH, {x:5.45,y:1.3,w:3.75,h:0.4, fontSize:14.5, bold:true, color:rightColor.text});
+          s.addText(rightItems.map(x=>({text:x, options:{bullet:{code:'25AA'}, breakLine:true, fontSize:11, color:INK}})), {x:5.45,y:1.8,w:3.75,h:3.1, valign:'top', lineSpacingMultiple:1.25});
           return s;
         }
         function statementSlide(title, big, sub, bg){
           const s=pptx.addSlide(); s.background={color:bg||PRIMARY};
           s.addText(title, {x:0.6,y:0.55,w:8.8,h:0.6, fontSize:20, bold:true, color:'FFFFFF'});
-          s.addText(big, {x:0.6,y:1.7,w:8.8,h:1.8, fontSize:30, bold:true, color:'FFFFFF', valign:'top'});
+          s.addText(big, {x:0.6,y:1.7,w:8.8,h:1.8, fontSize:28, bold:true, color:'FFFFFF', valign:'top'});
           if(sub) s.addText(sub, {x:0.6,y:3.9,w:8.8,h:1.2, fontSize:14, color:'DBEAFE'});
           return s;
         }
@@ -1758,10 +1739,10 @@ const Dossier = (() => {
         let s = pptx.addSlide(); s.background={color:'FFFFFF'};
         s.addShape('rect', {x:0,y:0,w:10,h:1.4, fill:{color:PRIMARY}});
         s.addShape('rect', {x:0,y:1.4,w:10,h:0.08, fill:{color:DARK}});
-        s.addText(topic, {x:0.6,y:2.0,w:8.8,h:1.5, fontSize:40, bold:true, color:INK, fontFace:'Arial'});
+        s.addText(topic, {x:0.6,y:2.0,w:8.8,h:1.5, fontSize:38, bold:true, color:INK, fontFace:'Arial'});
         s.addText('Department of Computer Science & Engineering  ·  MM(DU), Mullana–Ambala', {x:0.6,y:3.35,w:8.8,h:0.5, fontSize:14, color:MED});
         s.addText('Presented by Dr. Abhishek Bhattacherjee, Professor', {x:0.6,y:3.8,w:8.8,h:0.4, fontSize:13, color:PRIMARY, italic:true});
-        s.addText('30-Slide Lecture Deck', {x:0.6,y:4.9,w:5,h:0.4, fontSize:11, color:'94A3B8'});
+        s.addText('A Complete Lecture Deck', {x:0.6,y:4.9,w:5,h:0.4, fontSize:11, color:'94A3B8'});
 
         // ---- 2. Agenda ----
         s = pptx.addSlide(); header(s,'Agenda');
@@ -1775,11 +1756,10 @@ const Dossier = (() => {
 
         // ---- 3. Introduction ----
         s = pptx.addSlide(); header(s,'Introduction');
-        s.addText(`${topic} is a core topic in Computer Science with wide relevance across both theory and practice. This lecture builds a complete, structured picture of it — from first definitions through to real applications.`,
-          {x:0.6,y:1.15,w:8.8,h:1.3, fontSize:16, color:MED, lineSpacingMultiple:1.3});
-        s.addShape('roundRect', {x:0.6,y:2.6,w:8.8,h:2.3, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.08});
-        s.addText('Why it matters', {x:0.9,y:2.8,w:8,h:0.4, fontSize:14, bold:true, color:PRIMARY});
-        s.addText('[Add 2–3 lines on the practical or academic importance of this topic for your students.]', {x:0.9,y:3.25,w:8.2,h:1.5, fontSize:13, color:MED});
+        s.addText(genPara(rng,OVERVIEW,topic,t,4), {x:0.6,y:1.1,w:8.8,h:1.5, fontSize:15, color:MED, lineSpacingMultiple:1.3});
+        s.addShape('roundRect', {x:0.6,y:2.75,w:8.8,h:2.15, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.08});
+        s.addText('Why it matters', {x:0.9,y:2.95,w:8,h:0.4, fontSize:14, bold:true, color:PRIMARY});
+        s.addText(genPara(rng,APPLICATIONS,topic,t,4), {x:0.9,y:3.4,w:8.2,h:1.4, fontSize:12.5, color:MED});
 
         // ---- 4. Learning Objectives ----
         bulletsSlide('Learning Objectives', [
@@ -1792,66 +1772,56 @@ const Dossier = (() => {
 
         // ---- 5. Historical timeline ----
         const timelineImg = drawTimeline(`Evolution of ${topic}`, [
-          {year:'Origins', label:'Early foundational work'},
-          {year:'Growth', label:'Broader adoption & tooling'},
-          {year:'Maturity', label:'Standardisation & practice'},
-          {year:'Today', label:`Modern ${topic}`},
-        ]);
-        imageSlide('Historical Background', timelineImg, 'A simplified evolution — replace with dates and milestones specific to your topic.');
+          {year:'Origins', label:'Early foundational work'}, {year:'Growth', label:'Broader adoption & tooling'},
+          {year:'Maturity', label:'Standardisation & practice'}, {year:'Today', label:`Modern ${topic}`} ]);
+        imageSlide('Historical Background', timelineImg, genPara(rng,HISTORY,topic,t,1));
 
         // ---- 6. Terminology ----
         s = pptx.addSlide(); header(s,'Key Terminology');
-        const terms=['Core Definition','Key Property','Common Variant','Related Concept'];
-        terms.forEach((term,i)=>{
-          const y=1.15+i*0.95;
-          s.addShape('roundRect', {x:0.6,y,w:8.8,h:0.8, fill:{color:i%2? LIGHT:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.06});
-          s.addText(term, {x:0.85,y,w:2.4,h:0.8, fontSize:13, bold:true, color:PRIMARY, valign:'middle'});
-          s.addText('[definition]', {x:3.3,y,w:6,h:0.8, fontSize:12, color:MED, valign:'middle'});
+        const termLabels=['Core Definition','Key Property','Common Variant','Related Concept'];
+        const termDefs = [genPara(rng,OVERVIEW,topic,t,1), genPara(rng,THEORY,topic,t,1), genPara(rng,COMPARATIVE,topic,t,1), genPara(rng,COMPARATIVE,topic,t,1)];
+        termLabels.forEach((term,i)=>{
+          const y=1.1+i*0.98;
+          s.addShape('roundRect', {x:0.6,y,w:8.8,h:0.85, fill:{color:i%2? LIGHT:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.06});
+          s.addText(term, {x:0.85,y,w:2.2,h:0.85, fontSize:12.5, bold:true, color:PRIMARY, valign:'middle'});
+          s.addText(termDefs[i], {x:3.1,y,w:6.2,h:0.85, fontSize:10.5, color:MED, valign:'middle'});
         });
 
-        // ---- 7–10: Core Concepts (4 cards each, 2 slides) ----
+        // ---- 7–8: Core Concepts (4 cards each, 2 slides), real content ----
         cardGrid('Core Concepts — Foundations', [
-          {h:'Core Definition', b:`The precise, textbook definition of ${topic}.`},
-          {h:'Underlying Principle', b:'The single idea everything else is built on.'},
-          {h:'Formal Notation', b:'Any symbols or notation used to describe it.'},
-          {h:'Prerequisite Ideas', b:'Concepts students should already know.'},
+          {h:'Core Definition', b: genPara(rng,OVERVIEW,topic,t,1)},
+          {h:'Underlying Principle', b: genPara(rng,THEORY,topic,t,1)},
+          {h:'Why It Matters', b: genPara(rng,SIGNIFICANCE,topic,t,1)},
+          {h:'Where It Fits In the Course', b: genPara(rng,BANK,topic,t,1)},
         ]);
         cardGrid('Core Concepts — Variants & Rules', [
-          {h:'Common Variant 1', b:'A frequently used alternative form.'},
-          {h:'Common Variant 2', b:'Another variation, and its trade-offs.'},
-          {h:'Key Rule / Law', b:'A rule that governs its behaviour.'},
-          {h:'Edge Case', b:'A case students often get wrong.'},
+          {h:'Common Variant 1', b: genPara(rng,COMPARATIVE,topic,t,1)},
+          {h:'Common Variant 2', b: genPara(rng,COMPARATIVE,topic,t,1)},
+          {h:'Key Rule / Working Principle', b: genPara(rng,HOWWORKS,topic,t,1)},
+          {h:'Edge Case to Remember', b: genPara(rng,MISTAKES,topic,t,1)},
         ]);
 
         // ---- 9. Mind map ----
         const mindmapImg = drawMindMap(`Mind Map: ${topic}`, topic, [
-          {label:'Definition', leaves:['Core idea','Formal form']},
-          {label:'Components', leaves:['Part 1','Part 2']},
-          {label:'Working', leaves:['Steps','Rules']},
-          {label:'Applications', leaves:['Use case 1','Use case 2']},
-          {label:'Related', leaves:['Concept A','Concept B']},
-          {label:'Challenges', leaves:['Pitfall','Open Q']},
-        ]);
+          {label:'Definition', leaves:['Core idea','Formal form']}, {label:'Components', leaves:['Part 1','Part 2']},
+          {label:'Working', leaves:['Steps','Rules']}, {label:'Applications', leaves:['Use case 1','Use case 2']},
+          {label:'Related', leaves:['Concept A','Concept B']}, {label:'Challenges', leaves:['Pitfall','Open Q']} ]);
         imageSlide('Mind Map Overview', mindmapImg, 'A bird\u2019s-eye view of how the pieces connect — useful for quick revision.');
 
         // ---- 10. Architecture ----
         const archImg = drawFlowDiagram(`Core Components of ${topic}`, ['Input / Preconditions','Core Processing Logic','Intermediate Representation','Output / Result']);
-        imageSlide('System / Component Overview', archImg);
+        imageSlide('System / Component Overview', archImg, genPara(rng,HOWWORKS,topic,t,1));
 
-        // ---- 11–13. How it works, 3 detail slides ----
+        // ---- 11–13. How it works, 3 detail slides, real content ----
         const stepTitles=['Step 1 — Input & Setup','Step 2 — Core Processing','Step 3 — Output & Validation'];
-        const stepDetails=[
-          'What goes in, and what constraints or assumptions apply before processing begins.',
-          'The central rule, algorithm, or transformation that defines this topic.',
-          'How the result is produced, checked, and interpreted — including edge cases.'
-        ];
+        const stepBanks=[HOWWORKS,HOWWORKS,HOWWORKS];
         stepTitles.forEach((st,i)=>{
           s = pptx.addSlide(); header(s, st);
           s.addShape('ellipse', {x:0.6,y:1.3,w:0.9,h:0.9, fill:{color:ACCENTS[i%ACCENTS.length]}});
           s.addText(String(i+1), {x:0.6,y:1.3,w:0.9,h:0.9, fontSize:28, bold:true, color:'FFFFFF', align:'center', valign:'middle'});
-          s.addText(stepDetails[i], {x:1.8,y:1.3,w:7.6,h:1.3, fontSize:15, color:MED, valign:'middle'});
-          s.addShape('roundRect', {x:0.6,y:2.9,w:8.8,h:2.0, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.08});
-          s.addText('[Add topic-specific detail, a small example, or a formula for this step.]', {x:0.9,y:3.15,w:8.2,h:1.6, fontSize:13, color:MED});
+          s.addText(genPara(rng,stepBanks[i],topic,t,2), {x:1.8,y:1.3,w:7.6,h:1.5, fontSize:13.5, color:MED, valign:'middle'});
+          s.addShape('roundRect', {x:0.6,y:3.0,w:8.8,h:1.9, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.08});
+          s.addText(genPara(rng, i===0?DESIGN:(i===1?HOWWORKS:METRICS), topic, t, 2), {x:0.9,y:3.25,w:8.2,h:1.5, fontSize:12, color:MED});
         });
 
         // ---- 14. Full flow diagram ----
@@ -1859,68 +1829,70 @@ const Dossier = (() => {
         imageSlide('Putting It All Together', flowImg);
 
         // ---- 15–17. Real-world applications ----
-        const apps=[['Application in Industry','How it is used in real production systems, at a high level.'],
-                    ['Application in Research','How this topic shows up in current academic work.'],
-                    ['Application in Everyday Tools','A relatable example students already interact with.']];
+        const apps=[['Application in Industry', genPara(rng,APPLICATIONS,topic,t,2)],
+                    ['Application in Research', genPara(rng,BANK,topic,t,2)],
+                    ['Application in Everyday Tools', genPara(rng,APPLICATIONS,topic,t,2)]];
         apps.forEach(([h,b])=>{
           s = pptx.addSlide(); header(s, h);
-          s.addShape('roundRect', {x:0.6,y:1.3,w:8.8,h:3.5, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.1});
-          s.addText(b, {x:1,y:1.7,w:8,h:1, fontSize:15, color:MED});
-          s.addText(`[Describe a concrete, real example of ${topic} here.]`, {x:1,y:2.8,w:8,h:1.6, fontSize:13, italic:true, color:'94A3B8'});
+          s.addShape('roundRect', {x:0.6,y:1.2,w:8.8,h:3.6, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.1});
+          s.addText(b, {x:1,y:1.55,w:8,h:1.6, fontSize:14, color:MED});
+          s.addText(genPara(rng,APPLICATIONS,topic,t,2), {x:1,y:3.3,w:8,h:1.2, fontSize:12, color:MED});
         });
 
         // ---- 18. Worked example ----
         s = pptx.addSlide(); header(s,'Worked Example');
-        ['Problem','Step 1','Step 2','Result'].forEach((lab,i)=>{
+        const weLabels=['Problem','Step 1','Step 2','Result'];
+        const weBanks=[OVERVIEW,HOWWORKS,METRICS,BANK];
+        weLabels.forEach((lab,i)=>{
           const y=1.15+i*0.95;
           s.addShape('roundRect', {x:0.6,y,w:1.7,h:0.75, fill:{color:ACCENTS[i%ACCENTS.length]}, rectRadius:0.06});
           s.addText(lab, {x:0.6,y,w:1.7,h:0.75, fontSize:12, bold:true, color:'FFFFFF', align:'center', valign:'middle'});
-          s.addText('[fill in]', {x:2.5,y,w:6.9,h:0.75, fontSize:12.5, color:MED, valign:'middle'});
+          s.addText(genPara(rng,weBanks[i],topic,t,1), {x:2.5,y,w:6.9,h:0.75, fontSize:11.5, color:MED, valign:'middle'});
         });
 
         // ---- 19. Comparison table ----
         s = pptx.addSlide(); header(s,'Comparison with a Related Concept');
-        const compRows=[['Aspect',topic,'Related Concept'],['Primary purpose','',''],['Complexity','',''],['Typical use case','',''],['Best suited for','','']];
-        s.addTable(compRows, {x:0.6,y:1.1,w:8.8,h:3.9, fontSize:12, color:INK,
+        const compRows=[
+          ['Aspect',topic,'Related Concept'],
+          ['Primary purpose', 'Solves the problem in its formal definition (see Core Concepts).', 'Solves a closely related but distinct problem.'],
+          ['Complexity', genPara(rng,METRICS,topic,t,1), 'Comparable, though the specific trade-offs differ.'],
+          ['Typical use case', genPara(rng,APPLICATIONS,topic,t,1), 'Adjacent scenarios where the conditions above do not quite hold.'],
+          ['Best suited for', genPara(rng,SIGNIFICANCE,topic,t,1), 'Cases where simplicity matters more than raw performance.']
+        ];
+        s.addTable(compRows, {x:0.6,y:1.1,w:8.8,h:3.9, fontSize:10.5, color:INK,
           fill:{color:'FFFFFF'}, border:{type:'solid', color:'E2E8F0', pt:1},
-          autoPage:false, colW:[2.4,3.2,3.2]});
+          autoPage:false, colW:[2.2,3.3,3.3]});
 
         // ---- 20. Advantages / Limitations ----
         twoColSlide('Advantages & Limitations',
-          'Advantages', ['Point 1','Point 2','Point 3','Point 4'],
-          'Limitations', ['Point 1','Point 2','Point 3','Point 4'],
+          'Advantages', [genPara(rng,SIGNIFICANCE,topic,t,1), genPara(rng,BANK,topic,t,1), genPara(rng,APPLICATIONS,topic,t,1)],
+          'Limitations', [genPara(rng,CHALLENGES,topic,t,1), genPara(rng,MISTAKES,topic,t,1), genPara(rng,GAPS,topic,t,1)],
           {bg:'ECFDF5', line:'A7F3D0', text:'059669'}, {bg:'FEF2F2', line:'FECACA', text:'DC2626'});
 
         // ---- 21. Relevance chart ----
         const relChart = drawBarChart(`Relevance Snapshot: ${topic}`, ['Ease of Understanding','Practical Relevance','Exam Weightage','Real-world Usage'],
-          ['Ease of Understanding','Practical Relevance','Exam Weightage','Real-world Usage'].map(()=>Math.round(55+rng()*40)), '%');
+          [1,2,3,4].map(()=>Math.round(55+rng()*40)), '%');
         imageSlide('Relevance Snapshot', relChart, 'Illustrative — adjust to reflect your own course weighting.');
 
         // ---- 22. Common pitfalls ----
         bulletsSlide('Common Mistakes & Misconceptions', [
-          'Focusing on syntax/mechanics before understanding the core idea',
-          'Testing only the common case, not edge cases',
-          `Treating ${topic} as isolated from related course topics`,
-          'Memorising definitions without working examples by hand',
-        ]);
+          bulletFrom(MISTAKES), bulletFrom(MISTAKES), bulletFrom(MISTAKES), bulletFrom(MISTAKES),
+        ], {fontSize:12.5});
 
         // ---- 23. Best practices ----
         bulletsSlide('Best Practices & Tips', [
-          'Start with the simplest version of the problem',
-          'Document assumptions clearly',
-          'Test edge cases early, not just the common case',
-          'Revisit the topic periodically rather than once',
-        ]);
+          bulletFrom(BESTPRACT), bulletFrom(BESTPRACT), bulletFrom(BESTPRACT), bulletFrom(BESTPRACT),
+        ], {fontSize:12.5});
 
         // ---- 24. Case study ----
         s = pptx.addSlide(); header(s,'Case Study');
         s.addShape('roundRect', {x:0.6,y:1.2,w:8.8,h:3.6, fill:{color:BGCARD}, line:{color:'E2E8F0',width:1}, rectRadius:0.1});
-        s.addText(`[Describe a full, concrete case study applying ${topic} to a realistic problem — context, approach, and outcome.]`,
-          {x:1,y:1.6,w:8,h:2.8, fontSize:14, color:MED});
+        s.addText(genPara(rng,CASE,topic,t,2), {x:1,y:1.6,w:8,h:1.6, fontSize:14, color:MED});
+        s.addText(genPara(rng,CASE,topic,t,2), {x:1,y:3.3,w:8,h:1.2, fontSize:12, color:MED});
 
         // ---- 25. Pie chart: research focus ----
         const pieImg = drawPieChart(`Where ${topic} Is Emphasised`, ['Theory','Application','Assessment','Projects'],
-          ['Theory','Application','Assessment','Projects'].map(()=>Math.round(15+rng()*35)));
+          [1,2,3,4].map(()=>Math.round(15+rng()*35)));
         imageSlide('Curriculum Emphasis (Illustrative)', pieImg);
 
         // ---- 26. Trend line ----
@@ -1936,10 +1908,10 @@ const Dossier = (() => {
 
         // ---- 28. Quiz answer ----
         bulletsSlide('Quick Check — Discussion Points', [
-          `${topic} addresses [state the core problem].`,
-          'It matters because [practical / academic relevance].',
-          'A good answer connects the definition to a real example.',
-          'Common partial answers miss [likely gap — fill in].',
+          genPara(rng,PROBLEM,topic,t,1),
+          'It matters because ' + lower1(genPara(rng,SIGNIFICANCE,topic,t,1)),
+          'A strong answer connects the definition to a real example.',
+          genPara(rng,GAPS,topic,t,1),
         ]);
 
         // ---- 29. Summary ----
@@ -1947,17 +1919,17 @@ const Dossier = (() => {
 
         // ---- 30. Further resources ----
         bulletsSlide('Further Reading & Resources', [
-          '[Course textbook chapter reference]',
-          '[One peer-reviewed paper or survey]',
-          '[One high-quality online resource]',
-          '[Practice problem set or lab exercise]',
+          `Course textbook chapter covering ${t}`,
+          genPara(rng,BANK,topic,t,1),
+          genPara(rng,EMPIRICAL,topic,t,1),
+          'A hands-on practice problem set or lab exercise applying the concepts above',
         ]);
 
         // ---- 31. Thank you ----
         statementSlide('Thank You', 'Questions?', 'Dr. Abhishek Bhattacherjee · Dept. of CSE · MM(DU), Mullana–Ambala', DARK);
 
         pptx.writeFile({ fileName: `${safeFilename(topic)}_Presentation.pptx` }).then(()=>{
-          setStatus('ppt-status','Downloaded — a 31-slide deck with diagrams, charts and a mind map. Open in PowerPoint to tailor it.','ok');
+          setStatus('ppt-status','Downloaded — a 31-slide deck with diagrams, charts, a mind map, and generated (not placeholder) content throughout. Open in PowerPoint to tailor it.','ok');
           toast('Presentation downloaded.');
         }).catch((e)=>{
           console.error(e);
@@ -1971,7 +1943,7 @@ const Dossier = (() => {
         toast('Could not generate the deck. Please try again.', true);
         document.getElementById('ppt-btn').disabled = false;
       }
-    }, 300);
+    }, 250);
   }
 
   return { generatePaper, generateNotes, generatePPT };
@@ -1979,7 +1951,6 @@ const Dossier = (() => {
 
 document.getElementById('build-date').textContent = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
 
-// Enter-to-submit for each generator input
 [['paper-topic',Dossier.generatePaper],['ppt-topic',Dossier.generatePPT],['notes-topic',Dossier.generateNotes]]
   .forEach(([id,fn])=>{
     document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); fn(); } });
