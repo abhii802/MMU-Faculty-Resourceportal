@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <!-- Google tag (gtag.js) -->
+      <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-E6J4TDP05D"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -363,7 +363,8 @@
     display:flex; gap:10px; flex-wrap:wrap; align-items:center;
     margin-bottom:12px;
   }
-  .gen-panel input[type="text"]{
+  .gen-panel input[type="text"],
+  .gen-panel input[type="password"]{
     flex:1; min-width:220px;
     padding:11px 14px;
     border:1px solid var(--line-strong);
@@ -371,7 +372,29 @@
     font-family:var(--sans); font-size:14px;
     background:#fff;
   }
-  .gen-panel input[type="text"]:focus{border-color:var(--crimson);}
+  .gen-panel input[type="text"]:focus,
+  .gen-panel input[type="password"]:focus{border-color:var(--crimson);}
+  .gen-hint{
+    font-size:12px; color:var(--ink-faint); margin:6px 0 0;
+  }
+  .gen-hint a{color:var(--crimson-dark);}
+  .key-saved{
+    display:flex; align-items:center; justify-content:space-between;
+    background:#fff; border:1px solid var(--line-strong); border-radius:9px;
+    padding:10px 14px; font-family:var(--mono); font-size:12.5px;
+  }
+  .key-saved .ok{color:#1C7C3F;}
+  .key-saved button{
+    background:none; border:none; color:var(--ink-faint); text-decoration:underline;
+    cursor:pointer; font-size:12px; font-family:inherit;
+  }
+  .gen-log{
+    font-family:var(--mono); font-size:12px; color:var(--ink-soft);
+    margin-top:10px; white-space:pre-wrap;
+  }
+  .gen-log .line{margin-bottom:4px;}
+  .gen-log .ok{color:#1C7C3F;}
+  .gen-log .err{color:var(--crimson-dark);}
   .gen-note{
     font-size:12.5px; color:var(--ink-faint); margin:8px 0 0;
     display:flex; gap:6px; align-items:flex-start;
@@ -477,7 +500,7 @@
       </div>
     </div>
     <nav class="index-panel" aria-label="Resource index">
-      <h3>Seven resources, one dossier</h3>
+      <h3>Eight resources, one dossier</h3>
       <ul class="index-list">
         <li><span class="num">01</span><a href="#r1">Timetable Generation</a></li>
         <li><span class="num">02</span><a href="#r2">Load Adjustment (Faculty on Leave)</a></li>
@@ -486,6 +509,7 @@
         <li><span class="num">05</span><a href="#r5">Presentation (PPT) Generator</a></li>
         <li><span class="num">06</span><a href="#r6">Class Notes Generator</a></li>
         <li><span class="num">07</span><a href="#r7">Project Idea Generator</a></li>
+        <li><span class="num">08</span><a href="#r8">Quiz Generator</a></li>
       </ul>
     </nav>
   </div>
@@ -494,7 +518,7 @@
 <section class="story-section">
   <div class="wrap">
     <div class="story-head">
-      <h3>A week, in seven resources</h3>
+      <h3>A week, in eight resources</h3>
       <span class="tag">— the working story behind this dossier</span>
     </div>
     <div class="story-body">
@@ -505,6 +529,7 @@
       <p>Tuesday's lecture still needs slides. <b>Resource 05</b> turns a topic into a clean, presentation-ready deck in the time it takes to make a cup of tea — a starting point built to be reshaped with the examples and emphasis only the professor teaching the room would know to add.</p>
       <p>And after the lecture, the notes students actually study from. <b>Resource 06</b> drafts a well-structured notes document for any Computer Science topic — definitions, explanations, a worked example, and a summary — ready to be annotated, corrected, and handed out as the professor's own.</p>
       <p>And when final-year students come asking for project ideas, <b>Resource 07</b> turns a single technology into a full catalog of twenty fresh, right-sized project briefs — problem statement, tech stack, features and deliverables for each — so no student leaves a meeting empty-handed.</p>
+      <p>And before Friday's test, thirty questions students haven't seen before. <b>Resource 08</b> writes a full multiple-choice quiz on any topic, shuffles it, and packages it as one offline file students can take on their own devices — self-graded, no login, no server to manage.</p>
     </div>
   </div>
 </section>
@@ -513,7 +538,7 @@
   <div class="wrap">
     <div class="section-head">
       <h3>The dossier</h3>
-      <p>Each entry below is a live resource. The first three link directly to the department's forms and record sheets; the last four generate a downloadable draft file, entirely inside this page.</p>
+      <p>Each entry below is a live resource. The first three link directly to the department's forms and record sheets; the last five generate a downloadable draft file, entirely inside this page — except Resource 08, which also calls the Anthropic API directly using your own key to write the quiz questions.</p>
     </div>
 
     <div class="dossier">
@@ -591,7 +616,7 @@
           <div class="card-copy">
             <p class="kicker">Research · Draft Assistance</p>
             <h4>Research Paper Draft Generator</h4>
-            <p class="story">Type a topic, and this page builds a real Journal article. ;  <span style="white-space:nowrap"></span> </p>
+            <p class="story">Generates a complete research paper draft but you need to modify this as per your effort. </p>
           </div>
         </div>
         <div class="gen-panel">
@@ -617,7 +642,7 @@
           <div class="card-copy">
             <p class="kicker">Teaching · Draft Assistance</p>
             <h4>Presentation (PPT) Generator</h4>
-            <p class="story">Type a Computer Science topic and receive a real Presentation. </p>
+            <p class="story">Generates Presentation for your class. </p>
           </div>
         </div>
         <div class="gen-panel">
@@ -643,7 +668,7 @@
           <div class="card-copy">
             <p class="kicker">Teaching · Draft Assistance</p>
             <h4>Class Notes Generator</h4>
-            <p class="story">Type a topic and get a real Notes. </p>
+            <p class="story">Generates a notes document. </p>
           </div>
         </div>
         <div class="gen-panel">
@@ -669,7 +694,7 @@
           <div class="card-copy">
             <p class="kicker">Student Projects · Draft Assistance</p>
             <h4>Project Idea Generator</h4>
-            <p class="story">Type a broad technology Like — Web Development, Machine Learning, Cybersecurity, Mobile Development, Cloud, Blockchain, Computer Vision, NLP, Data Science, Game Development, AR/VR, DBMS, IoT, or anything else — and get a full catalog of 20 fresh, right-sized project. </p>
+            <p class="story">Generates a catalog of 20 projects  based on the topic entered. </p>
           </div>
         </div>
         <div class="gen-panel">
@@ -684,6 +709,43 @@
           <details class="disclosure">
             <summary>How this catalog is built</summary>
             <p>Built entirely in your browser by combining the chosen technology with a bank of real-world problem domains — no server, nothing uploaded, and no external code is loaded or exposed to produce it. Every one of the 20 briefs is written out in full (problem, stack, features, deliverables) — nothing is left blank. Treat each brief as a strong starting point for a student team to scope and refine, not a final specification.</p>
+          </details>
+        </div>
+      </article>
+
+      <!-- RESOURCE 8: QUIZ GENERATOR -->
+      <article class="card" id="r8">
+        <div class="card-top">
+          <div class="seal-num">08</div>
+          <div class="card-copy">
+            <p class="kicker">Assessment · Draft Assistance</p>
+            <h4>Quiz Generator</h4>
+            <p class="story">Generates a 30-question multiple-choice quiz. </p>
+          </div>
+        </div>
+        <div class="gen-panel">
+          <label for="quiz-key-input" style="display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">Anthropic API key — needed once, to write the questions</label>
+          <div id="quiz-key-input-row">
+            <input type="password" id="quiz-key-input" placeholder="sk-ant-..." style="width:100%;">
+            <p class="gen-hint">Get one free at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>. Saved only in this browser (localStorage) — never written into the downloaded quiz file, never sent anywhere but Anthropic.</p>
+          </div>
+          <div id="quiz-key-saved-row" class="key-saved" style="display:none;">
+            <span class="ok">✓ key saved in this browser</span>
+            <button id="quiz-change-key-btn" type="button">change</button>
+          </div>
+
+          <div class="gen-row" style="margin-top:14px;">
+            <input type="text" id="quiz-topic" placeholder="e.g. Newton's laws of motion" aria-label="Quiz topic">
+            <button class="btn btn-primary" id="quiz-btn" onclick="Dossier.generateQuiz()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+              Generate &amp; Download Quiz (.html)
+            </button>
+          </div>
+          <div class="gen-log" id="quiz-log"></div>
+          <div class="gen-status" id="quiz-status" role="status"></div>
+          <details class="disclosure">
+            <summary>How this quiz is built</summary>
+            <p>Unlike the other generators on this page, this one calls the Anthropic API directly from your browser using your own key, so the questions are genuinely written for the topic you type rather than assembled from a template — the topic (not the key) is what gets sent to Anthropic. The key is stored only in this browser's local storage: never written into the downloaded quiz file, never sent anywhere else. The result is a single offline file — 30 shuffled, self-graded questions — that students can open and take with no key, login, or server of their own.</p>
           </details>
         </div>
       </article>
@@ -713,7 +775,7 @@
         Last compiled: <span id="build-date"></span>
       </div>
     </div>
-    <p class="footer-note">This page is a static, self-contained resource index. Resources 01–03 link out to the department's live Google Forms and Sheets. Resources 04–07 generate files locally in your browser — nothing is uploaded or stored. University facts (founding year, accreditation, programme count) are drawn from MM(DU)'s public profile at mmumullana.org for reference.</p>
+    <p class="footer-note">This page is a static, self-contained resource index. Resources 01–03 link out to the department's live Google Forms and Sheets. Resources 04–07 generate files locally in your browser — nothing is uploaded or stored. Resource 08 also calls the Anthropic API directly from your browser, using your own API key, to write quiz questions. University facts (founding year, accreditation, programme count) are drawn from MM(DU)'s public profile at mmumullana.org for reference.</p>
   </div>
 </footer>
 
@@ -723,7 +785,7 @@
 
 <script>
 /* =========================================================================
-   DOSSIER — client-side draft generators for Resources 04–07
+   DOSSIER — client-side draft generators for Resources 04–08
    Runs entirely in the browser: no network calls, no server, no stored
    data. Two open-source libraries are loaded via CDN purely to assemble
    genuine binary Office files (so they open reliably in Word / PowerPoint,
@@ -2295,16 +2357,268 @@ const Dossier = (() => {
     }, 250);
   }
 
-  return { generatePaper, generateNotes, generatePPT, generateProjects };
+  /* =======================================================================
+     QUIZ GENERATOR — Resource 08
+     The one generator on this page that isn't fully offline: it calls the
+     Anthropic API directly from the browser, using the professor's own
+     API key, to write genuinely topic-specific questions. The key never
+     leaves this browser's local storage and is never written into the
+     downloaded quiz file.
+     ======================================================================= */
+  const QUIZ_LS_KEY = 'mmu_quiz_anthropic_key';
+
+  function refreshQuizKeyUI(){
+    const saved = localStorage.getItem(QUIZ_LS_KEY);
+    const inputRow = document.getElementById('quiz-key-input-row');
+    const savedRow = document.getElementById('quiz-key-saved-row');
+    if(!inputRow || !savedRow) return;
+    if(saved){ inputRow.style.display = 'none'; savedRow.style.display = 'flex'; }
+    else{ inputRow.style.display = 'block'; savedRow.style.display = 'none'; }
+  }
+
+  function quizLog(msg, cls){
+    const el = document.getElementById('quiz-log');
+    if(!el) return;
+    const div = document.createElement('div');
+    div.className = 'line' + (cls ? ' '+cls : '');
+    div.textContent = msg;
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  async function callClaudeForQuiz(apiKey, prompt){
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if(!res.ok){
+      const errText = await res.text();
+      throw new Error(`API error ${res.status}: ${errText.slice(0,200)}`);
+    }
+    const data = await res.json();
+    const text = data.content.map(b => b.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  }
+
+  function quizBatchPrompt(topic, count, bloomLevels){
+    return `Write ${count} multiple-choice quiz questions on the topic "${topic}", for a college-level test.
+
+Requirements for every question:
+- The question stem is 3-4 lines long.
+- About 70% of all questions should be scenario/applied situations (a short case, situation, or example the student has to reason through), not bare definitions.
+- Mix these Bloom's taxonomy levels across the set: ${bloomLevels}.
+- Exactly 4 answer options per question.
+- Each option is only 1-3 words long — short, concrete terms only.
+- The 4 options must be genuinely tricky: similar in length, style, and plausibility to each other, so a student has to actually know the material, not spot the odd one out.
+- Exactly one option is correct.
+
+Respond with ONLY a raw JSON array, no markdown fences, no commentary, shaped exactly like this:
+[{"question":"...","options":["...","...","...","..."],"correctIndex":0}, ...]`;
+  }
+
+  function shuffleQuizQuestion(q){
+    const idx = [0,1,2,3];
+    for(let i = idx.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [idx[i], idx[j]] = [idx[j], idx[i]];
+    }
+    const options = idx.map(i => q.options[i]);
+    const correctIndex = idx.indexOf(q.correctIndex);
+    return { question: q.question, options, correctIndex };
+  }
+
+  function buildQuizFileHtml(topic, questions){
+    const dataJson = JSON.stringify(questions.map(shuffleQuizQuestion));
+    const safeTopic = topic.replace(/</g,'&lt;');
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${safeTopic} — Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root{ --ink:#14171C; --panel:#1D2229; --panel-hi:#262C35; --chalk:#E7E2D3; --chalk-dim:#9AA0AA; --amber:#E8A33D; --teal:#4C8B80; --rule:#333A44; }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--ink); color:var(--chalk); font-family:'Inter',sans-serif; line-height:1.55; }
+  .wrap{ max-width:680px; margin:0 auto; padding:3.5rem 1.5rem 6rem; }
+  h1{ font-family:'Zilla Slab',serif; font-size:1.9rem; margin:0 0 .3rem; }
+  p.lede{ color:var(--chalk-dim); margin:0 0 2rem; }
+  .card{ background:var(--panel); border:1px solid var(--rule); border-radius:6px; padding:1.5rem 1.6rem; margin-bottom:1.1rem; }
+  label{ display:block; font-size:.82rem; color:var(--chalk-dim); margin-bottom:.35rem; }
+  input[type=text], input[type=email]{ width:100%; padding:.7rem .8rem; margin-bottom:1rem; border:1px solid var(--rule); border-radius:4px; background:var(--panel-hi); color:var(--chalk); font-family:'JetBrains Mono',monospace; font-size:.92rem; }
+  input:focus{ outline:2px solid var(--amber); outline-offset:1px; }
+  .q{ margin-bottom:1.4rem; padding-bottom:1.4rem; border-bottom:1px solid var(--rule); }
+  .q:last-child{ border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .q .num{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-size:.78rem; letter-spacing:.06em; }
+  .q p{ margin:.3rem 0 .8rem; white-space:pre-wrap; }
+  .opt{ display:flex; align-items:flex-start; gap:.6rem; padding:.5rem .6rem; border-radius:4px; cursor:pointer; margin-bottom:.35rem; }
+  .opt:hover{ background:var(--panel-hi); }
+  .opt input{ margin-top:.2rem; }
+  button.primary{ width:100%; padding:.9rem 1.1rem; border:none; border-radius:5px; cursor:pointer; background:var(--amber); color:#1B1404; font-weight:600; font-size:.95rem; }
+  button.primary:disabled{ opacity:.4; cursor:not-allowed; }
+  #quizSection, #resultSection{ display:none; }
+  #quizSection.show, #resultSection.show{ display:block; }
+  #resultSection{ text-align:center; }
+  #resultSection .score{ font-family:'Zilla Slab',serif; font-size:3rem; color:var(--teal); margin:.5rem 0; }
+  #warn{ color:#C0463C; font-size:.85rem; margin-top:.5rem; display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>${safeTopic}</h1>
+  <p class="lede">30 questions · 1 point each. Fill in your details, then answer every question and submit once — you'll see your score at the end.</p>
+
+  <div class="card" id="introSection">
+    <label for="email">Email ID</label>
+    <input type="email" id="email" required>
+    <label for="name">Name</label>
+    <input type="text" id="name" required>
+    <label for="roll">Roll Number</label>
+    <input type="text" id="roll" required>
+    <label for="section">Section</label>
+    <input type="text" id="section" required>
+    <button class="primary" id="startBtn">Start quiz</button>
+    <div id="warn">Please fill in all four fields before starting.</div>
+  </div>
+
+  <form id="quizSection">
+    <div id="questionList"></div>
+    <button class="primary" type="submit">Submit quiz</button>
+  </form>
+
+  <div class="card" id="resultSection">
+    <div class="score" id="scoreValue"></div>
+    <p>out of ${questions.length}, ${safeTopic}</p>
+  </div>
+</div>
+<script>
+const QUESTIONS = ${dataJson};
+const introSection = document.getElementById('introSection');
+const quizSection = document.getElementById('quizSection');
+const resultSection = document.getElementById('resultSection');
+const questionList = document.getElementById('questionList');
+const warn = document.getElementById('warn');
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  const fields = ['email','name','roll','section'].map(id => document.getElementById(id).value.trim());
+  if(fields.some(v => !v)){ warn.style.display = 'block'; return; }
+  warn.style.display = 'none';
+  introSection.style.display = 'none';
+  quizSection.classList.add('show');
+  renderQuestions();
+});
+
+function renderQuestions(){
+  questionList.innerHTML = QUESTIONS.map((q, i) => \`
+    <div class="q">
+      <div class="num">Question \${i+1} of ${questions.length}</div>
+      <p>\${q.question.replace(/</g,'&lt;')}</p>
+      \${q.options.map((opt, j) => \`
+        <label class="opt">
+          <input type="radio" name="q\${i}" value="\${j}" required>
+          <span>\${opt.replace(/</g,'&lt;')}</span>
+        </label>
+      \`).join('')}
+    </div>
+  \`).join('');
+}
+
+quizSection.addEventListener('submit', (e) => {
+  e.preventDefault();
+  let score = 0;
+  QUESTIONS.forEach((q, i) => {
+    const picked = document.querySelector(\`input[name="q\${i}"]:checked\`);
+    if(picked && parseInt(picked.value, 10) === q.correctIndex) score++;
+  });
+  quizSection.classList.remove('show');
+  resultSection.classList.add('show');
+  document.getElementById('scoreValue').textContent = score + ' / ${questions.length}';
+});
+<\/script>
+</body>
+</html>`;
+  }
+
+  async function generateQuiz(){
+    const keyInputEl = document.getElementById('quiz-key-input');
+    const typedKey = keyInputEl.value.trim();
+    if(typedKey) localStorage.setItem(QUIZ_LS_KEY, typedKey);
+    const apiKey = localStorage.getItem(QUIZ_LS_KEY);
+    const topic = document.getElementById('quiz-topic').value.trim();
+
+    if(!apiKey){ setStatus('quiz-status','Please add your Anthropic API key first.','err'); return; }
+    if(!topic){ setStatus('quiz-status','Please enter a topic first.','err'); return; }
+
+    refreshQuizKeyUI();
+    document.getElementById('quiz-btn').disabled = true;
+    document.getElementById('quiz-log').innerHTML = '';
+    setStatus('quiz-status','Writing questions…','busy');
+
+    const batches = [
+      { count: 10, levels: 'remember, understand' },
+      { count: 10, levels: 'apply, analyze' },
+      { count: 10, levels: 'analyze, evaluate' }
+    ];
+
+    let all = [];
+    try{
+      for(let b = 0; b < batches.length; b++){
+        quizLog(`Writing questions ${b*10+1}-${b*10+10}…`);
+        const qs = await callClaudeForQuiz(apiKey, quizBatchPrompt(topic, batches[b].count, batches[b].levels));
+        all = all.concat(qs);
+        quizLog(`Got ${qs.length} questions.`, 'ok');
+      }
+      quizLog('Building the quiz file…');
+      const htmlOut = buildQuizFileHtml(topic, all);
+      const blob = new Blob([htmlOut], { type: 'text/html;charset=utf-8' });
+      const filename = topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g,'') + '-quiz.html';
+      downloadBlob(blob, filename);
+      quizLog('Done.', 'ok');
+      setStatus('quiz-status', `Downloaded — ${all.length} questions on "${topic}", shuffled and self-graded. Hand the file to students; it runs fully offline.`, 'ok');
+      toast('Quiz file downloaded.');
+    }catch(err){
+      console.error(err);
+      quizLog('Failed: ' + err.message, 'err');
+      setStatus('quiz-status','Something went wrong writing the quiz. Check your API key and try again.','err');
+      toast('Could not generate the quiz.', true);
+    }finally{
+      document.getElementById('quiz-btn').disabled = false;
+    }
+  }
+
+  refreshQuizKeyUI();
+  const quizChangeKeyBtn = document.getElementById('quiz-change-key-btn');
+  if(quizChangeKeyBtn){
+    quizChangeKeyBtn.addEventListener('click', () => {
+      localStorage.removeItem(QUIZ_LS_KEY);
+      document.getElementById('quiz-key-input').value = '';
+      refreshQuizKeyUI();
+    });
+  }
+
+  return { generatePaper, generateNotes, generatePPT, generateProjects, generateQuiz };
 })();
 
 document.getElementById('build-date').textContent = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
 
-[['paper-topic',Dossier.generatePaper],['ppt-topic',Dossier.generatePPT],['notes-topic',Dossier.generateNotes],['project-topic',Dossier.generateProjects]]
+[['paper-topic',Dossier.generatePaper],['ppt-topic',Dossier.generatePPT],['notes-topic',Dossier.generateNotes],['project-topic',Dossier.generateProjects],['quiz-topic',Dossier.generateQuiz]]
   .forEach(([id,fn])=>{
     document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); fn(); } });
   });
 </script>
+
 
 </body>
 </html>
