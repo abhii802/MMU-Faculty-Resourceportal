@@ -2494,8 +2494,15 @@ const Dossier = (() => {
     return quizParseJson(text);
   }
 
-  async function callGeminiForQuiz(apiKey, prompt){
-    const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent', {
+  // Google auto-updates these "-latest" aliases to whatever their current
+  // stable release is (hot-swapped on Google's side), so this stays correct
+  // without needing a hardcoded, soon-to-expire version number. A concrete
+  // model name is kept as a second attempt in case the alias itself ever
+  // has an outage.
+  const GEMINI_MODEL_CHAIN = ['gemini-flash-latest', 'gemini-3.6-flash'];
+
+  async function callGeminiModel(model, apiKey, prompt){
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -2506,6 +2513,22 @@ const Dossier = (() => {
                   data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
                   data.candidates[0].content.parts[0].text) || '';
     return quizParseJson(text);
+  }
+
+  async function callGeminiForQuiz(apiKey, prompt){
+    let lastErr = null;
+    for(const model of GEMINI_MODEL_CHAIN){
+      try{
+        return await callGeminiModel(model, apiKey, prompt);
+      }catch(err){
+        lastErr = err;
+        // Only fall through to the next model on a model-availability error —
+        // for anything else (bad key, no credit, CORS) retrying with a
+        // different model name won't help, so fail fast instead.
+        if(!err.isModelIssue) throw err;
+      }
+    }
+    throw lastErr;
   }
 
   const QUIZ_CALL_FN = { anthropic: callAnthropicForQuiz, openai: callOpenAIForQuiz, gemini: callGeminiForQuiz };
