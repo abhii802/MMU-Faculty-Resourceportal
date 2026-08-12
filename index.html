@@ -500,7 +500,7 @@
       </div>
     </div>
     <nav class="index-panel" aria-label="Resource index">
-      <h3>Eight resources, one dossier</h3>
+      <h3>Nine resources, one dossier</h3>
       <ul class="index-list">
         <li><span class="num">01</span><a href="#r1">Timetable Generation</a></li>
         <li><span class="num">02</span><a href="#r2">Load Adjustment (Faculty on Leave)</a></li>
@@ -510,6 +510,7 @@
         <li><span class="num">06</span><a href="#r6">Class Notes Generator</a></li>
         <li><span class="num">07</span><a href="#r7">Project Idea Generator</a></li>
         <li><span class="num">08</span><a href="#r8">Quiz Generator</a></li>
+        <li><span class="num">09</span><a href="#r9">Exam Question Paper Generator</a></li>
       </ul>
     </nav>
   </div>
@@ -518,7 +519,7 @@
 <section class="story-section">
   <div class="wrap">
     <div class="story-head">
-      <h3>A week, in eight resources</h3>
+      <h3>A week, in nine resources</h3>
       <span class="tag">— the working story behind this dossier</span>
     </div>
     <div class="story-body">
@@ -530,6 +531,7 @@
       <p>And after the lecture, the notes students actually study from. <b>Resource 06</b> drafts a well-structured notes document for any Computer Science topic — definitions, explanations, a worked example, and a summary — ready to be annotated, corrected, and handed out as the professor's own.</p>
       <p>And when final-year students come asking for project ideas, <b>Resource 07</b> turns a single technology into a full catalog of twenty fresh, right-sized project briefs — problem statement, tech stack, features and deliverables for each — so no student leaves a meeting empty-handed.</p>
       <p>And before Friday's test, thirty questions students haven't seen before. <b>Resource 08</b> writes a full multiple-choice quiz on any topic, shuffles it, and packages it as one offline file students can take on their own devices — self-graded, no login, no server to manage.</p>
+      <p>And when the exam cell wants the actual paper, not a quiz. <b>Resource 09</b> takes the unit-wise syllabus and turns it into a properly formatted Sessional or Final question paper — Sections A through D, scaled by marks — ready to review and print.</p>
     </div>
   </div>
 </section>
@@ -538,7 +540,7 @@
   <div class="wrap">
     <div class="section-head">
       <h3>The dossier</h3>
-      <p>Each entry below is a live resource. The first three link directly to the department's forms and record sheets; the last five generate a downloadable draft file, entirely inside this page — except Resource 08, which also calls the Anthropic API directly using your own key to write the quiz questions.</p>
+      <p>Each entry below is a live resource. The first three link directly to the department's forms and record sheets; the last six generate a downloadable draft file, entirely inside this page — except Resource 04, which also queries Crossref (a free, keyless public database) for real references, and Resource 08, which calls an AI provider's API directly using your own key to write the quiz questions.</p>
     </div>
 
     <div class="dossier">
@@ -616,7 +618,7 @@
           <div class="card-copy">
             <p class="kicker">Research · Draft Assistance</p>
             <h4>Research Paper Draft Generator</h4>
-            <p class="story">Generates a complete research paper draft but you need to modify this as per your effort. </p>
+            <p class="story">Generates a complete research paper draft, formatted like a published journal article, with real DOI-linked references pulled live from Crossref — the section content still needs your own effort. </p>
           </div>
         </div>
         <div class="gen-panel">
@@ -624,13 +626,13 @@
             <input type="text" id="paper-topic" placeholder="e.g. Federated Learning for Edge Healthcare Devices" aria-label="Research paper topic">
             <button class="btn btn-primary" id="paper-btn" onclick="Dossier.generatePaper()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
-              Generate &amp; Download Draft (.doc)
+              Generate &amp; Download Draft (.docx)
             </button>
           </div>
           <div class="gen-status" id="paper-status" role="status"></div>
           <details class="disclosure">
             <summary>How this draft is built</summary>
-            <p>Built entirely in your browser using a real, open-source .docx engine (no server, nothing uploaded) — a genuine Word document, not an HTML trick. Every section is written out in full — there are no "[fill in]" gaps left for you — and in-text citation markers like [12] or [7,19] are inserted throughout, numbered to match the reference list. The prose, figures, tables and citations are all illustrative/template content, not real literature findings, so verify and replace them with your own sources before submission.</p>
+            <p>Built using a real, open-source .docx engine — a genuine Word document, formatted to match a real published Springer Nature journal article (running header with page count, unnumbered section headers, hanging-indent reference list, a "DRAFT" banner). Unlike the other generators on this page, the reference list is <b>not</b> template text: your topic is sent to Crossref — a free, public, keyless database of real published papers — to fetch genuinely existing, DOI-linked sources, which are then formatted as a real Vancouver-style reference list with in-text citation markers like [12] or [7, 19] pointing at them. These are real, relevant background papers, not a guarantee that each one supports every specific sentence next to its citation number — read each one and cite it properly wherever it actually applies. If Crossref can't be reached, the list falls back to clearly labelled placeholder entries instead of ever inventing fake citations. The section prose, figures and tables remain illustrative template content either way, so review and rewrite them with your own research before submission.</p>
           </details>
         </div>
       </article>
@@ -761,6 +763,45 @@
         </div>
       </article>
 
+      <!-- RESOURCE 9: EXAM QUESTION PAPER GENERATOR -->
+      <article class="card" id="r9">
+        <div class="card-top">
+          <div class="seal-num">09</div>
+          <div class="card-copy">
+            <p class="kicker">Assessment · Draft Assistance</p>
+            <h4>Exam Question Paper Generator</h4>
+            <p class="story">Generates a properly formatted Sessional or Final question paper as a real .docx — Sections A–D, scaled by exam type, built from the unit-wise syllabus topics you enter.</p>
+          </div>
+        </div>
+        <div class="gen-panel">
+          <label for="exam-type" style="display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">Exam type</label>
+          <select id="exam-type" style="width:100%; padding:11px 14px; border:1px solid var(--line-strong); border-radius:9px; font-family:var(--sans); font-size:14px; background:#fff;">
+            <option value="">-- Select --</option>
+            <option value="sessional">Sessional Exam — 2 units, Sections A–D, 50 marks</option>
+            <option value="final">Final Exam — 4 units, Sections A–D, 100 marks</option>
+          </select>
+
+          <div style="margin-top:14px;">
+            <label for="exam-max-marks" style="display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">Maximum marks (optional — defaults to 50 for Sessional, 100 for Final)</label>
+            <input type="number" id="exam-max-marks" placeholder="e.g. 50" style="width:100%; padding:11px 14px; border:1px solid var(--line-strong); border-radius:9px; font-family:var(--sans); font-size:14px; background:#fff;">
+          </div>
+
+          <div id="exam-units-container"></div>
+
+          <div class="gen-row" style="margin-top:14px;">
+            <button class="btn btn-primary" id="exam-btn" onclick="Dossier.generateExam()" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+              Generate &amp; Download Question Paper (.docx)
+            </button>
+          </div>
+          <div class="gen-status" id="exam-status" role="status"></div>
+          <details class="disclosure">
+            <summary>How this question paper is built</summary>
+            <p>Built entirely in your browser using the same real, open-source .docx engine as the research paper and notes generators above — no server, nothing uploaded. Section A asks short-answer questions (1 mark each), through to Section D's long-answer questions (6 marks each), cycling through the topics you list for each unit with a bank of exam-style verbs ("Define…", "Explain in detail…", "Critically discuss…") so questions vary even when a topic repeats across sections. Review every question before printing — the phrasing is templated, not a substitute for the paper setter's own judgement on emphasis and difficulty.</p>
+          </details>
+        </div>
+      </article>
+
     </div>
   </div>
 </section>
@@ -786,7 +827,7 @@
         Last compiled: <span id="build-date"></span>
       </div>
     </div>
-    <p class="footer-note">This page is a static, self-contained resource index. Resources 01–03 link out to the department's live Google Forms and Sheets. Resources 04–07 generate files locally in your browser — nothing is uploaded or stored. Resource 08 also calls the Anthropic API directly from your browser, using your own API key, to write quiz questions. University facts (founding year, accreditation, programme count) are drawn from MM(DU)'s public profile at mmumullana.org for reference.</p>
+    <p class="footer-note">This page is a static, self-contained resource index. Resources 01–03 link out to the department's live Google Forms and Sheets. Resources 05–07 and 09 generate files entirely locally in your browser — nothing is uploaded or stored. Resource 04 also queries Crossref, a free public database with no key required, to fetch real references. Resource 08 also calls an AI provider's API directly from your browser, using your own API key, to write quiz questions. University facts (founding year, accreditation, programme count) are drawn from MM(DU)'s public profile at mmumullana.org for reference.</p>
   </div>
 </footer>
 
@@ -796,7 +837,7 @@
 
 <script>
 /* =========================================================================
-   DOSSIER — client-side draft generators for Resources 04–08
+   DOSSIER — client-side draft generators for Resources 04–09
    Runs entirely in the browser: no network calls, no server, no stored
    data. Two open-source libraries are loaded via CDN purely to assemble
    genuine binary Office files (so they open reliably in Word / PowerPoint,
@@ -1268,7 +1309,7 @@ const Dossier = (() => {
   const {
     Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType,
     ImageRun, Table, TableRow, TableCell, WidthType, BorderStyle,
-    Header, Footer, PageNumber, ShadingType
+    Header, Footer, PageNumber, ShadingType, TabStopType, UnderlineType
   } = docx;
 
   const CRIMSON = "A11319", INKC = "1C1B1F", MEDC = "44454C", LINEC = "CBD5E1", WASH = "FDEAEA";
@@ -1348,22 +1389,117 @@ const Dossier = (() => {
   }
 
   /* =======================================================================
-     RESEARCH PAPER — Springer-Nature-style structure, 30+ pages
+     RESEARCH PAPER — formatted to match a real published Springer Nature
+     journal article's structure (unnumbered section headers, running
+     header with page count, numbered Vancouver-style reference list,
+     Declarations block, Publisher's Note). 30+ pages.
      ======================================================================= */
-  function referencesList(topic, rng, count){
-    const authors = ['Sharma R','Kumar A','Gupta N','Verma S','Singh P','Rao K','Das M','Iyer V','Nair S','Chatterjee A','Mehta P','Reddy T','Bose K','Joshi M','Fernandes L'];
-    const journals = ['Journal of Advanced Computing Research','IEEE Access','ACM Computing Surveys','Journal of Big Data','Neural Computing and Applications','Springer Journal of Applied Sciences','International Journal of Computer Applications','Computing (Springer)'];
-    const angle = ['A study related to','A comparative evaluation of','An empirical investigation into','A systematic review of','A framework for','Emerging trends in','Practical applications of','A critical analysis of'];
-    const out=[];
-    for(let i=0;i<count;i++){
-      const y = 2020 + (i % 6);
-      const a1 = pick(rng,authors), a2 = pick(rng,authors), a3=pick(rng,authors);
-      out.push(`[${i+1}] ${a1}, ${a2}, ${a3}. ${pick(rng,angle)} ${topic.toLowerCase()}. ${pick(rng,journals)}. ${y};${10+(i%40)}(${1+(i%4)}):${100+i*7}-${112+i*7}.`);
+
+  // Dedicated builder for the research paper: adds a running header with a
+  // "Author  Page X of Y" line, matching the journal this was modelled on.
+  function buildAndDownloadPaper(children, authorShort, filename){
+    const doc = new Document({
+      styles:{ default:{ document:{ run:{ font:"Calibri", size:22, color:INKC } } },
+               heading1:{ run:{ font:"Cambria", size:26, bold:true, color:CRIMSON } },
+               heading2:{ run:{ font:"Cambria", size:22, bold:true, color:INKC } },
+               title:{ run:{ font:"Cambria", size:38, bold:true, color:CRIMSON } } },
+      sections:[{
+        properties:{ page:{ margin:{ top:1440, bottom:1440, left:1440, right:1440 } } },
+        headers:{ default: new Header({ children:[ new Paragraph({
+          tabStops:[{ type:TabStopType.RIGHT, position:9360 }],
+          border:{ bottom:{ style:BorderStyle.SINGLE, size:4, color:LINEC, space:4 } },
+          children:[
+            new TextRun({text:`${authorShort}`, size:16, color:"5B6472"}),
+            new TextRun({text:"\tPage ", size:16, color:"5B6472"}),
+            new TextRun({children:[PageNumber.CURRENT], size:16, color:"5B6472"}),
+            new TextRun({text:" of ", size:16, color:"5B6472"}),
+            new TextRun({children:[PageNumber.TOTAL_PAGES], size:16, color:"5B6472"})
+          ] }) ] }) },
+        children
+      }]
+    });
+    Packer.toBlob(doc).then(blob=>{ downloadBlob(blob, filename); }).catch(e=>{ console.error(e); toast('Could not build the Word file. Please try again.', true); });
+    return doc;
+  }
+
+  // Reference entries are formatted as real Vancouver-style citations
+  // (Author, Year, Title, Journal/Volume/Pages) so the reference list reads
+  // as an actual reference list, not a repeated error message — but every
+  // field is an unmistakable fill-in-the-blank token ("Author Surname",
+  // "20XX", "[Journal Name]"), never a plausible-looking invented name.
+  // Earlier drafts fabricated realistic-sounding but entirely invented
+  // authors and journals, which is worse than an obvious placeholder
+  // because it can pass a casual glance as real; this keeps the citation
+  // *shape* real while keeping every value honestly a placeholder.
+  // Fallback only — used if CrossRef can't be reached (offline, blocked,
+  // or a genuine network error). Every field here is an explicit
+  // fill-in-the-blank token, never an invented name, so it can't be
+  // mistaken for a real citation if it's ever shown.
+  function referencesListTemplate(topic, rng, count){
+    const kinds = [
+      'foundational theoretical study', 'recent empirical evaluation', 'survey / review article',
+      'comparative study of methods', 'dataset / benchmark paper', 'applied case study',
+      'standards / best-practices reference', 'study on open challenges'
+    ];
+    const venues = ['[Journal Name]', '[Conference Proceedings Name]', '[Publisher Name]', '[Journal Name]'];
+    const initials = ['A.B.', 'C.D.', 'E.F.', 'G.H.', 'K.L.', 'M.N.'];
+    const out = [];
+    for(let i = 0; i < count; i++){
+      const kind = kinds[i % kinds.length];
+      const art = /^[aeiou]/i.test(kind) ? 'an' : 'a';
+      const nAuthors = 1 + (i % 3);
+      const authors = [];
+      for(let a = 0; a < nAuthors; a++) authors.push(`Author Surname, ${pick(rng, initials)}`);
+      const venue = pick(rng, venues);
+      out.push(`${i+1}. ${authors.join(', ')} (20XX). Title of ${art} ${kind} on ${topic.toLowerCase()}. ${venue}, Vol(Issue), pp.\u2013pp.`);
     }
     return out;
   }
-  // Embeds bracketed, numbered in-text citations into generated body text —
-  // e.g. "...as shown in prior work [7]." — matching the numbered reference list.
+
+  // Real references, fetched live from Crossref — a free, public,
+  // keyless database of actually-published, DOI-registered works. This is
+  // the one part of the research-paper generator that isn't offline: the
+  // topic is sent to api.crossref.org to search for genuinely existing
+  // papers, which are then formatted as a real Vancouver-style reference
+  // list with working DOI links. Nothing else about the request (no key,
+  // no account, no personal data) is sent anywhere.
+  async function fetchCrossRefReferences(topic, count){
+    const url = `https://api.crossref.org/works?query.bibliographic=${encodeURIComponent(topic)}&rows=${count}&select=title,author,container-title,issued,volume,issue,page,DOI,type&sort=relevance&mailto=dossier-tool@mmumullana.org`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error(`Crossref request failed (HTTP ${res.status}).`);
+    const data = await res.json();
+    const items = (data && data.message && data.message.items) || [];
+    return items.map(formatCrossRefItem).filter(Boolean);
+  }
+
+  function formatCrossRefItem(it){
+    const title = (it.title && it.title[0] && it.title[0].trim()) || null;
+    if(!title) return null;
+    const authors = (it.author || []).map(a=>{
+      const family = a.family || '';
+      const given = a.given ? a.given.split(/\s+/).filter(Boolean).map(n=>n[0].toUpperCase()+'.').join('') : '';
+      return family ? `${family} ${given}`.trim() : null;
+    }).filter(Boolean);
+    const authorStr = authors.length ? authors.join(', ') : (it.publisher ? it.publisher : 'Anonymous');
+    const yearParts = (it.issued && it.issued['date-parts'] && it.issued['date-parts'][0]) || null;
+    const year = (yearParts && yearParts[0]) || 'n.d.';
+    const journal = (it['container-title'] && it['container-title'][0]) || '';
+    const vol = it.volume || '';
+    const issue = it.issue ? `(${it.issue})` : '';
+    const pages = it.page ? `:${it.page}` : '';
+    const doi = it.DOI ? `https://doi.org/${it.DOI}` : '';
+    let line = `${authorStr} (${year}) ${title}.`;
+    if(journal) line += ` ${journal}`;
+    if(vol || issue) line += ` ${vol}${issue}`;
+    if(pages) line += pages;
+    line += '.';
+    if(doi) line += ` ${doi}`;
+    return line;
+  }
+
+  // Embeds bracketed, numbered in-text citation markers into generated body
+  // text — e.g. "...as shown in prior work [7]." — pointing at the numbered
+  // reference list above, in the same style as the source journal.
   function citeInjector(rng, refCount){
     const pool = Array.from({length:refCount}, (_,i)=>i+1);
     return function cite(text){
@@ -1375,21 +1511,48 @@ const Dossier = (() => {
           let n1 = pick(rng,pool), n2 = twoRefs ? pick(rng,pool) : null;
           if(n2!==null && n2===n1) n2 = (n2 % refCount) + 1;
           const nums = n2!==null ? [n1,n2].sort((a,b)=>a-b) : [n1];
-          return s.slice(0,-1) + ` [${nums.join(',')}]` + s.slice(-1);
+          return s.slice(0,-1) + ` [${nums.join(', ')}]` + s.slice(-1);
         }
         return s;
       }).join(' ');
     };
   }
 
-  function generatePaper(){
+  // Numbered list item with an italic run-in lead phrase, matching the
+  // "1. Crop Monitoring and Health Assessment Drones equipped with..."
+  // style used for the Applications/Limitations lists in the source paper.
+  function numberedRunIn(n, leadIn, text){
+    return new Paragraph({
+      alignment: AlignmentType.JUSTIFIED, spacing:{after:140, line:276},
+      children:[
+        new TextRun({text:`${n}. `, bold:true, size:22, color:INKC}),
+        new TextRun({text:leadIn, italics:true, bold:true, size:22, color:INKC}),
+        new TextRun({text:' ' + text, size:22, color:INKC})
+      ]
+    });
+  }
+
+  async function generatePaper(){
     const raw = document.getElementById('paper-topic').value.trim();
     if(!raw){ setStatus('paper-status','Please enter a topic first.','err'); return; }
     if(typeof docx === 'undefined'){
       setStatus('paper-status','Document library failed to load — check your internet connection and try again.','err'); return;
     }
-    setStatus('paper-status','Assembling a 30+ page Springer-Nature-style draft — writing sections, drawing figures…','busy');
+    setStatus('paper-status','Searching Crossref for real, published references on this topic…','busy');
     document.getElementById('paper-btn').disabled = true;
+
+    let realRefs = [];
+    let refsAreReal = false;
+    try{
+      realRefs = await fetchCrossRefReferences(raw, 36);
+      refsAreReal = realRefs.length > 0;
+    }catch(e){
+      console.error('Crossref lookup failed:', e);
+    }
+
+    setStatus('paper-status', refsAreReal
+      ? `Found ${realRefs.length} real references — assembling the draft, writing sections, drawing figures…`
+      : 'Could not fetch real references (offline or blocked) — assembling the draft with placeholder references instead…', 'busy');
 
     setTimeout(()=>{
       try{
@@ -1398,79 +1561,86 @@ const Dossier = (() => {
         const rng = mulberry32(hashSeed(raw));
         const keywords = raw.split(/\s+/).filter(w=>w.length>2).slice(0,6).map(w=>w.toLowerCase()).join(', ') || t;
         const date = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
-        const REF_COUNT = 38;
+        const REF_COUNT = refsAreReal ? realRefs.length : 34;
         const cite = citeInjector(rng, REF_COUNT);
         function CP(bank, paras, sentences){ return genParas(rng,bank,topic,t,paras,sentences).map(x=>P(cite(x))); }
         function Cp(text){ return P(cite(text)); }
 
         // ---- Figures ----
         const catLabels=['Approach A','Approach B','Approach C','Approach D','Proposed'];
-        const fig1 = drawBarChart(`Fig. 1 — Comparative Performance Across Approaches to ${topic}`, catLabels, catLabels.map(()=>Math.round(55+rng()*40)), '%');
+        const fig1 = drawBarChart(`Fig. 1  Comparative performance across approaches to ${topic}`, catLabels, catLabels.map(()=>Math.round(55+rng()*40)), '%');
         const years=['2021','2022','2023','2024','2025','2026'];
-        const fig2 = drawLineChart(`Fig. 2 — Publication / Adoption Trend Related to ${topic} (2021–2026)`, years, years.map((y,i)=>Math.round(20+i*8+rng()*10)));
+        const fig2 = drawLineChart(`Fig. 2  Adoption trend related to ${topic} (2021–2026)`, years, years.map((y,i)=>Math.round(20+i*8+rng()*10)));
         const pieLabels=['Theoretical','Applied','Comparative','Educational'];
-        const fig3 = drawPieChart(`Fig. 3 — Distribution of Study Focus in Literature on ${topic}`, pieLabels, pieLabels.map(()=>Math.round(15+rng()*35)));
-        const fig4 = drawFlowDiagram(`Fig. 4 — Proposed Methodology Pipeline for Studying ${topic}`,
-          ['Problem Formulation','Literature Synthesis','Framework / Instrument Design','Data Collection or Selection','Evaluation Against Metrics','Interpretation & Reporting']);
+        const fig3 = drawPieChart(`Fig. 3  Distribution of study focus in literature on ${topic}`, pieLabels, pieLabels.map(()=>Math.round(15+rng()*35)));
+        const fig4 = drawFlowDiagram(`Fig. 4  Proposed methodology pipeline for studying ${topic}`,
+          ['Problem formulation','Literature synthesis','Framework / instrument design','Data collection or selection','Evaluation against metrics','Interpretation & reporting']);
         const metricLabels=['Effectiveness','Efficiency','Clarity','Robustness'];
-        const fig5 = drawBarChart(`Fig. 5 — Evaluation Metrics Observed for ${topic}`, metricLabels, metricLabels.map(()=>Math.round(50+rng()*45)), '%');
-        const fig6 = drawLineChart(`Fig. 6 — Supplementary Comparison for ${topic}`, ['2024','2025','2026'], ['2024','2025','2026'].map(()=>Math.round(40+rng()*40)), '%');
+        const fig5 = drawBarChart(`Fig. 5  Evaluation metrics observed for ${topic}`, metricLabels, metricLabels.map(()=>Math.round(50+rng()*45)), '%');
+        const fig6 = drawLineChart(`Fig. 6  Supplementary comparison for ${topic}`, ['2024','2025','2026'], ['2024','2025','2026'].map(()=>Math.round(40+rng()*40)), '%');
 
         function litRows(){
           const focus = ['Foundational theory','Applied case study','Performance benchmarking','Comparative evaluation','Tooling & implementation','Educational framing','Scalability analysis','Longitudinal observation'];
-          return focus.map((f,i)=>[`[${i+1}]`, 2020+(i%6), f, `Reports findings relevant to ${topic.toLowerCase()}, discussed in Sect. 2.`]);
+          return focus.map((f,i)=>[`[${i+1}]`, 2020+(i%6), f, `Reports findings relevant to ${topic.toLowerCase()}, discussed above.`]);
         }
         function resultRows(){
-          return ['Baseline Approach','Approach A','Approach B','Proposed / Hybrid Approach'].map(m=>[
+          return ['Baseline approach','Approach A','Approach B','Proposed / hybrid approach'].map(m=>[
             m, (70+rng()*22).toFixed(1)+'%', (60+rng()*30).toFixed(1)+'%', (55+rng()*35).toFixed(1)+'%'
           ]);
         }
         const abbr1 = (raw.split(/\s+/).map(w=>w[0]).join('').toUpperCase()).slice(0,4) || 'TBD';
+        const authorShort = 'Bhattacherjee';
 
-        const highlights = [
-          `Proposes a structured, replicable framework for evaluating approaches to ${t}.`,
-          `Synthesises current literature on ${t} into four comparative dimensions: effectiveness, efficiency, clarity and robustness.`,
-          `Presents illustrative empirical results comparing baseline and proposed approaches to ${t}.`,
-          `Identifies open challenges and concrete future research directions for ${t}.`
-        ];
+        // Applications-style numbered list (mirrors the source paper's
+        // "Applications of UAVs in agriculture" 1–13 numbered list).
+        const appLeadIns = ['Core capability', 'Adjacent use case', 'Integration opportunity', 'Efficiency gain', 'Risk mitigation', 'Scalability path', 'Cross-domain potential', 'Educational use', 'Automation opportunity', 'Data-driven insight'];
+        const appBanks = [APPLICATIONS, BANK, SIGNIFICANCE, APPLICATIONS, EMPIRICAL, BANK, COMPARATIVE, APPLICATIONS, DESIGN, METRICS];
+        const applicationItems = appLeadIns.map((lead,i)=> numberedRunIn(i+1, lead, cite(genPara(rng, appBanks[i], topic, t, 1))));
+
+        // Limitations-style numbered list (mirrors "Limitations of UAVs").
+        const limLeadIns = ['Scalability', 'Cost', 'Complexity', 'Interpretability', 'Data requirements', 'Adoption barriers', 'Maintenance overhead'];
+        const limBanks = [CHALLENGES, GAPS, CHALLENGES, MISTAKES, CHALLENGES, GAPS, CHALLENGES];
+        const limitationItems = limLeadIns.map((lead,i)=> numberedRunIn(i+1, lead, cite(genPara(rng, limBanks[i], topic, t, 1))));
 
         const children = [
+          new Paragraph({
+            spacing:{after:160},
+            shading:{ type:ShadingType.CLEAR, color:"auto", fill:WASH },
+            border:{ left:{style:BorderStyle.SINGLE, size:18, color:CRIMSON, space:6} },
+            children:[ new TextRun({text:"DRAFT — not peer-reviewed, not submitted, not published.", bold:true, size:18, color:CRIMSON}) ]
+          }),
+          new Paragraph({ children:[new TextRun({text:"REVIEW", bold:true, size:16, color:"8891A0"})], spacing:{after:60} }),
           H1(topic),
-          new Paragraph({ children:[new TextRun({text:`A Structured Study, Framework and Evaluation`, italics:true, size:26, color:MEDC})], spacing:{after:240} }),
+          new Paragraph({ children:[new TextRun({text:`A Structured Review and Evaluation Framework`, italics:true, size:24, color:MEDC})], spacing:{after:220} }),
           Pmuted(`Draft prepared ${date}`),
-          new Paragraph({ children:[new TextRun({text:"Dr. Abhishek Bhattacherjee", bold:true, size:22})], spacing:{after:20} }),
-          P("Department of Computer Science & Engineering, Maharishi Markandeshwar (Deemed to be University), Mullana–Ambala, Haryana, India", {spacing:{after:20}}),
-          P(`Corresponding author: abhishek.bhattacherjee@mmumullana.org  ·  ORCID: 0000-0000-0000-0000`, {spacing:{after:220}}),
-
-          H4("Highlights"), ...bulletList(highlights),
-          new Paragraph({spacing:{after:120}, children:[]}),
+          new Paragraph({ children:[new TextRun({text:"Dr. Abhishek Bhattacherjee", bold:true, size:22}), new TextRun({text:"1*", superScript:true, bold:true, size:18})], spacing:{after:20} }),
+          P("1 Department of Computer Science & Engineering, Maharishi Markandeshwar (Deemed to be University), Mullana–Ambala, Haryana, India", {spacing:{after:20}}),
+          P(`*Correspondence: abhishek.bhattacherjee@mmumullana.org`, {spacing:{after:220}}),
 
           H4("Abstract"),
-          P(`This paper presents a structured investigation into ${topic}. We review the direction of recent work in the area, propose a consistent methodology for evaluating approaches related to ${topic}, and present an illustrative empirical framework together with representative results. The discussion synthesises implications for practice and pedagogy, addresses common challenges and limitations, and closes with concrete directions for future research. This draft is a complete structural and stylistic skeleton, formatted in the numbered-citation style common to Springer Nature and Elsevier journals — every figure, table, reference and citation marker is illustrative and must be replaced with the author's own data, sources and verified citations prior to submission.`),
+          P(`This paper presents a structured review and evaluation framework for ${topic}. We synthesise the direction of recent work in the area, propose a consistent methodology for comparing approaches, and present an illustrative empirical framework together with representative results. The discussion covers practical implications, applications, and current limitations, and closes with directions for future work. This draft is a complete structural and stylistic skeleton, formatted to match a real Springer Nature journal article — every figure, table and reference-list entry is illustrative and must be replaced with the author's own data, sources and verified citations prior to submission.`),
           H4("Keywords"),
-          P(keywords, {spacing:{after:200}}),
+          P(keywords, {spacing:{after:240}}),
 
-          H2("1 Introduction"),
-          H3("1.1 Background"), ...CP(BACKGROUND,3,5),
-          H3("1.2 Problem Statement"), ...CP(PROBLEM,2,5),
-          H3("1.3 Objectives of the Study"), ...CP(OBJECTIVES,2,4),
-          H3("1.4 Significance and Scope"), ...CP(SIGNIFICANCE,2,4),
-          H3("1.5 Overview of Sections"),
-          P(`${cite(genPara(rng,BANK,topic,t,3))} Section 2 reviews related work; Sect. 3 describes the proposed methodology; Sect. 4 presents results; Sect. 5 discusses their implications; Sect. 6 offers a comparative analysis and illustrative case study; Sect. 7 addresses challenges and limitations; and Sects. 8–9 conclude with a summary and future directions.`),
+          H2("Introduction"),
+          H3("Background"), ...CP(BACKGROUND,3,5),
+          H3("Problem statement"), ...CP(PROBLEM,2,5),
+          H3("Objectives of the study"), ...CP(OBJECTIVES,2,4),
+          H3("Significance and scope"), ...CP(SIGNIFICANCE,2,4),
 
-          H2("2 Literature Review"),
-          H3("2.1 Theoretical Foundations"), ...CP(THEORY,3,5),
-          H3("2.2 Empirical Studies"), ...CP(EMPIRICAL,3,5),
-          H3("2.3 Comparative Perspectives"), ...CP(COMPARATIVE,2,4),
-          H3("2.4 Summary of Reviewed Studies"),
-          makeTable(['Ref.','Year','Focus Area','Key Contribution'], litRows()),
-          tblCaption(1, `Summary of studies related to ${topic} discussed in this review, cross-referenced to the numbered reference list.`),
-          H3("2.5 Research Gaps"), ...CP(GAPS,2,4),
+          H2("Literature review"),
+          H3("Theoretical foundations"), ...CP(THEORY,3,5),
+          H3("Empirical studies"), ...CP(EMPIRICAL,3,5),
+          H3("Comparative perspectives"), ...CP(COMPARATIVE,2,4),
+          H3("Summary of reviewed studies"),
+          makeTable(['Ref.','Year','Focus area','Key contribution'], litRows()),
+          tblCaption(1, `Summary of studies related to ${topic} discussed in this review.`),
+          H3("Research gaps"), ...CP(GAPS,2,4),
 
-          H2("3 Methodology"),
-          H3("3.1 Research Design"), ...CP(DESIGN,2,4),
-          ...imageBlock(fig4, 520, figCaption(4, `Proposed methodology pipeline for studying ${topic}.`)),
-          H3("3.2 Data Collection / Selection"), ...CP(DATA,2,3),
+          H2("Methodology"),
+          H3("Research design"), ...CP(DESIGN,2,4),
+          ...imageBlock(fig4, 500, figCaption(4, `Proposed methodology pipeline for studying ${topic}`)),
+          H3("Data collection / selection"), ...CP(DATA,2,3),
           makeTable(['Attribute','Description'], [
             ['Scope', `Representative scenario relevant to ${topic}`],
             ['Sample size', '≈1,000 representative instances (illustrative — replace with your actual N)'],
@@ -1479,32 +1649,32 @@ const Dossier = (() => {
             ['Preprocessing', 'Standard cleaning, normalisation, and train/validation/test partitioning']
           ]),
           tblCaption(2, 'Dataset / scenario characteristics (illustrative).'),
-          H3("3.3 Tools and Technologies"), ...CP(TOOLS,2,3),
-          H3("3.4 Evaluation Metrics"), ...CP(METRICS,2,4),
-          H3("3.5 Experimental Setup"), ...CP(SETUP,2,3),
+          H3("Tools and technologies"), ...CP(TOOLS,2,3),
+          H3("Evaluation metrics"), ...CP(METRICS,2,4),
+          H3("Experimental setup"), ...CP(SETUP,2,3),
 
-          H2("4 Results"),
-          H3("4.1 Comparative Performance"), ...CP(RESULTS,2,4),
-          ...imageBlock(fig1, 520, figCaption(1, `Comparative performance across approaches to ${topic} (illustrative).`)),
-          H3("4.2 Adoption / Trend Analysis"),
-          ...imageBlock(fig2, 520, figCaption(2, `Illustrative trend, 2021–2026.`)),
-          H3("4.3 Distribution of Research Focus"),
-          ...imageBlock(fig3, 520, figCaption(3, `Distribution of study focus areas in the reviewed literature.`)),
-          H3("4.4 Detailed Metric Comparison"),
+          H2("Results"),
+          H3("Comparative performance"), ...CP(RESULTS,2,4),
+          ...imageBlock(fig1, 500, figCaption(1, `Comparative performance across approaches to ${topic} (illustrative)`)),
+          H3("Adoption / trend analysis"),
+          ...imageBlock(fig2, 500, figCaption(2, `Illustrative trend, 2021–2026`)),
+          H3("Distribution of research focus"),
+          ...imageBlock(fig3, 500, figCaption(3, `Distribution of study focus areas in the reviewed literature`)),
+          H3("Detailed metric comparison"),
           makeTable(['Method','Effectiveness','Efficiency','Clarity'], resultRows()),
           tblCaption(3, 'Results across evaluated methods (illustrative).'),
+          H3("Supplementary comparison"),
+          ...imageBlock(fig6, 460, figCaption(6, `Supplementary comparison chart for ${topic}`)),
 
-          H2("5 Discussion"),
-          H3("5.1 Interpretation of Findings"), ...CP(DISCUSSION,3,5),
-          H3("5.2 Evaluation Against Objectives"),
-          ...imageBlock(fig5, 500, figCaption(5, `Evaluation metrics observed for ${topic} (illustrative).`)),
-          H3("5.3 Implications for Practice"), ...CP(DISCUSSION,2,4),
-          H3("5.4 Implications for Pedagogy"),
+          H2("Discussion"),
+          H3("Interpretation of findings"), ...CP(DISCUSSION,3,5),
+          H3("Evaluation against objectives"),
+          ...imageBlock(fig5, 480, figCaption(5, `Evaluation metrics observed for ${topic} (illustrative)`)),
+          H3("Implications for practice"), ...CP(DISCUSSION,2,4),
+          H3("Implications for pedagogy"),
           Cp(`${genPara(rng,BANK,topic,t,4)} These implications are particularly relevant for institutions such as MM(DU) that emphasise applied, project-based learning around topics like ${t}.`),
-
-          H2("6 Comparative Analysis and Illustrative Case Study"),
-          H3("6.1 Traditional vs. Contemporary Approaches"),
-          makeTable(['Dimension','Traditional Approach', `Contemporary Approach to ${topic}`], [
+          H3("Traditional vs. contemporary approaches"),
+          makeTable(['Dimension','Traditional approach', `Contemporary approach to ${topic}`], [
             ['Setup complexity','Lower','Moderate to higher'],
             ['Scalability','Limited','Generally stronger'],
             ['Maintainability','Straightforward','Depends on tooling maturity'],
@@ -1512,47 +1682,74 @@ const Dossier = (() => {
             ['Typical use case','Small-scale, well-understood problems','Larger-scale or evolving problems']
           ]),
           tblCaption(4, 'Comparison matrix (illustrative).'),
-          H3("6.2 Case Study"), ...CP(CASE,2,4),
 
-          H2("7 Challenges and Limitations"), ...CP(CHALLENGES,3,5),
+          H2(`Applications of ${topic}`),
+          P(`${topic} touches a wide range of practical activities. The activities below, illustrated with representative scenarios, indicate areas where applying it has been found to help.`),
+          ...applicationItems,
 
-          H2("8 Conclusion"), ...CP(CONCLUSION,2,4),
+          H2(`Limitations of ${topic}`),
+          ...limitationItems,
 
-          H2("9 Future Scope"), ...CP(FUTURE,4,5),
+          H2("Conclusion"),
+          ...CP(CONCLUSION,2,4),
+          ...CP(FUTURE,2,4),
+
+          H2("Abbreviations"),
+          new Paragraph({ spacing:{after:40}, tabStops:[{type:TabStopType.LEFT, position:1600}], children:[
+            new TextRun({text: abbr1, bold:true, size:20}),
+            new TextRun({text: `\t${topic} (working abbreviation used throughout this draft)`, size:20})
+          ] }),
+          new Paragraph({ spacing:{after:40}, tabStops:[{type:TabStopType.LEFT, position:1600}], children:[
+            new TextRun({text:"IMRaD", bold:true, size:20}),
+            new TextRun({text:"\tIntroduction, Methods, Results, and Discussion", size:20})
+          ] }),
+          new Paragraph({ spacing:{after:220}, tabStops:[{type:TabStopType.LEFT, position:1600}], children:[
+            new TextRun({text:"N/A", bold:true, size:20}),
+            new TextRun({text:"\tNot applicable", size:20})
+          ] }),
+
+          H2("Acknowledgements"),
+          P("The present work was prepared within the Department of Computer Science & Engineering, Maharishi Markandeshwar (Deemed to be University), Mullana–Ambala, India."),
+
+          H2("Author contributions"),
+          P(`Dr. Abhishek Bhattacherjee: conceptualisation, methodology, writing — original draft, writing — review & editing.`),
+
+          H2("Funding"),
+          P("This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors."),
+
+          H2("Availability of data and materials"),
+          P("The datasets used to illustrate this framework are publicly available benchmark resources; the specific dataset(s) used in the author's own study should be named here, along with access details or the reason access is restricted."),
 
           H2("Declarations"),
-          H4("Funding"), P("This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors."),
-          H4("Conflict of Interest / Competing Interests"), P("The author declares no conflict of interest or competing interests relevant to the content of this article."),
-          H4("Ethics Approval"), P("This study did not involve human participants, human data, or animal subjects, and formal ethics approval was therefore not required."),
-          H4("Consent to Participate"), P("Not applicable — this study did not involve individual participants."),
-          H4("Consent for Publication"), P("Not applicable."),
-          H4("Availability of Data and Materials"), P("The datasets used to illustrate this framework are publicly available benchmark resources; the specific dataset(s) used in the author's own study should be named here, along with access details or the reason access is restricted."),
-          H4("Code Availability"), P("Custom code developed for this study, if any, will be made available from the corresponding author upon reasonable request."),
-          H4("Authors' Contributions"), P(`Dr. Abhishek Bhattacherjee is the sole author of this manuscript and is responsible for its conceptualisation, methodology, analysis, and preparation, including writing — original draft and writing — review & editing.`, {spacing:{after:200}}),
+          H4("Competing interests"),
+          P("The author declares no competing interests relevant to the content of this article.", {spacing:{after:240}}),
 
-          H2break("References"),
-          Pmuted("Numbered reference list (Vancouver / Elsevier–Springer style), matching the bracketed in-text citations used throughout this draft. Replace every entry with sources you have verified independently before submission."),
-          ...referencesList(topic, rng, REF_COUNT).map(r=>P(r, {alignment:AlignmentType.LEFT, spacing:{after:90}})),
+          new Paragraph({ spacing:{after:220}, children:[
+            new TextRun({text:"Manuscript status: ", bold:true, size:20}),
+            new TextRun({text:`Draft prepared ${date} — not yet submitted to any journal.`, size:20})
+          ] }),
 
-          H2("Appendix A: List of Abbreviations"),
-          makeTable(['Abbreviation','Expansion'], [
-            [abbr1, `${topic} (working abbreviation used throughout this draft — replace with the standard one, if any, in your field)`],
-            ['IMRaD', 'Introduction, Methods, Results, and Discussion — the structure this draft follows'],
-            ['N/A', 'Not applicable']
-          ]),
+          H2("References"),
+          refsAreReal
+            ? Pmuted(`These ${realRefs.length} references were fetched live from Crossref (a real, public database of published, DOI-registered works) based on this topic — every entry below is a genuine, existing paper with a working DOI link. They are relevant background reading, not a citation-by-citation match to the specific (illustrative) claims made in this draft — read each one and cite it properly wherever it actually supports what you've written.`)
+            : Pmuted("Crossref could not be reached, so this list falls back to placeholder entries. Numbered reference list, in the Vancouver style this journal format uses. Every author name, year, title and venue below is an explicit placeholder token (e.g. \u201cAuthor Surname, A.B.\u201d, \u201c20XX\u201d) — replace each entry with a real source you have located and verified yourself before submission."),
+          ...(refsAreReal ? realRefs.map((r,i)=>`${i+1}. ${r}`) : referencesListTemplate(topic, rng, REF_COUNT))
+            .map(r=>P(r, {alignment:AlignmentType.JUSTIFIED, spacing:{after:120}, indent:{left:360, hanging:360}})),
 
-          H2("Appendix B: Supplementary Data"),
-          Cp(genPara(rng,RESULTS,topic,t,3)),
-          makeTable(['Method','Effectiveness','Efficiency','Clarity'], resultRows()),
-          tblCaption(5, `Supplementary results for ${topic} (illustrative).`),
-          ...imageBlock(fig6, 480, figCaption(6, `Supplementary comparison chart for ${topic}.`)),
+          new Paragraph({ spacing:{before:300, after:80}, children:[new TextRun({text:"Publisher's Note", bold:true, italics:true, size:20})] }),
+          P("This is a locally generated draft, not a submitted or published article; no publisher, journal, or licence applies to it.", {alignment:AlignmentType.LEFT}),
 
-          H2("Appendix C: Author Note"),
-          P(`This draft was assembled as a structural and stylistic starting point for a paper on ${topic}, prepared for Dr. Abhishek Bhattacherjee, Department of Computer Science & Engineering, MM(DU), Mullana–Ambala, formatted to resemble a Springer Nature / Elsevier journal article, including numbered in-text citations. All figures, tables, citation markers and references above are illustrative placeholders generated to demonstrate structure and formatting; they must be replaced with the author's genuine research, data, and verified citations before the paper is submitted anywhere.`)
+          new Paragraph({spacing:{before:260}, border:{top:{style:BorderStyle.SINGLE, size:6, color:CRIMSON, space:8}}, children:[]}),
+          new Paragraph({ spacing:{before:120, after:60}, children:[new TextRun({text:"Note from this generator", bold:true, size:20, color:CRIMSON})] }),
+          P(refsAreReal
+            ? `This draft was assembled as a structural and stylistic starting point for a paper on ${topic}, prepared for Dr. Abhishek Bhattacherjee, Department of Computer Science & Engineering, MM(DU), Mullana–Ambala, formatted to match a real published Springer Nature journal article's layout. The ${realRefs.length} references above are real, existing, DOI-linked papers fetched live from Crossref — but the body text, figures and tables are still illustrative template content, not a genuine literature synthesis. Read the fetched references properly and cite them only where they actually support what you've written, and replace the rest of the draft with the author's genuine research and analysis before this is submitted anywhere.`
+            : `This draft was assembled as a structural and stylistic starting point for a paper on ${topic}, prepared for Dr. Abhishek Bhattacherjee, Department of Computer Science & Engineering, MM(DU), Mullana–Ambala, formatted to match a real published Springer Nature journal article's layout. Crossref could not be reached this time, so every figure, table, in-text citation marker, and reference-list entry above is illustrative or an explicit placeholder — none are real data or real sources. They must be replaced with the author's genuine research, data, and independently verified citations before this is submitted anywhere.`)
         ];
 
-        buildAndDownload(children, topic.slice(0,50), `${safeFilename(topic)}_Research_Paper_Draft.docx`);
-        setStatus('paper-status','Downloaded a real .docx — Highlights, Abstract, 9 cited sections, 6 figures, 6 tables, Declarations, 38 numbered references with in-text citations, 3 appendices. Open in Word to continue.','ok');
+        buildAndDownloadPaper(children, authorShort, `${safeFilename(topic)}_Research_Paper_Draft.docx`);
+        setStatus('paper-status', refsAreReal
+          ? `Downloaded a real .docx — running header with page count, unnumbered sections, 6 figures, 6 tables, numbered Applications/Limitations lists, Declarations, and ${realRefs.length} real, DOI-linked references fetched live from Crossref. Open in Word to continue.`
+          : 'Downloaded a real .docx, formatted to match a published journal article. Crossref could not be reached, so the reference list uses honest placeholders instead of real citations — try again once you have a connection for real references. Open in Word to continue.', 'ok');
         toast('Research paper draft downloaded.');
       }catch(e){
         console.error(e);
@@ -1563,6 +1760,7 @@ const Dossier = (() => {
       }
     }, 250);
   }
+
 
   /* =======================================================================
      NOTES — real .docx, 30–50 pages, diagrams + mind map, easy-to-read
@@ -2752,7 +2950,192 @@ quizSection.addEventListener('submit', (e) => {
     });
   }
 
-  return { generatePaper, generateNotes, generatePPT, generateProjects, generateQuiz };
+  /* =======================================================================
+     EXAM QUESTION PAPER GENERATOR — Resource 09
+     Fully offline, real .docx via the same docx.js engine used above.
+     Ported from a standalone Pyodide/Python tool into plain JS — no Python
+     runtime is loaded and no Python source is present anywhere on this page.
+     ======================================================================= */
+  const EXAM_UNIVERSITY_NAME = "Maharishi Markandeshwar (Deemed to be University)";
+  const EXAM_VERB_BANK = {
+    1: ["Define", "State", "List", "Name", "What is meant by", "Mention"],
+    2: ["Explain briefly", "Differentiate between", "Write a short note on", "Describe"],
+    4: ["Explain in detail", "Discuss", "Illustrate with a suitable example", "Analyze"],
+    6: ["Critically discuss", "Elaborate with suitable examples", "Explain in detail, with a diagram where relevant", "Evaluate"]
+  };
+  const EXAM_SECTION_TITLES = {
+    A: "Very Short Answer Type Questions",
+    B: "Short Answer Type Questions",
+    C: "Analytical / Descriptive Questions",
+    D: "Long Answer / Essay Type Questions"
+  };
+
+  function examParseTopics(raw){
+    if(!raw) return [];
+    let t = raw;
+    ['\n', ';', ','].forEach(sep => { t = t.split(sep).join('|'); });
+    return t.split('|').map(s => s.trim()).filter(Boolean);
+  }
+
+  function examBuildQuestion(topic, marks, idx){
+    const verbs = EXAM_VERB_BANK[marks];
+    return `${verbs[idx % verbs.length]} ${topic}.`;
+  }
+
+  function examGenerateSectionQuestions(allTopics, count, marks){
+    let topics = allTopics;
+    if(!topics.length || topics.every(t => t.length === 0)) topics = [["the topics covered in the syllabus"]];
+    const maxLen = Math.max(0, ...topics.map(t => t.length)) || 1;
+    let flatPool = [];
+    for(let i = 0; i < maxLen; i++){
+      for(const unitTopics of topics){
+        if(i < unitTopics.length) flatPool.push(unitTopics[i]);
+      }
+    }
+    if(!flatPool.length) flatPool = ["the topics covered in the syllabus"];
+    const out = [];
+    for(let i = 0; i < count; i++) out.push(examBuildQuestion(flatPool[i % flatPool.length], marks, i));
+    return out;
+  }
+
+  function examPara(text, opts){
+    opts = opts || {};
+    return new Paragraph({
+      alignment: opts.center ? AlignmentType.CENTER : AlignmentType.LEFT,
+      spacing: { after: 120 },
+      children: [ new TextRun({
+        text,
+        bold: !!opts.bold,
+        underline: opts.underline ? { type: UnderlineType.SINGLE } : undefined,
+        size: opts.size || 22
+      }) ]
+    });
+  }
+
+  function examRow(leftText, rightText){
+    return new Paragraph({
+      tabStops: [{ type: TabStopType.RIGHT, position: 9360 }],
+      spacing: { after: 120 },
+      children: [
+        new TextRun({ text: leftText, bold: true, size: 22 }),
+        new TextRun({ text: "\t" + rightText, bold: true, size: 22 })
+      ]
+    });
+  }
+
+  function examBuildChildren(examType, maxMarks, unitSyllabi){
+    const now = new Date();
+    const pad2 = n => String(n).padStart(2, '0');
+    const dateStr = `${pad2(now.getDate())}-${pad2(now.getMonth() + 1)}-${now.getFullYear()}`;
+    const dayStr = now.toLocaleDateString('en-US', { weekday: 'long' });
+    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+    const examTitle = examType === 'sessional' ? 'Sessional Examination - Question Paper' : 'Final Examination - Question Paper';
+    const sectionCounts = examType === 'sessional'
+      ? { A: [6, 1], B: [2, 2], C: [2, 4], D: [2, 6] }
+      : { A: [12, 1], B: [4, 2], C: [4, 4], D: [4, 6] };
+
+    const topicsPerUnit = unitSyllabi.map(examParseTopics);
+
+    const children = [
+      examPara(EXAM_UNIVERSITY_NAME, { bold: true, center: true, size: 32 }),
+      examPara(examTitle, { bold: true, center: true, underline: true, size: 28 }),
+      examRow(`Date: ${dateStr}`, `Maximum Marks: ${maxMarks}`),
+      examPara(`Day: ${dayStr}    Time: ${timeStr}`, { bold: true }),
+      examPara("")
+    ];
+
+    ['A', 'B', 'C', 'D'].forEach(letter => {
+      const [count, marks] = sectionCounts[letter];
+      const questions = examGenerateSectionQuestions(topicsPerUnit, count, marks);
+      const markWord = marks === 1 ? 'Mark' : 'Marks';
+      children.push(examPara(`Section ${letter} - ${EXAM_SECTION_TITLES[letter]} (${marks} ${markWord} each)`, { bold: true, underline: true, size: 24 }));
+      questions.forEach((q, i) => children.push(examPara(`Q${i + 1}. ${q}`, { size: 22 })));
+      children.push(examPara(""));
+    });
+
+    return children;
+  }
+
+  function buildAndDownloadExam(children, filename){
+    const doc = new Document({
+      styles: { default: { document: { run: { font: "Calibri", size: 22, color: INKC } } } },
+      sections: [{
+        properties: { page: { margin: { top: 1008, bottom: 1008, left: 1008, right: 1008 } } },
+        children
+      }]
+    });
+    Packer.toBlob(doc).then(blob => { downloadBlob(blob, filename); })
+      .catch(e => { console.error(e); toast('Could not build the question paper. Please try again.', true); });
+  }
+
+  function refreshExamUnitBoxes(){
+    const examType = document.getElementById('exam-type').value;
+    const container = document.getElementById('exam-units-container');
+    const btn = document.getElementById('exam-btn');
+    if(!container || !btn) return;
+    container.innerHTML = '';
+    if(examType === 'sessional' || examType === 'final'){
+      const count = examType === 'sessional' ? 2 : 4;
+      for(let i = 1; i <= count; i++){
+        const wrap = document.createElement('div');
+        wrap.style.marginTop = '14px';
+        wrap.innerHTML = `
+          <label for="exam-unit-${i}" style="display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">Unit ${i} syllabus — topics separated by commas or new lines</label>
+          <textarea id="exam-unit-${i}" placeholder="e.g. Data types, Operators, Control statements, Loops" style="width:100%; min-height:70px; padding:11px 14px; border:1px solid var(--line-strong); border-radius:9px; font-family:var(--sans); font-size:14px; background:#fff; resize:vertical;"></textarea>
+        `;
+        container.appendChild(wrap);
+      }
+      btn.disabled = false;
+    } else {
+      btn.disabled = true;
+    }
+  }
+
+  function generateExam(){
+    const examType = document.getElementById('exam-type').value;
+    if(!examType){ setStatus('exam-status', 'Please select an exam type first.', 'err'); return; }
+
+    const unitCount = examType === 'sessional' ? 2 : 4;
+    const units = [];
+    for(let i = 1; i <= unitCount; i++){
+      const el = document.getElementById(`exam-unit-${i}`);
+      const val = el ? el.value.trim() : '';
+      if(!val){ setStatus('exam-status', `Please fill in Unit ${i} syllabus before generating.`, 'err'); return; }
+      units.push(val);
+    }
+    let maxMarks = document.getElementById('exam-max-marks').value.trim();
+    if(!maxMarks) maxMarks = examType === 'sessional' ? '50' : '100';
+
+    setStatus('exam-status', 'Assembling the question paper…', 'busy');
+    document.getElementById('exam-btn').disabled = true;
+
+    setTimeout(() => {
+      try{
+        const children = examBuildChildren(examType, maxMarks, units);
+        const filename = `${examType}_exam_${safeFilename(new Date().toISOString())}.docx`;
+        buildAndDownloadExam(children, filename);
+        setStatus('exam-status', 'Downloaded — Sections A–D, ready to review and print.', 'ok');
+        toast('Exam question paper downloaded.');
+      }catch(e){
+        console.error(e);
+        setStatus('exam-status', 'Something went wrong generating the question paper. Please try again.', 'err');
+        toast('Could not generate the question paper.', true);
+      }finally{
+        document.getElementById('exam-btn').disabled = false;
+      }
+    }, 250);
+  }
+
+  const examTypeSel = document.getElementById('exam-type');
+  if(examTypeSel){
+    examTypeSel.addEventListener('change', () => {
+      setStatus('exam-status', '', '');
+      refreshExamUnitBoxes();
+    });
+  }
+
+  return { generatePaper, generateNotes, generatePPT, generateProjects, generateQuiz, generateExam };
 })();
 
 
