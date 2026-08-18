@@ -1541,6 +1541,62 @@ const Dossier = (() => {
     return { data:c.toDataURL('image/png'), w, h, b0, b1, r2 };
   }
 
+  function drawNetworkDiagram(title, nodes, edges){
+    // nodes: [{id,label}], edges: [[id1,id2,label?]] — laid out on a
+    // circle so the layout is deterministic and never overlaps, with
+    // directed arrows for relationships that have a clear direction.
+    const w=900, h=620, cx=450, cy=340, r=220;
+    const c=cv(w,h), ctx=ctxOf(c);
+    ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,0,w,h);
+    drawTitle(ctx,w,title);
+    const pos = {};
+    nodes.forEach((n,i)=>{
+      const ang = -Math.PI/2 + i*(2*Math.PI/nodes.length);
+      pos[n.id] = { x: cx + r*Math.cos(ang), y: cy + r*Math.sin(ang) };
+    });
+    ctx.lineWidth = 1.6;
+    edges.forEach(([a,b,label])=>{
+      const pa = pos[a], pb = pos[b];
+      if(!pa || !pb) return;
+      const dx = pb.x-pa.x, dy = pb.y-pa.y, len = Math.hypot(dx,dy);
+      const ux = dx/len, uy = dy/len;
+      const nodeR = 42;
+      const sx = pa.x + ux*nodeR, sy = pa.y + uy*nodeR;
+      const ex = pb.x - ux*nodeR, ey = pb.y - uy*nodeR;
+      ctx.strokeStyle = '#4B5563';
+      ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(ex,ey); ctx.stroke();
+      const ah = 9;
+      const ang2 = Math.atan2(ey-sy, ex-sx);
+      ctx.beginPath();
+      ctx.moveTo(ex, ey);
+      ctx.lineTo(ex - ah*Math.cos(ang2-Math.PI/7), ey - ah*Math.sin(ang2-Math.PI/7));
+      ctx.lineTo(ex - ah*Math.cos(ang2+Math.PI/7), ey - ah*Math.sin(ang2+Math.PI/7));
+      ctx.closePath(); ctx.fillStyle='#4B5563'; ctx.fill();
+      if(label){
+        const mx=(sx+ex)/2, my=(sy+ey)/2;
+        ctx.fillStyle='#FFFFFF'; ctx.fillRect(mx-30, my-9, 60, 18);
+        ctx.fillStyle='#374151'; ctx.font='10px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(label, mx, my);
+      }
+    });
+    nodes.forEach((n,i)=>{
+      const p = pos[n.id];
+      const shade = PALETTE[i % PALETTE.length];
+      ctx.beginPath(); ctx.arc(p.x, p.y, 42, 0, 7);
+      ctx.fillStyle = shade; ctx.fill();
+      ctx.strokeStyle='#111111'; ctx.lineWidth=1.5; ctx.stroke();
+      // Pick readable text color based on the node's actual fill
+      // luminance, rather than always white — light gray nodes need dark
+      // text, dark nodes need white text.
+      const rgb = [shade.slice(1,3), shade.slice(3,5), shade.slice(5,7)].map(h=>parseInt(h,16));
+      const lum = (0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]) / 255;
+      ctx.fillStyle = lum > 0.55 ? '#111111' : '#FFFFFF';
+      ctx.font='bold 12px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      wrapText(ctx, n.label, p.x, p.y, 74, 13);
+    });
+    return {data:c.toDataURL('image/png'), w, h};
+  }
+
   /* ---- Diagram-type variety: which chart TYPE fills each figure slot is
      chosen from the topic-seeded rng, not hardcoded — so different topics
      (and re-runs with a different topic) get a genuinely different mix of
@@ -1768,18 +1824,80 @@ const Dossier = (() => {
   // equation strings below) as normal glyphs in a plain run, so no image
   // rendering or native Math/OMML object is needed for this to look right
   // and stay selectable, searchable, and editable in the downloaded file.
+  // The equation number sits inline at the right margin behind a dotted
+  // leader — standard published-paper equation numbering — rather than as
+  // a separate label line above the formula.
   function equationParagraph(eq, eqNumber){
     return [
       new Paragraph({
-        alignment: AlignmentType.CENTER, spacing:{before:140, after:20},
-        children:[ new TextRun({text:`Equation ${eqNumber}`, size:16, color:"A11319", bold:true, allCaps:true}) ]
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER, spacing:{after:100},
-        children:[ new TextRun({text:eq.text, size:30, font:"Georgia", bold:true, color:INKC}) ]
+        tabStops:[{ type: TabStopType.RIGHT, position: 9360, leader: LeaderType.DOT }],
+        spacing:{before:140, after:100},
+        children:[
+          new TextRun({text:eq.text, size:22, font:"Times New Roman", bold:true, color:INKC}),
+          new TextRun({text:`\t(Eq. ${eqNumber})`, size:22, font:"Times New Roman", bold:true, color:INKC})
+        ]
       })
     ];
   }
+
+  // Dedicated abstract sentence banks — deliberately NOT reused body
+  // sentences, so the abstract reads as a genuine condensed summary
+  // rather than a copy of the introduction. Four movements (motivation,
+  // method, findings, implications), matching how real abstracts are
+  // structured, assembled into one ~220-word paragraph.
+  const ABSTRACT_OPEN = [
+    "{T} has grown from a narrow research interest into a broadly applied part of modern computing practice, yet the literature around it remains fragmented across small, loosely connected studies.",
+    "Despite steady growth in published work on {t}, there is still no widely agreed framework for comparing competing approaches on equal terms.",
+    "Interest in {t} has outpaced the emergence of shared standards for evaluating it, leaving researchers and practitioners to rely on inconsistent, hard-to-compare criteria.",
+    "{T} sits at the intersection of established theory and fast-moving practice, and the gap between the two is the starting point for this paper."
+  ];
+  const ABSTRACT_METHOD = [
+    "This paper addresses that gap by synthesising the recent literature on {t} and proposing a structured, repeatable evaluation methodology.",
+    "Drawing on a review of the existing research, the study develops evaluation criteria spanning effectiveness, efficiency, and clarity of implementation.",
+    "A representative empirical framework is applied to illustrate how these criteria distinguish between competing approaches to {t} in practice.",
+    "The methodology combines a structured literature synthesis with a quantitative evaluation framework designed to generalise beyond any single implementation of {t}."
+  ];
+  const ABSTRACT_RESULTS = [
+    "Across the studies reviewed, no single approach to {t} dominates on every dimension considered; the strongest choice depends on the specific constraints of the deployment.",
+    "The comparative results reported here highlight consistent trade-offs between simplicity and robustness that recur throughout the literature on {t}.",
+    "A regression analysis further quantifies the relationship between the key variables considered, adding a statistically grounded complement to the qualitative comparison.",
+    "The evaluation framework reveals measurable differences between approaches to {t} that are easy to miss when studies are read in isolation."
+  ];
+  const ABSTRACT_CONCLUSION = [
+    "These findings carry practical implications for both researchers and practitioners working with {t}, and clarify where the current evidence base remains thin.",
+    "The paper closes by identifying specific directions for future work, including larger-scale empirical validation and closer attention to failure cases.",
+    "Taken together, this review offers both a consolidated reference for {t} and a reusable framework for evaluating future work in the area.",
+    "The results argue for a more deliberate, evidence-based approach to choosing between methods for {t}, rather than defaulting to whichever is most familiar."
+  ];
+  function buildAbstract(rng, topic, t){
+    const open = pickN(rng, ABSTRACT_OPEN, 2);
+    const method = pickN(rng, ABSTRACT_METHOD, 3);
+    const results = pickN(rng, ABSTRACT_RESULTS, 3);
+    const conclusion = pickN(rng, ABSTRACT_CONCLUSION, 2);
+    const all = [...open, ...method, ...results, ...conclusion].map(s => fill(s, topic, t));
+    return all.join(' ');
+  }
+
+  const THREATS_VALIDITY = [
+    "As with any evaluation framework, several threats to validity are worth stating plainly rather than glossing over.",
+    "Internal validity here rests on the assumption that the illustrative dataset behaves similarly to real deployments of {t} — an assumption that should be tested directly once real data is available.",
+    "Construct validity depends on whether effectiveness, efficiency, and clarity actually capture what matters most for {t} in a given context; a different study might reasonably argue for different constructs.",
+    "External validity is limited by the narrow scope of the illustrative comparison presented here — conclusions about {t} drawn from a handful of approaches may not generalise to the full space of possible implementations.",
+    "Statistical conclusion validity is constrained by the modest sample size used in the regression analysis; a larger sample would narrow the confidence interval around the fitted relationship.",
+    "There is also a risk of bias in how the literature review was scoped, since search terms and inclusion criteria shape which studies on {t} get surfaced in the first place.",
+    "Reproducibility remains a threat until the tooling, data, and exact parameters used are published alongside any real results on {t}.",
+    "None of these threats invalidate the framework proposed here, but each should be addressed explicitly before treating any specific finding about {t} as conclusive."
+  ];
+  const ETHICAL_CONSIDERATIONS = [
+    "Any real study of {t} should consider who is affected by the systems being evaluated, not only how well those systems perform on the chosen metrics.",
+    "Where {t} touches personal or sensitive data, data protection and informed consent are a precondition for ethical research, not an optional extra.",
+    "Bias in the underlying data can propagate into any evaluation of {t}, particularly where the illustrative dataset here is replaced with real-world data collected unevenly across populations.",
+    "Transparency about limitations — stated clearly throughout this paper — is itself an ethical commitment, not just good academic practice.",
+    "Dual-use potential is worth considering for {t}: the same techniques that improve legitimate applications can sometimes be repurposed for harm.",
+    "Environmental cost is an underdiscussed dimension of research on {t}, particularly for approaches that are computationally expensive to train or run at scale.",
+    "Where this study's findings might inform real decisions about {t}, the illustrative nature of the data used here should be disclosed prominently rather than buried in a footnote.",
+    "These considerations do not have easy answers, but naming them is the minimum expected of responsible research into {t}."
+  ];
 
   const BACKGROUND = [
     "{T} did not appear fully formed. It grew out of earlier work on narrower, related problems that eventually got generalised.",
@@ -2096,17 +2214,20 @@ const Dossier = (() => {
   const {
     Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType,
     ImageRun, Table, TableRow, TableCell, WidthType, BorderStyle,
-    Header, Footer, PageNumber, ShadingType, TabStopType, UnderlineType
+    Header, Footer, PageNumber, ShadingType, TabStopType, UnderlineType, LeaderType
   } = docx;
 
   const CRIMSON = "A11319", INKC = "1C1B1F", MEDC = "44454C", LINEC = "CBD5E1", WASH = "FDEAEA";
 
-  function H1(text){ return new Paragraph({ text, heading: HeadingLevel.TITLE, spacing:{after:120} }); }
-  function H2(text){ return new Paragraph({ text, heading: HeadingLevel.HEADING_1, spacing:{before:260,after:140},
-    run:{color:CRIMSON} }); }
-  function H2break(text){ return new Paragraph({ text, heading: HeadingLevel.HEADING_1, pageBreakBefore:true, spacing:{before:120,after:140}, run:{color:CRIMSON} }); }
-  function H3(text){ return new Paragraph({ text, heading: HeadingLevel.HEADING_2, spacing:{before:200,after:100} }); }
-  function H4(text){ return new Paragraph({ children:[new TextRun({text, bold:true, color:CRIMSON, size:22})], spacing:{before:160,after:60} }); }
+  function H1(text){ return new Paragraph({ heading: HeadingLevel.TITLE, spacing:{after:120},
+    children:[new TextRun({text, font:"Times New Roman", bold:true, size:40, color:CRIMSON})] }); }
+  function H2(text){ return new Paragraph({ heading: HeadingLevel.HEADING_1, spacing:{before:260,after:140},
+    children:[new TextRun({text, font:"Times New Roman", bold:true, size:28, color:CRIMSON})] }); }
+  function H2break(text){ return new Paragraph({ heading: HeadingLevel.HEADING_1, pageBreakBefore:true, spacing:{before:120,after:140},
+    children:[new TextRun({text, font:"Times New Roman", bold:true, size:28, color:CRIMSON})] }); }
+  function H3(text){ return new Paragraph({ heading: HeadingLevel.HEADING_2, spacing:{before:200,after:100},
+    children:[new TextRun({text, font:"Times New Roman", bold:true, size:24, color:INKC})] }); }
+  function H4(text){ return new Paragraph({ children:[new TextRun({text, font:"Times New Roman", bold:true, color:CRIMSON, size:22})], spacing:{before:160,after:60} }); }
   function P(text, opts){
     return new Paragraph(Object.assign({
       children:[new TextRun({text, size:22, color:INKC})],
@@ -2225,10 +2346,10 @@ const Dossier = (() => {
   // "Author  Page X of Y" line, matching the journal this was modelled on.
   function buildAndDownloadPaper(children, authorShort, filename){
     const doc = new Document({
-      styles:{ default:{ document:{ run:{ font:"Calibri", size:22, color:INKC } } },
-               heading1:{ run:{ font:"Cambria", size:26, bold:true, color:CRIMSON } },
-               heading2:{ run:{ font:"Cambria", size:22, bold:true, color:INKC } },
-               title:{ run:{ font:"Cambria", size:38, bold:true, color:CRIMSON } } },
+      styles:{ default:{ document:{ run:{ font:"Times New Roman", size:24, color:INKC } } },
+               heading1:{ run:{ font:"Times New Roman", size:28, bold:true, color:CRIMSON } },
+               heading2:{ run:{ font:"Times New Roman", size:24, bold:true, color:INKC } },
+               title:{ run:{ font:"Times New Roman", size:40, bold:true, color:CRIMSON } } },
       sections:[{
         properties:{ page:{ margin:{ top:1440, bottom:1440, left:1440, right:1440 } } },
         headers:{ default: new Header({ children:[ new Paragraph({
@@ -2295,13 +2416,19 @@ const Dossier = (() => {
     // reviewer's anonymous comments on someone else's paper, not a citable
     // source in its own right) and items with no author on file at all —
     // both get filtered out below rather than ever being shown as if
-    // "Anonymous" were a real author name.
-    const url = `https://api.crossref.org/works?query.bibliographic=${encodeURIComponent(topic)}&rows=${count*2}&select=title,author,container-title,issued,volume,issue,page,DOI,type&sort=relevance&mailto=dossier-tool@mmumullana.org`;
+    // "Anonymous" were a real author name. Restricted server-side to
+    // works published in or after 2020.
+    const url = `https://api.crossref.org/works?query.bibliographic=${encodeURIComponent(topic)}&filter=from-pub-date:2020-01-01,type:journal-article&rows=${Math.min(count*3, 200)}&select=title,author,container-title,issued,volume,issue,page,DOI,type&sort=relevance&mailto=dossier-tool@mmumullana.org`;
     const res = await fetch(url);
     if(!res.ok) throw new Error(`Crossref request failed (HTTP ${res.status}).`);
     const data = await res.json();
     const items = (data && data.message && data.message.items) || [];
-    const usable = items.filter(it => it.type !== 'peer-review' && Array.isArray(it.author) && it.author.some(a => a.family));
+    const usable = items.filter(it => {
+      if(it.type === 'peer-review') return false;
+      if(!Array.isArray(it.author) || !it.author.some(a => a.family)) return false;
+      const y = it.issued && it.issued['date-parts'] && it.issued['date-parts'][0] && it.issued['date-parts'][0][0];
+      return !y || y >= 2020;
+    });
     return usable.slice(0, count).map(formatCrossRefItem).filter(Boolean);
   }
 
@@ -2378,7 +2505,7 @@ const Dossier = (() => {
     let realRefs = [];
     let refsAreReal = false;
     try{
-      realRefs = await fetchCrossRefReferences(raw, 36);
+      realRefs = await fetchCrossRefReferences(raw, 55);
       refsAreReal = realRefs.length > 0;
     }catch(e){
       console.error('Crossref lookup failed:', e);
@@ -2429,6 +2556,18 @@ const Dossier = (() => {
         // one dense block — see the Equation Engine notes above.
         let eqCounter = 0;
         const usedEquations = new Set();
+        // Ties each equation category back to exactly where in THIS
+        // specific paper it would actually be applied — this is what
+        // makes a generic, mathematically-correct formula read as
+        // connected to the topic rather than dropped in at random.
+        const EQ_TOPIC_TIE = {
+          metrics: () => `Applied to ${t} specifically, this metric would be computed on whatever ground-truth labels or reference outcomes are available for the evaluation described in Section 4.2.`,
+          setup: () => `In this paper's evaluation of ${t}, this quantity would be computed directly from the dataset described in Section 3.2, once real data replaces the illustrative placeholder.`,
+          results: () => `For ${t} specifically, this figure would be computed from the actual comparative results reported in Section 5, once illustrative numbers are replaced with real measurements.`,
+          discussion: () => `Read against the findings on ${t} discussed in Section 6, this quantity would sharpen exactly how confident this paper's conclusions about ${t} are entitled to be.`,
+          theory: () => `Within the theoretical treatment of ${t} in this paper, this identity underlies the reasoning developed earlier in this section.`,
+          design: () => `For ${t}, this would be computed directly from the weights and complexity bounds established in the research design described in Section 3.1.`
+        };
         function eqSection(section, count){
           const chosen = equationsFor(rng, section, count, usedEquations);
           const blocks = [];
@@ -2437,7 +2576,7 @@ const Dossier = (() => {
             usedEquations.add(eq.text);
             blocks.push(P(`${eq.lead} This is stated formally as Equation ${eqCounter} below.`));
             blocks.push(...equationParagraph(eq, eqCounter));
-            blocks.push(P(`${eq.defs} ${eq.purpose}`));
+            blocks.push(P(`${eq.defs} ${eq.purpose} ${EQ_TOPIC_TIE[section]()}`));
           });
           return blocks;
         }
@@ -2506,13 +2645,13 @@ const Dossier = (() => {
 
         // Applications-style numbered list (mirrors the source paper's
         // "Applications of UAVs in agriculture" 1–13 numbered list).
-        const appLeadIns = ['Core capability', 'Adjacent use case', 'Integration opportunity', 'Efficiency gain', 'Risk mitigation', 'Scalability path', 'Cross-domain potential', 'Educational use', 'Automation opportunity', 'Data-driven insight'];
-        const appBanks = [APPLICATIONS, BANK, SIGNIFICANCE, APPLICATIONS, EMPIRICAL, BANK, COMPARATIVE, APPLICATIONS, DESIGN, METRICS];
+        const appLeadIns = ['Core capability', 'Adjacent use case', 'Integration opportunity', 'Efficiency gain', 'Risk mitigation', 'Scalability path', 'Cross-domain potential', 'Educational use', 'Automation opportunity', 'Data-driven insight', 'Standardisation opportunity', 'Collaborative potential', 'Long-term maintainability', 'Cost reduction pathway'];
+        const appBanks = [APPLICATIONS, BANK, SIGNIFICANCE, APPLICATIONS, EMPIRICAL, BANK, COMPARATIVE, APPLICATIONS, DESIGN, METRICS, GAPS, THEORY, TOOLS, SETUP];
         const applicationItems = appLeadIns.map((lead,i)=> numberedRunIn(i+1, lead, cite(genPara(rng, appBanks[i], topic, t, 1))));
 
         // Limitations-style numbered list (mirrors "Limitations of UAVs").
-        const limLeadIns = ['Scalability', 'Cost', 'Complexity', 'Interpretability', 'Data requirements', 'Adoption barriers', 'Maintenance overhead'];
-        const limBanks = [CHALLENGES, GAPS, CHALLENGES, MISTAKES, CHALLENGES, GAPS, CHALLENGES];
+        const limLeadIns = ['Scalability', 'Cost', 'Complexity', 'Interpretability', 'Data requirements', 'Adoption barriers', 'Maintenance overhead', 'Standardisation gap', 'Talent availability', 'Long-term support'];
+        const limBanks = [CHALLENGES, GAPS, CHALLENGES, MISTAKES, CHALLENGES, GAPS, CHALLENGES, THREATS_VALIDITY, GAPS, ETHICAL_CONSIDERATIONS];
         const limitationItems = limLeadIns.map((lead,i)=> numberedRunIn(i+1, lead, cite(genPara(rng, limBanks[i], topic, t, 1))));
 
         const children = [
@@ -2531,7 +2670,7 @@ const Dossier = (() => {
           P(`*Correspondence: abhishek.bhattacherjee@mmumullana.org`, {spacing:{after:220}}),
 
           H4("Abstract"),
-          P(`This paper presents a structured review and evaluation framework for ${topic}. We synthesise the direction of recent work in the area, propose a consistent methodology for comparing approaches, and present an illustrative empirical framework together with representative results. The discussion covers practical implications, applications, and current limitations, and closes with directions for future work. This draft is a complete structural and stylistic skeleton, formatted to match a real Springer Nature journal article — every figure, table and reference-list entry is illustrative and must be replaced with the author's own data, sources and verified citations prior to submission.`),
+          P(buildAbstract(rng, topic, t)),
           H4("Keywords"),
           P(keywords, {spacing:{after:240}}),
 
@@ -2543,6 +2682,27 @@ const Dossier = (() => {
 
           H2("Literature review"),
           H3("Theoretical foundations"), ...CP(THEORY,2,5),
+          P(`Figure 8 sketches how the core theoretical elements of ${topic} relate to one another, as a directed concept network rather than a simple hierarchy.`),
+          ...(function(){
+            const netNodes = [
+              {id:'core', label: titleCase(t)},
+              {id:'def', label:'Core Definition'},
+              {id:'theory', label:'Theoretical Basis'},
+              {id:'app', label:'Practical Application'},
+              {id:'eval', label:'Evaluation Criteria'},
+              {id:'open', label:'Open Challenges'},
+            ];
+            const netEdges = [
+              ['core','def','grounded in'], ['core','theory','builds on'], ['core','app','shapes'],
+              ['app','eval','judged by'], ['theory','open','still faces'], ['eval','open','exposes'],
+            ];
+            const net = drawNetworkDiagram(`Fig. 8  Conceptual network of ${topic}`, netNodes, netEdges);
+            return [
+              new Paragraph({ children:[ new ImageRun({ data: dataUrlToBytes(net.data), type:'png', transformation:{ width:460, height: Math.round(460*(net.h/net.w)) } }) ], alignment: AlignmentType.CENTER, spacing:{before:100, after:60} }),
+              new Paragraph({ children:[new TextRun({text: figCaption(8, `Conceptual network of ${topic}`), italics:true, size:18, color:"5B6472"})], alignment: AlignmentType.CENTER, spacing:{after:200} }),
+              P(`Each arrow in Figure 8 represents a real dependency this paper relies on: the practical application of ${t} is judged against the evaluation criteria discussed in Section 4.2, and both the theoretical basis and the evaluation criteria feed directly into the open challenges discussed later in Section 7.`)
+            ];
+          })(),
           ...eqSection('theory', 2),
           ...CP(THEORY,1,4),
           H3("Empirical studies"), ...CP(EMPIRICAL,3,5),
@@ -2593,6 +2753,8 @@ const Dossier = (() => {
           P(`Table 3 reports the same comparison in tabular form, broken down by effectiveness, efficiency, and clarity.`),
           makeTable(['Method','Effectiveness','Efficiency','Clarity'], resultRows()),
           tblCaption(3, 'Results across evaluated methods (illustrative).'),
+          H3("Illustrative case study"),
+          Cp(`${genPara(rng,CASE,topic,t,3)} The remainder of this subsection should be replaced with a real, worked example from your own research on ${t} — the case sketched here exists only to show the level of concrete detail a finished case study needs.`),
           H3("Regression analysis"),
           P(`To go beyond simple group comparisons, Figure 7 below fits a linear regression to an illustrative sample, relating an independent variable to a measured outcome. Replace both axes and the underlying data with your own paired measurements for ${topic}; the fitted line and R\u00b2 value shown are computed directly from whatever data is plotted, not fixed in advance.`),
           ...(function(){
@@ -2626,6 +2788,8 @@ const Dossier = (() => {
           H3("Implications for practice"), ...CP(DISCUSSION,2,4),
           H3("Implications for pedagogy"),
           Cp(`${genPara(rng,BANK,topic,t,4)} These implications are particularly relevant for institutions such as MM(DU) that emphasise applied, project-based learning around topics like ${t}.`),
+          H3("Threats to validity"), ...CP(THREATS_VALIDITY,2,4),
+          H3("Ethical considerations"), ...CP(ETHICAL_CONSIDERATIONS,2,4),
           H3("Traditional vs. contemporary approaches"),
           P(`Table 4 sets the traditional and contemporary approaches side by side across five practical dimensions.`),
           makeTable(['Dimension','Traditional approach', `Contemporary approach to ${topic}`], [
@@ -2692,12 +2856,6 @@ const Dossier = (() => {
 
           new Paragraph({ spacing:{before:300, after:80}, children:[new TextRun({text:"Publisher's Note", bold:true, italics:true, size:20})] }),
           P("This is a locally generated draft, not a submitted or published article; no publisher, journal, or licence applies to it.", {alignment:AlignmentType.LEFT}),
-
-          new Paragraph({spacing:{before:260}, border:{top:{style:BorderStyle.SINGLE, size:6, color:CRIMSON, space:8}}, children:[]}),
-          new Paragraph({ spacing:{before:120, after:60}, children:[new TextRun({text:"Note from this generator", bold:true, size:20, color:CRIMSON})] }),
-          P(refsAreReal
-            ? `This draft was assembled as a structural and stylistic starting point for a paper on ${topic}, prepared for Dr. Abhishek Bhattacherjee, Department of Computer Science & Engineering, MM(DU), Mullana–Ambala, formatted to match a real published Springer Nature journal article's layout. The ${realRefs.length} references above are real, existing, DOI-linked papers fetched live from Crossref — but the body text, figures and tables are still illustrative template content, not a genuine literature synthesis. Read the fetched references properly and cite them only where they actually support what you've written, and replace the rest of the draft with the author's genuine research and analysis before this is submitted anywhere.`
-            : `This draft was assembled as a structural and stylistic starting point for a paper on ${topic}, prepared for Dr. Abhishek Bhattacherjee, Department of Computer Science & Engineering, MM(DU), Mullana–Ambala, formatted to match a real published Springer Nature journal article's layout. Crossref could not be reached this time, so every figure, table, in-text citation marker, and reference-list entry above is illustrative or an explicit placeholder — none are real data or real sources. They must be replaced with the author's genuine research, data, and independently verified citations before this is submitted anywhere.`)
         ];
 
         buildAndDownloadPaper(children, authorShort, `${safeFilename(topic)}_Research_Paper_Draft.docx`);
